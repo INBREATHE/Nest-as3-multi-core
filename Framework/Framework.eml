@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" jdk="AIR Latest" jdk_type="Flex SDK Type (new)">
+	<output-test url="file://$MODULE_DIR$/../_bin/test/framework"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="D:\Projects\INBREATHE\Frameworks\Nest\as3\framework\libs\source" scope="COMPILE">
+		<relative-module-cls project-related="file://$PROJECT_DIR$/framework/libs/source"/>
+	</lib>
+	<levels>
+		<level name="starling" value="project"/>
+	</levels>
+</component>

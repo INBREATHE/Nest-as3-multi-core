@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/AIR Latest"/>
+	<classpathentry kind="src" path="/framework/src"/>
+	<classpathentry exported="true" kind="lib" path="/framework/libs/swc"/>
+	<classpathentry exported="true" kind="lib" path="/framework/libs/source"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/starling"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/Starling"/>
+	<classpathentry kind="output" path="/_bin/production/framework"/>
+</classpath>

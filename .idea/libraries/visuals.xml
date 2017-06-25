@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="visuals" type="flex">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Application/assets/visuals.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
