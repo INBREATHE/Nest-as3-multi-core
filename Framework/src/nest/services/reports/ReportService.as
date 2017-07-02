@@ -58,6 +58,7 @@ public final class ReportService extends EventDispatcher implements IServiceLoca
 		_header = new URLRequestHeader(serverVO.head, serverVO.key);
 		_url 	= serverVO.url;
 		_type 	= serverVO.type;
+		trace("> Nest -> ReportService -> init: _url =", _url, "_type =", _type);
 	}
 
 	public function get currentTime():uint { return _date.time; }

@@ -34,7 +34,7 @@ public final class WorkerJunction extends Junction
 
 	public var isSupported:Boolean = false;
 
-	private const _dbService:DatabaseService = DatabaseService.getInstance();
+//	private const _dbService:DatabaseService = DatabaseService.getInstance();
 
 	private const _responces:Dictionary = new Dictionary(true);
 
@@ -55,7 +55,7 @@ public final class WorkerJunction extends Junction
 				const requestFilter:Filter = new Filter(
 					FILTER_FOR_STORE_RESPONCE, new PipeListener(
 						workerModule, function ( message:IPipeMessage ):void {
-							trace("> Nest -> ", "> WorkerJunction : PipeMessage_MasterToWorker: \n\t\t : isBusy = " + this.isBusy + "\n", JSON.stringify(message) + "\n");
+							trace("> Nest -> WorkerJunction : PipeMessage_MasterToWorker: \n\t\t : isBusy = " + this.isBusy + "\n", JSON.stringify(message) + "\n");
 							this.send( new WorkerTask( WorkerTask.MESSAGE, message ));
 						}
 					),
@@ -63,7 +63,7 @@ public final class WorkerJunction extends Junction
 				);
 				teeMerge.connect(requestFilter);
 				this.registerPipe( WorkerModule.WRK_IN, Junction.INPUT, teeMerge );
-				trace("> Nest -> ", "> WorkerJunction : MASTER - READY!");
+				trace("> Nest -> WorkerJunction : MASTER - READY!");
 			}
 			else // The WRKOUT pipe from the worker to all modules or main
 			{
@@ -71,12 +71,12 @@ public final class WorkerJunction extends Junction
 				this.registerPipe( WorkerModule.WRK_OUT, Junction.OUTPUT, teeSplit );
 				this.addPipeListener( WorkerModule.WRK_OUT, workerModule, function( message:IPipeMessage ):void
 				{
-					trace("> Nest -> ", "> WorkerJunction : PipeMessage_WorkerToMaster: \n\t\t : isBusy = " + this.isBusy + "\n", (typeof message) + "\n");
+					trace("> Nest -> WorkerJunction : PipeMessage_WorkerToMaster: \n\t\t : isBusy = " + this.isBusy + "\n", (typeof message) + "\n");
 					var taskType:int = WorkerTask.MESSAGE;
 					this.send( new WorkerTask(taskType, message) );
 				});
 
-				trace("> Nest -> ", "> WorkerJunction : SLAVE - READY!");
+				trace("> Nest -> WorkerJunction : SLAVE - READY!");
 				workerModule.send( new WorkerTask(WorkerTask.READY) );
 			}
 
@@ -93,22 +93,22 @@ public final class WorkerJunction extends Junction
 
 				const completeTask:Function = function():void { __send(new WorkerTask(WorkerTask.COMPLETE)); };
 
-				const __dbConnect	: SQLConnection = _dbService.sqlConnection;
-				const syncDB:Function = function(message:WorkerDBSyncMessage):void {
-					__dbConnect.dispatchEvent( new SQLUpdateEvent(
-						message.eventType, false, true, message.eventTable, message.eventRowID
-					));
-				};
+//				const __dbConnect	: SQLConnection = _dbService.sqlConnection;
+//				const syncDB:Function = function(message:WorkerDBSyncMessage):void {
+//					__dbConnect.dispatchEvent( new SQLUpdateEvent(
+//						message.eventType, false, true, message.eventTable, message.eventRowID
+//					));
+//				};
 
 				return function (e:Event):void {
 					const taskType 	: * = (e.currentTarget as MessageChannel).receive(true);
 					const message 	: IPipeMessage = __getData() as IPipeMessage;
-					trace("> Nest -> ", "> WorkerJunction > CHANNEL_MESSAGE ", __isMaster ? "MASTER" : "SLAVE","taskType = " + taskType);
+					trace("> Nest -> WorkerJunction > CHANNEL_MESSAGE ", __isMaster ? "MASTER" : "SLAVE","taskType = " + taskType);
 					if (taskType is int) {
 						switch(taskType)
 						{
 							case WorkerTask.COMPLETE: __complete(); return;
-							case WorkerTask.SYNC_DB: syncDB(WorkerDBSyncMessage(message)); completeTask(); break;
+//							case WorkerTask.SYNC_DB: syncDB(WorkerDBSyncMessage(message)); completeTask(); break;
 							case WorkerTask.TERMINATE: __terminate(); break;
 							case WorkerTask.READY: __ready(); break;
 							case WorkerTask.MESSAGE: {
@@ -119,29 +119,29 @@ public final class WorkerJunction extends Junction
 							}
 							break;
 						}
-						trace("> Nest -> ", "> WorkerJunction > COMPLETE TASK:", __isMaster ? "MASTER" : "SLAVE", taskType);
+						trace("> Nest -> WorkerJunction > COMPLETE TASK:", __isMaster ? "MASTER" : "SLAVE", taskType);
 						__complete();
 					}
 				}
 			}(this));
 
-			const RetranslateDatabaseEvent:Function = function():Function
-			{
-				const __send		: Function 	= workerModule.send;
-				const __isMaster	: Boolean 	= workerModule.isMaster;
+//			const RetranslateDatabaseEvent:Function = function():Function
+//			{
+//				const __send		: Function 	= workerModule.send;
+//				const __isMaster	: Boolean 	= workerModule.isMaster;
+//
+//				return function (event:SQLUpdateEvent):void
+//				{
+//					trace("> Nest -> ", "===============> RetranslateDatabaseEvent");
+//					workerModule.send( new WorkerTask( WorkerTask.SYNC_DB,
+//						new WorkerDBSyncMessage(event.type, event.table, event.rowID
+//					)));
+//				}
+//			}();
 
-				return function (event:SQLUpdateEvent):void
-				{
-					trace("> Nest -> ", "===============> RetranslateDatabaseEvent");
-					workerModule.send( new WorkerTask( WorkerTask.SYNC_DB,
-						new WorkerDBSyncMessage(event.type, event.table, event.rowID
-					)));
-				}
-			}();
-
-			_dbService.listen(SQLUpdateEvent.INSERT, null, null, RetranslateDatabaseEvent, true);
-			_dbService.listen(SQLUpdateEvent.DELETE, null, null, RetranslateDatabaseEvent, true);
-			_dbService.listen(SQLUpdateEvent.UPDATE, null, null, RetranslateDatabaseEvent, true);
+//			_dbService.listen(SQLUpdateEvent.INSERT, null, null, RetranslateDatabaseEvent, true);
+//			_dbService.listen(SQLUpdateEvent.DELETE, null, null, RetranslateDatabaseEvent, true);
+//			_dbService.listen(SQLUpdateEvent.UPDATE, null, null, RetranslateDatabaseEvent, true);
 		}
 	}
 
@@ -154,7 +154,7 @@ public final class WorkerJunction extends Junction
 		{
 			case WorkerModule.DICONNECT_INPUT_PIPE:
 			{
-				trace("> Nest -> ", "> filterDisconnectOutput, DISCONNECT_INPUT_PIPE");
+				trace("> Nest -> filterDisconnectOutput, DISCONNECT_INPUT_PIPE");
 				disconnected = message.getBody() as IPipeFitting;
 				trace("\t\t: pipeName:", disconnected.pipeName);
 				trace("\t\t: channedID:", disconnected.channelID);
@@ -164,7 +164,7 @@ public final class WorkerJunction extends Junction
 			}
 			case WorkerModule.DICONNECT_OUTPUT_PIPE:
 			{
-				trace("> Nest -> ", "> filterDisconnectOutput, DISCONNECT_OUTPUT_PIPE");
+				trace("> Nest -> filterDisconnectOutput, DISCONNECT_OUTPUT_PIPE");
 				const teeSplit:TeeSplit = this.retrievePipe(WorkerModule.WRK_OUT) as TeeSplit;
 				if(teeSplit) {
 					disconnected = message.getBody() as IPipeFitting;
@@ -180,7 +180,7 @@ public final class WorkerJunction extends Junction
 	}
 
 	public function filterApplyMessageResponce(message:IPipeMessage, params:Object = null):IPipeMessage {
-		trace("> Nest -> ", "> filter_ApplyMessageResponce", (typeof message));
+		trace("> Nest -> filter_ApplyMessageResponce", (typeof message));
 		const responceMessageID:String = message.getHeader() as String;
 		const msgResponce:WorkerMessageResponce = _responces[responceMessageID];
 
@@ -204,7 +204,7 @@ public final class WorkerJunction extends Junction
 	}
 
 	public function filterKeepMessageResponce(message:WorkerRequestMessage, params:Object = null):IPipeMessage {
-		trace("> Nest -> ", "> filter_KeepMessageResponce", message);
+		trace("> Nest -> filter_KeepMessageResponce", message);
 		const responcePipeID:uint = message.getPipeID();
 		const responceMessageID:String = message.getMessageID();
 		const responce:* = message.getResponce();

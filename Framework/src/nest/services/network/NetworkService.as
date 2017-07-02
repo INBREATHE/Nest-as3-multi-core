@@ -7,12 +7,11 @@ package nest.services.network
 {
 import flash.desktop.NativeApplication;
 import flash.events.Event;
+import flash.events.EventDispatcher;
 import flash.net.NetworkInfo;
 import flash.utils.getDefinitionByName;
 
 import nest.interfaces.IService;
-
-import starling.events.EventDispatcher;
 
 public final class NetworkService extends EventDispatcher implements IService
 {
@@ -25,6 +24,7 @@ public final class NetworkService extends EventDispatcher implements IService
 	public function init(app:Object):void
 	{
 		_isNetworkAvailable = CheckInternetConnection();
+		trace("> Nest -> NetworkService -> init: isNetworkAvailable = " +  _isNetworkAvailable);
 		NativeApplication.nativeApplication.addEventListener(Event.NETWORK_CHANGE, HandleNetworkChange);
 	}
 
@@ -51,7 +51,7 @@ public final class NetworkService extends EventDispatcher implements IService
 		const previousState:Boolean = _isNetworkAvailable;
 		_isNetworkAvailable = CheckInternetConnection();
 		const status:Boolean = (previousState == false) && (_isNetworkAvailable == true);
-		this.dispatchEventWith(NETWORK_CHANGED, false, status);
+		this.dispatchEvent( new NetworkStatusEvent(NETWORK_CHANGED, status));
 	}
 
 	private static const _instance:NetworkService = new NetworkService();

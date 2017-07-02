@@ -49,7 +49,7 @@ public class ApplicationFacade extends Facade implements IFacade
 	//==================================================================================================
 		super.initializeView();
 
-//		trace("> Nest -> ", multitonKey, "> ApplicationFacade > initializeView" );
+		trace("> Nest -> ", multitonKey, "> ApplicationFacade > initializeView" );
 
 		registerMediatorAdvance(new ApplicationMediator(Starling.current.root));
 	}
@@ -59,7 +59,7 @@ public class ApplicationFacade extends Facade implements IFacade
 	//==================================================================================================
 		super.initializeModel();
 
-//		trace("> Nest -> ", multitonKey, "> ApplicationFacade > initializeModel" );
+		trace("> Nest -> ", multitonKey, "> ApplicationFacade > initializeModel" );
 
 		registerProxy( ReportProxy 		);
 		registerProxy( ServerProxy 		);
@@ -73,7 +73,7 @@ public class ApplicationFacade extends Facade implements IFacade
 	//==================================================================================================
 		super.initializeController();
 
-//		trace("> Nest -> ", multitonKey, "> ApplicationFacade > initializeController" );
+		trace("> Nest -> ", multitonKey, "> ApplicationFacade > initializeController" );
 
 		registerPoolCommand( ScreenCommand.REGISTER, 	RegisterScreenCommand 	);
 		registerPoolCommand( ScreenCommand.CHANGE, 		ChangeScreenCommand 	);

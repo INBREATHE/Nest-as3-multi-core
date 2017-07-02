@@ -9,6 +9,9 @@ import flash.data.SQLConnection;
 import flash.data.SQLMode;
 import flash.data.SQLResult;
 import flash.data.SQLStatement;
+import flash.errors.SQLError;
+import flash.events.Event;
+import flash.events.EventDispatcher;
 import flash.events.SQLEvent;
 import flash.events.SQLUpdateEvent;
 import flash.filesystem.File;
@@ -19,8 +22,6 @@ import flash.utils.getQualifiedClassName;
 
 import nest.entities.application.Application;
 import nest.interfaces.IServiceLocale;
-
-import starling.events.EventDispatcher;
 
 public final class DatabaseService extends EventDispatcher implements IServiceLocale
 {
@@ -36,11 +37,10 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	private var
 		_sqlConnection			: SQLConnection
 	,	_sqlStatement			: SQLStatement
-	,	_sqlResult				: SQLResult
 	,	_dbExist				: Boolean = false
-	,	_events					: Dictionary = new Dictionary();
+	,	_events					: Dictionary = new Dictionary()
 	;
-
+	
 	public function get dbExist():Boolean { return _dbExist; }
 	public function get sqlConnection():SQLConnection { return _sqlConnection; }
 
@@ -83,8 +83,8 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	public function retrieve(query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true):Object {
 	//==================================================================================================
 		ExecuteStatement(query, languageDependent, classRef);
-		_sqlResult = _sqlStatement.getResult();
-		const data:Array = _sqlResult.data;
+		const sqlResult:SQLResult = _sqlStatement.getResult();
+		const data:Array = sqlResult.data;
 		return data ? (all ? data : data[0]) : null;
 	}
 
@@ -171,7 +171,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		_sqlStatement.sqlConnection = _sqlConnection;
 		_sqlStatement.text = DatabaseQuery.UpdateTableParamsWhere(table, FillStatementParametersFromObject(_sqlStatement, data), criteria);
 //		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
-		_sqlStatement.execute();
+		Execute(_sqlStatement);
 	}
 
 	//==================================================================================================
@@ -181,7 +181,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		_sqlStatement.sqlConnection = _sqlConnection;
 		_sqlStatement.text = DatabaseQuery.InsertDataObjectToTable(FillStatementParametersFromObject(_sqlStatement, data), table);
 //		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
-		_sqlStatement.execute();
+		Execute(_sqlStatement);
 	}
 
 	//==================================================================================================
@@ -192,16 +192,31 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		if(addLanguage) query = DatabaseQuery.QueryWithLanguage(query);
 		_sqlStatement.text = query;
 		if(classRef != null) _sqlStatement.itemClass = classRef;
-		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
-//		Capabilities.isDebugger && Application.log("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
 		if(withCallback) _sqlStatement.addEventListener( SQLEvent.RESULT, Handler_SQLStatement_Result );
-		_sqlStatement.execute();
+		Execute(_sqlStatement);
+	}
+
+	private function Execute(stmt:SQLStatement):void {
+		try {
+//            trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
+//    		Capabilities.isDebugger && Application.log("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
+			stmt.execute();
+		} catch (e:SQLError) {
+			if(e.errorID == 3119) { // Error #3119: Database file is currently locked.
+				Execute(stmt);
+			} else {
+//                trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
+				if(_sqlConnection != null && _sqlConnection.inTransaction) {
+                    _sqlConnection.rollback();
+				}
+			}
+		}
 	}
 	
 	private function Handler_SQLStatement_Result( event:SQLEvent ):void {
 //		Capabilities.isDebugger && Application.log("Handler_SQLStatement_Result");
 		event.currentTarget.removeEventListener( SQLEvent.RESULT, Handler_SQLStatement_Result );
-		this.dispatchEventWith( EVENT_EXECUTE_COMPLETE );
+		this.dispatchEvent( new Event(EVENT_EXECUTE_COMPLETE) );
 	}
 
 	//==================================================================================================

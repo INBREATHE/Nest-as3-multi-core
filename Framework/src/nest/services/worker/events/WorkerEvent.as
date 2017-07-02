@@ -14,7 +14,7 @@ public class WorkerEvent extends Event
 	,	READY			:String = "WORKER_READY"
 	,	NEW				:String = "WORKER_NEW"
 	,	TERMINATED		:String = "WORKER_TERMINATED"
-	,	MODE_CHANGED	:String = "WORKER_MODE_CHANGED"
+	,	MODE_CHANGED	:String = "WORKER_MODE_CHANGED";
 
 	public function WorkerEvent(type:String)
 	{

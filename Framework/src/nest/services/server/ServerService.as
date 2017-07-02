@@ -43,6 +43,9 @@ public final class ServerService extends URLLoader implements IServiceLocale
 	public function init( serverVO:Object ):void {
 		REQUEST[0] = serverVO.url;
 		_header = new URLRequestHeader(serverVO.head, serverVO.key);
+		
+		trace("> Nest -> ServerService -> init: serverVO ", serverVO);
+
 		this.dataFormat = URLLoaderDataFormat.TEXT;
 		this.addEventListener(IOErrorEvent.IO_ERROR, Handle_LoadError);
 		this.addEventListener(Event.COMPLETE, Handle_LoadComplete);
@@ -166,7 +169,7 @@ public final class ServerService extends URLLoader implements IServiceLocale
 		return params.join("&");
 	}
 
-	public function set language(value:String):void { _currentLanguage = value; }
+	public function set language(value:String):void { this._currentLanguage = value; }
 
 	private static const _instance:ServerService = new ServerService();
 	public function ServerService() { if(_instance != null) throw new Error("This is a singleton class, use .getInstance()"); }

@@ -53,6 +53,8 @@ public final class CacheService implements IServiceLocale
 				_reports.push(new CacheReport(item.name, item.time,  item.params));
 			}
 		});
+		
+		trace("> Nest -> CacheService -> init: language = " +  this.language, "_reports = " + _reports.length);
 
 		_reports.sort(function compare(x:CacheReport, y:CacheReport):Number {
 			return x.time < y.time ? -1 : 1;

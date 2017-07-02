@@ -56,7 +56,6 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 	,	__singleThreadMode 	: Boolean = false
 	,	__isPrimordial 		: Boolean
 	;
-	;
 
 	protected var __worker:Worker;
 	protected var __sharable:ByteArray = new ByteArray();

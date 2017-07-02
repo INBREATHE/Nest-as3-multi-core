@@ -33,7 +33,7 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/automation_agent.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="3" linkType="1" path="D:/Projects/INBREATHE/Frameworks/Nest/as3-multi-core/_libs/starling.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="D:/Projects/INBREATHE/Frameworks/Nest/as3-multi-core/_libs/starling.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

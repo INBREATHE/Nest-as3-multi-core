@@ -5,16 +5,12 @@
 */
 package nest.services.database
 {
-import flash.events.SQLEvent;
-import flash.system.Capabilities;
+import flash.events.Event;
 import flash.utils.Dictionary;
 
-import nest.entities.application.Application;
 import nest.interfaces.ILocalize;
 import nest.interfaces.IProxy;
 import nest.patterns.proxy.Proxy;
-
-import starling.events.Event;
 
 /**
  * C:\Users\DQvsRA\AppData\Roaming\[App Identifier]\Local Store\
@@ -31,6 +27,8 @@ public class DatabaseProxy extends Proxy implements IProxy, ILocalize
 {
 	private const _events : Dictionary = new Dictionary();
 
+	public function DatabaseProxy() { super( DatabaseService.getInstance() ); }
+	
 	public function get dbExist():Boolean { return _dbService.dbExist; }
 
 	//==================================================================================================
@@ -38,16 +36,17 @@ public class DatabaseProxy extends Proxy implements IProxy, ILocalize
 	//==================================================================================================
 		const nextTable:Function = function(databaseTable:DatabaseTable):void {
 			_dbService.createTable(databaseTable.tableName, databaseTable.tableClass);
-		}
-		_dbService.addEventListener( DatabaseService.EVENT_EXECUTE_COMPLETE, function():void{
-			Capabilities.isDebugger && Application.log("DatabaseService.EVENT_EXECUTE_COMPLETE");
+		};
+		const dbListener:Function = function(e:Event):void {
+//			Capabilities.isDebugger && Application.log("DatabaseService.EVENT_EXECUTE_COMPLETE");
 			if(tables.length == 0) {
-				_dbService.removeEventListeners( DatabaseService.EVENT_EXECUTE_COMPLETE );
+				_dbService.removeEventListener( DatabaseService.EVENT_EXECUTE_COMPLETE, dbListener );
 				callback();
 			} else {
 				nextTable(tables.shift());
 			}
-		});
+		};
+		_dbService.addEventListener( DatabaseService.EVENT_EXECUTE_COMPLETE, dbListener);
 		nextTable(tables.shift());
 	}
 
@@ -100,15 +99,9 @@ public class DatabaseProxy extends Proxy implements IProxy, ILocalize
 	}
 
 	//==================================================================================================
-	override public function onRegister():void {
+	override public function onRegister():void { }
 	//==================================================================================================
 
-	}
-
-	public function DatabaseProxy() {
-		super(DatabaseService.getInstance());
-	}
-
-	private function get _dbService():DatabaseService { return DatabaseService(data); }
+	private function get _dbService():DatabaseService { return data as DatabaseService; }
 }
 }
