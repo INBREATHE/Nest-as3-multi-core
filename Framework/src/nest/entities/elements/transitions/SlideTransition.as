@@ -28,8 +28,8 @@ package nest.entities.elements.transitions
 		
 		private const
 			_scaleOffsetPos	: Number = (1 - SCALE_DOWN_VALUE) * 0.5
-		,	_scaleOffsetX 	: Number = Application.SCREEN_WIDTH * _scaleOffsetPos
-		,	_scaleOffsetY 	: Number = Application.SCREEN_HEIGHT * _scaleOffsetPos
+		,	_scaleOffsetX 	: Number = Screen.sw * _scaleOffsetPos
+		,	_scaleOffsetY 	: Number = Screen.sh * _scaleOffsetPos
 		
 		public function SlideTransition()
 		{
@@ -58,7 +58,7 @@ package nest.entities.elements.transitions
 		
 		override public function show(screen:Screen, isReturn:Boolean):void
 		{
-			screen.x = Application.SCREEN_WIDTH * (isReturn ? -1 : 1);
+			screen.x = Screen.sw * (isReturn ? -1 : 1);
 			
 			_slideOverTween = new Tween(screen, SLIDE_OVER_TIME, SLIDE_OVER_EASE);
 			_slideOverTween.moveTo(0, 0);

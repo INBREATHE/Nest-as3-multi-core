@@ -54,7 +54,8 @@ public class Application extends Sprite
 
 	protected var _notifier	: INotifier;
 
-	public function Application() {
+	public function Application() 
+	{
 		_that = this;
 
 		this.addElement(_screensContainer);

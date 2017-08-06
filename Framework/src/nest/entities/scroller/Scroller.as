@@ -25,10 +25,6 @@ public class Scroller
 {
 	private const
 		sf					:Number 	= Application.SCALEFACTOR
-	,	sw					:uint	 	= Application.SCREEN_WIDTH
-	,	sh					:uint	 	= Application.SCREEN_HEIGHT
-	,	swhalf				:Number 	= sw * 0.5
-	,	shhalf				:Number 	= sh * 0.5
 
 	,	MOVE_FRICTION		:Number 	= 0.8
 	,	SCALE_TIME			:Number 	= 0.15
@@ -40,7 +36,6 @@ public class Scroller
 	,	ALPHA_RIGHT			:Number 	= 1 + ALPHA_LEFT
 	,	SCROLL_SPEED		:Number 	= 0.0015
 	,	SWIPE_SPEED			:Number 	= 1.5
-
 
 	private var
 		__limitXMin			:int 		= int.MAX_VALUE
@@ -108,8 +103,20 @@ public class Scroller
 	,	_counter			:int 		= int.MAX_VALUE
 
 	,	_container			:ScrollContainer
+	
+	,	areaWidth					:uint	 	= 0
+	,	areaHeight					:uint	 	= 0
+	,	areaWidthHalf				:Number 	= 0
+	,	areaHeightHalf				:Number 	= 0
 	;
-	public function Scroller() { }
+		
+	public function Scroller(w:uint, h:uint) 
+	{
+		this.areaWidth = w;
+		this.areaHeight = h;
+		areaWidthHalf = w * 0.5;
+		areaHeightHalf = h * 0.5;
+	}
 
 	public function reset():void
 	{
@@ -146,8 +153,8 @@ public class Scroller
 		_holdStartCallback = _container.holdStartFunction;
 		_holdEndCallback = _container.holdEndFunction;
 
-		__limitTapMin = swhalf - __itemSizeHalf;
-		__limitTapMax = swhalf + __itemSizeHalf;
+		__limitTapMin = areaWidthHalf - __itemSizeHalf;
+		__limitTapMax = areaWidthHalf + __itemSizeHalf;
 
 		__childNum = _container.numChildren;
 
@@ -334,12 +341,12 @@ public class Scroller
 				_isFindCurrent = true;
 			}
 
-			if ( _targetPos < swhalf ) {
-				_targetPropScreen = _targetPos / swhalf;
+			if ( _targetPos < areaWidthHalf ) {
+				_targetPropScreen = _targetPos / areaWidthHalf;
 				_targetAlpha = Math.min(1, ALPHA_LEFT + _targetPropScreen);
 			} else {
-				_targetPos -= swhalf;
-				_targetPropScreen = _targetPos / swhalf;
+				_targetPos -= areaWidthHalf;
+				_targetPropScreen = _targetPos / areaWidthHalf;
 				_targetAlpha = Math.min(1, ALPHA_RIGHT - _targetPropScreen);
 			}
 

@@ -42,6 +42,7 @@ public final class CacheService implements IServiceLocale
 		if(!_isSupported && path) {
 			_path = String(path) + FILE_NAME;
 			_oData = GetCacheDataFromFile(_path);
+			return;
 		}
 
 		//http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language

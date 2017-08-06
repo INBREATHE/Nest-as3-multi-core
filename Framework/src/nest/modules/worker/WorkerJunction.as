@@ -63,7 +63,7 @@ public final class WorkerJunction extends Junction
 				);
 				teeMerge.connect(requestFilter);
 				this.registerPipe( WorkerModule.WRK_IN, Junction.INPUT, teeMerge );
-				trace("> Nest -> WorkerJunction : MASTER - READY!");
+				//trace("> Nest -> WorkerJunction : MASTER - READY!");
 			}
 			else // The WRKOUT pipe from the worker to all modules or main
 			{

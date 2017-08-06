@@ -11,7 +11,7 @@ import nest.patterns.command.SimpleCommand;
 public class ReportCommand extends SimpleCommand
 {
 	protected final function Report(name:String, params:Object):void {
-		this.exec(ApplicationCommand.SINGLE_REPORT, params, name);
+//		this.exec(ApplicationCommand.SINGLE_REPORT, params, name);
 	}
 }
 }

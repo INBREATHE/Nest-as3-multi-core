@@ -20,7 +20,7 @@ public final class ScrollCounter extends Canvas
 
 	private const
 		scalefactor				: Number 	= Application.SCALEFACTOR
-	,	COUNTER_SIZE			: int 		= 10 * scalefactor
+	,	COUNTER_SIZE			: int 		= 12 * scalefactor
 	,	COUNTER_RADIUS			: int 		= COUNTER_SIZE * 0.5
 	,	COUNTER_DELTA_X			: int		= 8 * scalefactor
 	,	COUNTER_OFFSET			: int 		= COUNTER_SIZE + COUNTER_DELTA_X
@@ -32,7 +32,7 @@ public final class ScrollCounter extends Canvas
 	,	_type					: int
 	;
 
-	public function ScrollCounter(type:int = TYPE_CIRCLE, color:uint = 0xCCC, activeColor:uint = 0x232323) {
+	public function ScrollCounter(type:int = TYPE_CIRCLE, color:uint = 0xCCCCCC, activeColor:uint = 0x232323) {
 		_type = type;
 		_color = color;
 		_colorActive = activeColor;
