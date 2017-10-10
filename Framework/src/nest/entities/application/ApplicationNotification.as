@@ -7,18 +7,20 @@ package nest.entities.application
 {
 public final class ApplicationNotification
 {
+	private static const PREFIX:String = "note_nest_application_";
 	static public const
-		PREPARE						: String = "note_nest_application_prepare"
-	,	INITIALIZED					: String = "note_nest_application_initialized"
-	,	SHOW_SCREEN					: String = "note_nest_application_showscreen"
-	,	HIDE_SCREEN					: String = "note_nest_application_hidescreen"
-	,	ADD_ELEMENT					: String = "note_nest_application_addelement"
-	,	REMOVE_ELEMENT				: String = "note_nest_application_removeelement"
-	,	LANGUAGE_CHANGED			: String = "note_nest_application_language_changed"
+		PREPARE					: String = PREFIX + "prepare"
+	,	VIEW_READY				: String = PREFIX + "initialized"
+	,	INITIALIZED				: String = PREFIX + "initialized"
+	,	SHOW_SCREEN				: String = PREFIX + "showscreen"
+	,	HIDE_SCREEN				: String = PREFIX + "hidescreen"
+	,	ADD_ELEMENT				: String = PREFIX + "addelement"
+	,	REMOVE_ELEMENT			: String = PREFIX + "removeelement"
+	,	LANGUAGE_CHANGED		: String = PREFIX + "language_changed"
 
-	,	POPUP_CLOSED				: String = "note_nest_application_popupclosed"
-	,	POPUP_OPENED				: String = "note_nest_application_popupopened"
-	,	ANDROID_BACK_BUTTON			: String = "note_nest_application_androidbackbutton"
+	,	POPUP_CLOSED			: String = PREFIX + "popupclosed"
+	,	POPUP_OPENED			: String = PREFIX + "popupopened"
+	,	ANDROID_BACK_BUTTON		: String = PREFIX + "androidbackbutton"
 	;
 }
 }

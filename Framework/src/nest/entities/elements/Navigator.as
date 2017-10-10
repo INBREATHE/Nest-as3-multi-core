@@ -5,6 +5,9 @@
 */
 package nest.entities.elements
 {
+import flash.system.System;
+import flash.utils.setTimeout;
+
 import nest.entities.elements.transitions.Transition;
 import nest.entities.screen.Screen;
 
@@ -12,11 +15,8 @@ import starling.display.DisplayObjectContainer;
 
 public class Navigator
 {
-	private var
-		_container	: DisplayObjectContainer
-	;
-
-	private var _transition:Transition;
+	private var _container	: DisplayObjectContainer;
+	private var _transition	: Transition;
 
 	public function Navigator(container:DisplayObjectContainer, transition:Transition) {
 		_container = container;
@@ -35,7 +35,11 @@ public class Navigator
 			_container.addChild(screen);
 			screen.show();
 		} else {
-			_transition.show(screen, isReturn);
+			setTimeout(function():void { 
+				_transition.show(screen, isReturn);
+			}, 10);
+			System.gc;
+			System.pauseForGCIfCollectionImminent();
 		}
 	}
 
@@ -47,7 +51,7 @@ public class Navigator
 		if(_transition.isHidePossible) {
 			_transition.hide(screen, isReturn);
 		} else {
-			screen.hide(function():void{
+			screen.hide(function():void {
 				_transition.hide(screen, isReturn);
 			});
 		}

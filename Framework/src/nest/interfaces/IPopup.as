@@ -5,10 +5,11 @@
 */
 package nest.interfaces
 {
-public interface IPopup
+	import nest.entities.popup.PopupData;
+
+public interface IPopup extends IEntity
 {
-	function setup(data:Object):void;
-	function localize(data:XMLList):void;
+	function setup(data:PopupData):void;
 	function prepare(params:Object):void;
 	function show():void;
 	function hide(next:Function):void;

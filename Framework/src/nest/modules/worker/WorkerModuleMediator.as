@@ -9,7 +9,6 @@ import nest.modules.pipes.interfaces.IPipeAware;
 import nest.modules.pipes.interfaces.IPipeFitting;
 import nest.modules.pipes.plumbing.Junction;
 import nest.modules.pipes.plumbing.Pipe;
-import nest.modules.pipes.plumbing.TeeMerge;
 import nest.patterns.mediator.Mediator;
 import nest.patterns.observer.NFunction;
 
@@ -17,6 +16,13 @@ public class WorkerModuleMediator extends Mediator
 {
 	public static const NAME:String = 'WorkerModuleMediator';
 
+	/**
+	 * This is intermediate object which connect other modules to worker module
+	 * - with Junction
+	 * - as IPipeAware
+	 * 
+	 * It lives in application (view) facade
+	 */
 	public function WorkerModuleMediator( module: WorkerModule )
 	{
 		super( module );
@@ -40,38 +46,35 @@ public class WorkerModuleMediator extends Mediator
 
 		workerOutPipe.channelID = workerInPipe.channelID;
 
-		worker.acceptInputPipe( WorkerModule.WRK_IN, workerInPipe );
+		workerModule.acceptInputPipe( WorkerModule.WRK_IN, workerInPipe );
 		module.acceptOutputPipe( WorkerModule.TO_WRK, workerInPipe );
 
-		worker.acceptOutputPipe( WorkerModule.WRK_OUT, workerOutPipe );
+		workerModule.acceptOutputPipe( WorkerModule.WRK_OUT, workerOutPipe );
 		module.acceptInputPipe( WorkerModule.FROM_WRK, workerOutPipe );
 	}
 
 	private function ConnectThrowJunction( body:Object, type:String ):void
 	{
-		trace("> Nest -> ", "> WorkerModuleMediator : ConnectThrowJunction", body);
+		trace("\n> Nest -> WorkerModuleMediator : ConnectThrowJunction", body);
 
-		const inputModuleJunction	: Junction 		= body as Junction;
-		const inputModuleToWrkPipe	: IPipeFitting 	= inputModuleJunction.retrievePipe(WorkerModule.TO_WRK);
-		const inputModuleInTee		: TeeMerge 		= inputModuleJunction.retrievePipe(WorkerModule.FROM_WRK) as TeeMerge;
+		const junction: Junction = body as Junction;
 
-		if(inputModuleToWrkPipe == null || inputModuleToWrkPipe == null) throw new Error("Connect through junction impossible - no pipes");
+		const toWorker		: IPipeFitting 	= junction.retrievePipe( WorkerModule.TO_WRK );
+		const fromWorker	: IPipeFitting 	= junction.retrievePipe( WorkerModule.FROM_WRK );
 
-		// The junction was passed from another module
-		const wrkToInputModulePipe	: Pipe = new Pipe(inputModuleToWrkPipe.channelID);
+		if(toWorker == null || toWorker == null) throw new Error("Connect through junction impossible - no pipes");
 
-		worker.acceptInputPipe( WorkerModule.WRK_IN, 	inputModuleToWrkPipe );
-		worker.acceptOutputPipe( WorkerModule.WRK_OUT, 	wrkToInputModulePipe );
+		// Use junction channelID that was passed from another module
 
-		inputModuleInTee.connectInput(wrkToInputModulePipe);
+		workerModule.acceptInputPipe( WorkerModule.WRK_IN, 	toWorker );
+		/**
+		 * Send notification JunctionMediator.ACCEPT_OUTPUT_PIPE to DataProcessorJunctionMediator
+		 * Which is already initialized from DataProcessor initialize method
+		 */
+		workerModule.acceptOutputPipe( WorkerModule.WRK_OUT, 	fromWorker );
 	}
 
-	/**
-	 * The Worker Module.
-	 */
-	protected function get worker():WorkerModule
-	{
-		return viewComponent as WorkerModule;
-	}
+	// DataProcessor
+	protected function get workerModule():WorkerModule { return viewComponent as WorkerModule; }
 }
 }

@@ -5,13 +5,11 @@
 */
 package nest.interfaces
 {
-public interface IScreen
+public interface IScreen extends IEntity
 {
 	function show():void;
 	function hide(callback:Function = null):void;
 	function build(content:Object):void;
-	function prepare(data:Object):void;
-	function localize(lang:String, data:XMLList=null):void;
 	function clear():void;
 	function onAdded():void;
 	function onRemoved():void;

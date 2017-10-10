@@ -13,9 +13,9 @@ public interface IFacade
 	function set currentLanguage(value:String):void;
 
 	function registerProxy		( proxyClass : Class ) : void;
-	function retrieveProxy		( proxyName : Class ) : IProxy;
-	function removeProxy		( proxyName : String ) : IProxy;
-	function hasProxy			( proxyName : String ) : Boolean;
+	function retrieveProxy		( proxyClass : Class ) : IProxy;
+	function removeProxy		( proxyClass : Class ) : IProxy;
+	function hasProxy			( proxyClass : Class ) : Boolean;
 
 	function registerCommand	( commandName : String, commandClassRef : Class ) : void;
 	function removeCommand		( name : String ) : void;

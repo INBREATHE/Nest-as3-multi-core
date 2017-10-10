@@ -40,7 +40,7 @@ public class MacroCommand extends Notifier implements ICommand, INotifier
 	}
 
 	//==================================================================================================
-	public final function execute( body:Object, type:String ) : void {
+	public function execute( body:Object, type:String ) : void {
 	//==================================================================================================
 		var commandClassRef : Class;
 		var commandInstance : ICommand;

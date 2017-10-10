@@ -29,7 +29,6 @@ public class Notifier implements INotifier
 	}
 
 	public function commandExist( value:String):Boolean { return facade.hasCommand( value ); }
-	public function getCurrentLanguage():String { return Facade(facade).currentLanguage; }
 	public function getMultitonKey():String { return facade.key; }
 }
 }

@@ -47,10 +47,12 @@ public final class FileUtils
 	static public function writeBytesToFile(path:String, bytes:ByteArray, compression:Boolean = false):Boolean {
 		var result:Boolean = true;
 
+		trace("> FileUtils -> writeBytesToFile: begins");
 		const file : File = File.applicationDirectory.resolvePath(path);
+		trace("> FileUtils -> writeBytesToFile: file =", file.exists, file.nativePath);
 		const fileStream : FileStream = new FileStream();
-
 		if(compression) bytes.compress(CompressionAlgorithm.LZMA);
+		trace("> FileUtils -> writeBytesToFile: compressed =" + compression);
 
 		fileStream.open(file, FileMode.WRITE);
 		fileStream.writeBytes(bytes);

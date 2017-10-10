@@ -6,21 +6,23 @@
 package nest.services.server 
 {
 import nest.entities.application.ApplicationCommand;
-import nest.interfaces.ILocalize;
-import nest.interfaces.IProxy;
-import nest.patterns.proxy.Proxy;
+import nest.services.localization.LanguageDependentProxy;
 import nest.services.server.ServerService;
 import nest.services.server.consts.ServerRequestType;
 import nest.services.server.entities.IServerData;
 import nest.services.server.entities.ServerProcess;
 import nest.services.server.entities.ServerResponse;
 
-public class ServerProxy extends Proxy implements IProxy, ILocalize
+public class ServerProxy extends LanguageDependentProxy
 {
 	public function ServerProxy() {
 		super(ServerService.getInstance());
 		_server.addEventListener(ServerResponse.COMPLETE, HandleServerRespond);
 	}
+	
+	//==================================================================================================
+	override public function onRegister():void { trace(">\t ServerProxy: Registered"); }
+	//==================================================================================================
 
 	//==================================================================================================
 	public function serverProcess(type:String, process:ServerProcess):void {
@@ -41,9 +43,10 @@ public class ServerProxy extends Proxy implements IProxy, ILocalize
 	}
 
 	//==================================================================================================
-	public function setupLanguage(value:String):void {
+	override public function languageChanged():void { 
 	//==================================================================================================
-		_server.language = value;
+		_server.language = this.facade.currentLanguage; 
+		trace(">\t ServerProxy: languageChanged");  
 	}
 
 	private function get _server():ServerService { return ServerService(data); }

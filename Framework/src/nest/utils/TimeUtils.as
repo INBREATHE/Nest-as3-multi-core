@@ -56,7 +56,7 @@ public final class TimeUtils
 		const d:uint = Math.floor(sec / DAY_IN_SECONDS);
 		const h:uint = Math.floor(sec / HOUR_IN_SECONDS);
 		const m:uint = Math.floor(his / MINUTE_IN_SECONDS);
-		const s:uint = Math.floor(his % MINUTE_IN_SECONDS);
+		const s:uint = Math.ceil(his % MINUTE_IN_SECONDS);
 
 		TIMECODE[0] = d == 0 ? "" : String(d) + ":";
 		TIMECODE[1] = h == 0 ? "" : ((h < 10 ? "0" + String(h) : String(h)) + ":");

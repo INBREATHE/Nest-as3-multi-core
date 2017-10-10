@@ -6,13 +6,13 @@
 package nest.patterns.facade
 {
 import flash.utils.Dictionary;
-import flash.utils.getQualifiedClassName;
 
 import nest.core.Controller;
 import nest.core.Model;
 import nest.core.View;
 import nest.interfaces.IController;
 import nest.interfaces.IFacade;
+import nest.interfaces.ILanguageDependent;
 import nest.interfaces.IMediator;
 import nest.interfaces.IModel;
 import nest.interfaces.INotification;
@@ -60,14 +60,17 @@ public class Facade implements IFacade
 	// PROPERTIES
 	//========================================================================================================================================
 	public function get currentLanguage():String { return _language; }
-	public function set currentLanguage(value:String):void { _language = value; }
+	public function set currentLanguage(value:String):void {
+		_language = value;
+		(model as ILanguageDependent).languageChanged();
+	}
 	//========================================================================================================================================
 
 	// INITIALIZE
 	//========================================================================================================================================
-	protected function initializeController()	:void { if ( controller != null ) return; else controller = Controller.getInstance( multitonKey ); }
-	protected function initializeModel()		:void { if ( model != null ) return; else model = Model.getInstance( multitonKey ); }
-	protected function initializeView()			:void { if ( view != null ) return; else view = View.getInstance( multitonKey ); }
+	protected function initializeController()	:void { if ( controller == null ) controller = Controller.getInstance( multitonKey ); }
+	protected function initializeModel()		:void { if ( model == null ) model = Model.getInstance( multitonKey ); }
+	protected function initializeView()			:void { if ( view == null ) view = View.getInstance( multitonKey ); }
 	//========================================================================================================================================
 
 	// REGISTER
@@ -85,7 +88,7 @@ public class Facade implements IFacade
 
 	// HAS
 	//========================================================================================================================================
-	public function hasProxy			( proxyName:String ) 			: Boolean 	{ return model.hasProxy( proxyName ); }
+	public function hasProxy			( proxyClass:Class ) 			: Boolean 	{ return model.hasProxy( proxyClass ); }
 	public function hasProcess			( process:Class ) 				: Boolean 	{ return false; }
 	public function hasCommand			( commandName:String ) 			: Boolean 	{ return controller.hasCommand( commandName ); }
 	public function hasMediator			( mediatorName:String ) 		: Boolean 	{ return view.hasMediator( mediatorName ); }
@@ -93,13 +96,13 @@ public class Facade implements IFacade
 
 	// RETRIEVE
 	//========================================================================================================================================
-	public function retrieveProxy 		( proxyName:Class )				: IProxy 	{ return model.retrieveProxy ( getQualifiedClassName(proxyName) ); }
+	public function retrieveProxy 		( proxyClass:Class )			: IProxy 	{ return model.retrieveProxy ( proxyClass ); }
 	public function retrieveMediator	( mediatorName:String )			: IMediator { return view.retrieveMediator( mediatorName ) as IMediator; }
 	//========================================================================================================================================
 
 	// REMOVE
 	//========================================================================================================================================
-	public function removeProxy 		( proxyName:String )			: IProxy 	{ return model.removeProxy ( proxyName ); }
+	public function removeProxy 		( proxyClass:Class )			: IProxy 	{ return model.removeProxy ( proxyClass ); }
 	public function removeProcess 		( processName:Class )			: void	 	{ }
 	public function removeCommand		( commandName:String )			: void 		{ controller.removeCommand( commandName ); }
 	public function removeMediator		( mediatorName:String ) 		: IMediator { return view.removeMediator( mediatorName ); }

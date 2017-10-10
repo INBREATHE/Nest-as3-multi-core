@@ -8,10 +8,10 @@ import nest.interfaces.IElement;
 
 import starling.display.Sprite;
 
-public class Element extends Sprite implements IElement{
+public class Element extends Sprite implements IElement {
     /* INTERFACE nest.interfaces.IElement */
-    private var _prioritet:int = 0;
-    public function set prioritet(value:int):void { _prioritet = value; }
-    public function get prioritet():int { return _prioritet; }
+    private var _order:int = 0;
+    public function set order(value:int):void { _order = value; }
+    public function get order():int { return _order; }
 }
 }

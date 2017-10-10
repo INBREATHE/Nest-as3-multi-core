@@ -5,12 +5,15 @@
 */
 package nest.entities.screen
 {
+import nest.entities.EntityType;
 import nest.interfaces.IScreen;
+
 import starling.display.Sprite;
 
 public class Screen extends Sprite implements IScreen
 {
 	public static const PREVIOUS:String = "nest_screen_mark_previous";
+	
 	public static var
 		sf					: Number	= 0
 	,	sw					: uint 		= 0
@@ -19,14 +22,10 @@ public class Screen extends Sprite implements IScreen
 	,	shhalf				: uint		= 0
 	
 	;
-	protected var _currentLanguage:String;
 	protected var _locale:XMLList;
 
-	public var isShown	: Boolean = false;
-	public var isBuild	: Boolean = false;
-	// Should it be clear from Stage
-	// Work only with _rebuild == true (ScreenMediator)
-	public var isClearWhenRemove:Boolean = false;
+	public var isShown		: Boolean = false;
+	public var rebuildable	: Boolean = false;
 
 	public function Screen(name:String) {
 		this.name = name;
@@ -47,17 +46,17 @@ public class Screen extends Sprite implements IScreen
 		this.touchable = false;
 		if(callback) callback.call();
 	}
-
+	
+	//==================================================================================================
+	public function screenHidden():void { }
 	//==================================================================================================
 
 	/**
-	 *  This function called when screen remove but only:
-	 * if(_rebuild && screen.isClearWhenRemove) screen.clear();
-	 * from ScreenMediator
+	 * This function called from ScreenMediator after screen removed when:
+	 * if(_rebuild) screen.clear();
 	*/
 	public /*abstract*/ function clear():void { }
 	public /*abstract*/ function build(content:Object):void { }
-	public /*abstract*/ function prepare(content:Object):void {  }
 
 	public function onAdded():void { }
 	public function onRemoved():void { }
@@ -67,10 +66,18 @@ public class Screen extends Sprite implements IScreen
 	 * with parameter: body = language
 	 * Initial command SetupLanguageMiscCommand
 	 */
-	public function localize(lang:String, data:XMLList = null):void {
-		_currentLanguage = lang;
-		_locale = data;
+	public function localize(localeData:XMLList):void {
+		_locale = localeData;
 	}
+	
+	//==================================================================================================
+	public function disableInteractivity():void { this.touchable = false; }
+	public function enableInteractivity():void { this.touchable = true; }
+	//==================================================================================================
+	
+	public function getEntityType():uint { return EntityType.SCREEN; }
+	public function getLocaleID( ):String { return this.name; }
+	
 	//==================================================================================================
 }
 }

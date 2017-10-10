@@ -87,7 +87,7 @@ public class Controller implements IController
 	//==================================================================================================
 	public function registerCommand( commandClassName : String, commandClassRef : Class ) : void {
 	//==================================================================================================
-//		trace("> Nest -> ", _multitonKey, "> registerCommand : commandClassName", commandClassName);
+//		trace("> Nest ->", _multitonKey, "> Controller : registerCommand -", commandClassRef);
 		Injector.mapTarget( commandClassRef, _multitonKey );
 		_commandMap[ commandClassName ] = commandClassRef;
 	}
@@ -98,7 +98,7 @@ public class Controller implements IController
 		const commandInstance:ICommand = new commandClassRef();
 		commandInstance.initializeNotifier( _multitonKey );
 		Injector.mapInject( commandInstance );
-//		trace("registerPoolCommand", commandClassRef);
+//		trace("> Nest ->", _multitonKey, "> Controller : registerPoolCommand -", commandClassRef);
 		_commandMap[ commandClassName ] = commandInstance;
 	}
 

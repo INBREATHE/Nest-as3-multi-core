@@ -9,10 +9,20 @@ public final class PopupEventData
 {
 	public var body:Object;
 	public var type:String;
+
+	private var _callback:Function;
 	public function PopupEventData(body:Object, type:String = null)
 	{
 		this.type = type;
 		this.body = body;
 	}
+	
+	public function onComplete(callback:Function):PopupEventData {
+		_callback = callback;
+		return this;
+	}
+
+	public function get callback():Function{ return _callback; }
+
 }
 }

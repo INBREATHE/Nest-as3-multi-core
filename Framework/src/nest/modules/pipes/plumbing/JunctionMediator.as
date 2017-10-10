@@ -59,8 +59,10 @@ package nest.modules.pipes.plumbing
 		 */
 		override public function handleNotification( note:INotification ):void
 		{
-			const connectionTeeName	: String = note.getType();
+			const connectionChannel	: String = note.getType();
 			const pipeToConnect		: IPipeFitting = note.getBody() as IPipeFitting;
+			
+			trace("\n> Nest -> JunctionMediator:", this, connectionChannel, pipeToConnect);
 			
 			switch( note.getName() )
 			{
@@ -68,44 +70,53 @@ package nest.modules.pipes.plumbing
 				// register the pipe and if successful 
 				// set this mediator as its listener
 				case JunctionMediator.ACCEPT_INPUT_PIPE:
-//					trace("\t\t : ACCEPT_INPUT_PIPE =", connectionTeeName);
-					if(junction.hasInputPipe(connectionTeeName)) 
+					trace("\t\t : ACCEPT_INPUT_PIPE channel:", connectionChannel);
+					trace("\t\t : hasInputPipe =", junction.hasInputPipe(connectionChannel));
+					if(junction.hasInputPipe(connectionChannel))
 					{
-						MergeInputPipeWithTee(pipeToConnect, connectionTeeName);
+						MergePipeToInputChannel(pipeToConnect, connectionChannel);
 					} 
-					else if(junction.registerPipe(connectionTeeName, Junction.INPUT, pipeToConnect))
+					else if(junction.registerPipe(connectionChannel, Junction.INPUT, pipeToConnect))
 					{
-						junction.addPipeListener(connectionTeeName, this, handlePipeMessage);		
+						junction.addPipeListener(connectionChannel, this, handlePipeMessage);
 					}
 					break;
 				
 				// accept an output pipe
 				case JunctionMediator.ACCEPT_OUTPUT_PIPE:
-//					trace("\t\t : ACCEPT_OUTPUT_PIPE =", connectionTeeName);
-					if(junction.hasOutputPipe(connectionTeeName)) 
+					trace("\t\t : ACCEPT_OUTPUT_PIPE channel =", connectionChannel);
+					trace("\t\t : hasInputPipe =", junction.hasOutputPipe(connectionChannel));
+					if(junction.hasOutputPipe(connectionChannel))
 					{
-						AddOutputChannelToTee(pipeToConnect, connectionTeeName);
-					} else {
-						junction.registerPipe( connectionTeeName, Junction.OUTPUT, pipeToConnect );
+						AddPipeToOutputChannel(pipeToConnect, connectionChannel);
+					}
+					else
+					{
+						junction.registerPipe( connectionChannel, Junction.OUTPUT, pipeToConnect );
 					}
 					break;
 			}
 		}
 		
-		private function AddOutputChannelToTee(outputPipe:IPipeFitting, teeName:String):void
+		private function AddPipeToOutputChannel(outputPipe:IPipeFitting, channelName:String):void
 		{
-			const teeForOutput:IPipeFitting = junction.retrievePipe(teeName) as IPipeFitting;
-//			trace("\t\t : Connect =", teeForOutput.pipeName, outputPipe);
-			teeForOutput.connect(outputPipe);
-//			trace(teeName, "TEE COUNT:", TeeSplit(teeForOutput).outputsCount());
+			const outputChannelPipe:IPipeFitting = junction.retrievePipe(channelName) as IPipeFitting;
+			trace("\t\t : AddPipeToOutputChannel -> Connect =", outputChannelPipe, outputPipe);
+			if(outputChannelPipe) {
+				outputChannelPipe.connect(outputPipe);
+				trace("\t\t :", "PIPES COUNT:", SplitPipe(outputChannelPipe).outputsCount());
+			}
 		}
 		
-		private function MergeInputPipeWithTee(inputPipe:IPipeFitting, teeName:String):void
+		private function MergePipeToInputChannel(inputPipe:IPipeFitting, channelName:String):void
 		{
-			const teeForInput : TeeMerge = junction.retrievePipe(teeName) as TeeMerge;
-//			trace("\t\t : Connect =", teeForInput, inputPipe);
-			teeForInput.connectInput(inputPipe);
-//			trace(teeName, "CHAIN LENGTH:", teeForInput.chainLength);
+			const pipeForInput : MergePipe = junction.retrievePipe(channelName) as MergePipe;
+			trace("\t\t : MergeInputPipeWithTee -> Connect =", pipeForInput, inputPipe);
+			if(pipeForInput) {
+				pipeForInput.connectInput(inputPipe);
+				trace("\t\t :", "CHAIN LENGTH:", pipeForInput.chainLength);
+			}
+
 		}
 		
 		/**
@@ -124,7 +135,5 @@ package nest.modules.pipes.plumbing
 		{
 			return viewComponent as Junction;
 		}
-		
-	
 	}
 }

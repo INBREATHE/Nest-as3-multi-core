@@ -6,18 +6,21 @@
 package nest.services.reports
 {
 import nest.entities.application.ApplicationCommand;
-import nest.interfaces.ILocalize;
-import nest.patterns.proxy.Proxy;
 import nest.services.cache.entities.CacheReport;
+import nest.services.localization.LanguageDependentProxy;
 import nest.services.reports.entities.ReportResponce;
 
-public final class ReportProxy extends Proxy implements ILocalize
+public final class ReportProxy extends LanguageDependentProxy
 {
 	public function ReportProxy()
 	{
 		super(ReportService.getInstance());
 		_report.addEventListener(ReportResponce.COMPLETE, HandleReportResponceComplete);
 	}
+	
+	//==================================================================================================
+	override public function onRegister():void { trace(">\t ReportProxy: Registered"); }
+	//==================================================================================================
 
 	public function get currentTime():uint { return _report.currentTime; }
 
@@ -33,8 +36,13 @@ public final class ReportProxy extends Proxy implements ILocalize
 		this.exec( ApplicationCommand.CACHE_CLEAR_REPORT, event.report );
 	}
 
-	public function setupLanguage(value:String):void { _report.language = value; }
-
+	//==================================================================================================
+	override public function languageChanged():void {
+	//==================================================================================================
+		_report.language = this.facade.currentLanguage; 
+		trace(">\t ReportProxy: languageChanged"); 
+	}
+	
 	private function get _report():ReportService { return ReportService(data); }
 }
 }

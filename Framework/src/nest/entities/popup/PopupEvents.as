@@ -7,10 +7,13 @@ package nest.entities.popup
 {
 public final class PopupEvents
 {
-	static public const COMMAND_FROM_POPUP		: String = "event_popup_commandFromPopup";
-	static public const TAP_HAPPEND_OK			: String = "event_popup_tapHappendOk";
-	static public const TAP_HAPPEND_CLOSE		: String = "event_popup_tapHappendClose";
-	static public const SHOW_CONFIRM_POPUP		: String = "event_popup_show_confirm_popup";
+	private static const PREFIX:String = "event_popup_";
+	static public const 
+		COMMAND_FROM_POPUP		: String = PREFIX + "commandFromPopup"
+	,	TAP_HAPPEND_OK			: String = PREFIX + "tapHappendOk"
+	,	TAP_HAPPEND_CLOSE		: String = PREFIX + "tapHappendClose"
+	, 	POPUP_SHOWN				: String = PREFIX + "popup_shown"
+	;
 
 }
 }

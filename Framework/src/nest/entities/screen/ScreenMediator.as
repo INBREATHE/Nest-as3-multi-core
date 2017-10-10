@@ -16,55 +16,51 @@ import starling.events.Event;
 public class ScreenMediator extends Mediator implements IMediator
 {
 	private var
-		_rebuild			: Boolean = false
-	,	_dataCommand		: String = ""
+		_dataRequest		: String = ""
 	,	_dataNotification	: String = ""
+	,	_dataForScreen		: ScreenData
+	,	_isReady			: Boolean
 	;
 
-	public var
-		isBackPossible:Boolean = false;
+	public var isBackPossible:Boolean = false;
 
 	public function ScreenMediator(
 		viewComponent		: Object,
 		dataNotification	: String,
-		dataCommand			: String = null,
-		rebuild				: Boolean = false
+		dataCommand			: String = null
 	) {
 		super(viewComponent);
 
-		this._rebuild = rebuild;
-		this._dataCommand = dataCommand;
+		screen.rebuildable = true;
+		
+		this._dataRequest = dataCommand;
 		this._dataNotification = dataNotification;
 
 		screen.addEventListener(Event.ADDED_TO_STAGE, Handle_AddComponentToStage);
 	}
 
+	public function get isReady():Boolean { return _isReady; }
+
 	/**
 	 * When screen mediator ready to use we first register him in ScreenProxy
 	 */
-	override public function onRegister():void {
-		this.exec( ScreenCommand.REGISTER, viewComponent, mediatorName );
-	}
-
+	override public function onRegister():void { this.exec( ScreenCommand.REGISTER, viewComponent, mediatorName ); }
+	
 	private function Handle_AddComponentToStage(e:Event):void {
-//		trace("> Nest -> ScreenMediator > Handle_AddComponentStage", screen);
 		screen.onAdded();
-		OnScreenAddedToStage();
+		SetupComponentListeners();
 		screen.removeEventListener(	Event.ADDED_TO_STAGE, 		Handle_AddComponentToStage);
 		screen.addEventListener(	Event.REMOVED_FROM_STAGE, 	Handle_RemoveComponentFromStage);
 		screen.addEventListener(	Event.TRIGGERED, 			ComponentTrigger);
 	}
 
 	private function Handle_RemoveComponentFromStage(e:Event):void {
-//		trace("> Nest -> ScreenMediator > Handle_RemoveComponentStage", screen);
 		screen.onRemoved();
-		OnScreenRemovedFromStage();
+		RemoveComponentListeners();
 		screen.addEventListener(	Event.ADDED_TO_STAGE, 		Handle_AddComponentToStage);
 		screen.removeEventListener(	Event.REMOVED_FROM_STAGE, 	Handle_RemoveComponentFromStage);
 		screen.removeEventListener(	Event.TRIGGERED, 			ComponentTrigger);
-		if(_rebuild && screen.isClearWhenRemove) {
-			screen.clear();
-		}
+		if(screen.rebuildable) screen.clear();
 	}
 
 	/**
@@ -93,12 +89,6 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	
 	//==================================================================================================
-	protected function OnScreenAddedToStage():void {}
-	protected function OnScreenRemovedFromStage():void {}
-	protected function OnScreenShown():void {}
-	//==================================================================================================
-	
-	//==================================================================================================
 	override public function listNotificationInterests():Vector.<String> {
 	//==================================================================================================
 		return new <String>[
@@ -116,7 +106,10 @@ public class ScreenMediator extends Mediator implements IMediator
 //		trace("> Nest -> ScreenMediator > handleNotification:", notification.getName());
 		const body:Object = notification.getBody();
 		const name:String = notification.getName();
-		if(name == _dataNotification) { ComponentDataReady( body ); ContentReady(); }
+		if(name == _dataNotification) { 
+			SetupScreenData( body );
+			ContentReady();
+		}
 		else if(name == ApplicationNotification.LANGUAGE_CHANGED) LocalizeScreen();
 		else if(name == ApplicationNotification.ANDROID_BACK_BUTTON && screen.isShown && isBackPossible) Handle_Android_BackButton();
 		else if(name == ApplicationNotification.POPUP_CLOSED) Handle_PopupClosed(uint(body), notification.getType())
@@ -124,47 +117,43 @@ public class ScreenMediator extends Mediator implements IMediator
 	}
 	
 	//==================================================================================================
-	private function LocalizeScreen():void {
-	//==================================================================================================
-		
-	}
-
-	//==================================================================================================
-	protected function ContentReady(isReturn:Boolean = false):void {
-	//==================================================================================================
-//		trace("> Nest -> ScreenMediator > ContentReady:", screen);
-		SetupComponentListeners();
-		SetupScrollerIfAvailable();
-		screen.isBuild = !_rebuild;
-		this.isBackPossible = true;
-		this.send( ApplicationNotification.SHOW_SCREEN, Screen(viewComponent), isReturn ? "" : null );
-	}
-
-	//==================================================================================================
-	protected /*abstract*/ function ComponentDataReady(data:Object):void { }
+	protected /*abstract*/ function LocalizeScreen():void { }
+	protected /*abstract*/ function SetupScreenData(data:Object):void { }
 	protected /*abstract*/ function ComponentTrigger(e:Event):void { }
 	protected /*abstract*/ function SetupComponentListeners():void { }
 	protected /*abstract*/ function RemoveComponentListeners():void { }
 	//==================================================================================================
+	
+	//==================================================================================================
+	protected function ContentReady():void { 
+	//==================================================================================================
+		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable )
+			this.send( ScrollerNotifications.SETUP_SCROLLER, ScrollScreen(viewComponent).getScrollContainer() );
 
-	//==================================================================================================
-	public function onReturn(screenData:Object):void {
-	//==================================================================================================
-//		trace("> Nest -> ScreenMediator > onReturn:", Screen(viewComponent));
-		ContentReady(true);
+		if(_dataForScreen && _dataForScreen.hasContentReadyCallback()) 
+			_dataForScreen.contentReadyCallback();
+		
+		this.send( ApplicationNotification.SHOW_SCREEN, this.screen, _dataForScreen.previous ? Screen.PREVIOUS : screen.name );
+
+		_dataForScreen = null;
+		_isReady = true;
 	}
 
 	/**
 	 * This method is called from ChangeScreenCommand
-	 * 	if(goPrevious) screenMediator.onReturn();
-	 *	else screenMediator.onPrepare(screenData);
+	 * screenMediator.onPrepareDataForScreen(screenData);
 	 */
 	//==================================================================================================
-	public function onPrepare(screenData:Object = null):void {
+	public function prepareDataForScreen( screenData:ScreenData ):void {
 	//==================================================================================================
-//		trace("> Nest -> ScreenMediator > onPrepare:", Screen(viewComponent));
-		if(!screen.isBuild) this.getDataForScreen( screenData );
-		else ContentReady();
+		_dataForScreen = screenData;
+		if( screen.rebuildable ) {
+			_isReady = false;
+			const getDataMethod:Function = facade.hasCommand(_dataRequest) ? this.exec : this.send; 
+			getDataMethod( _dataRequest, _dataForScreen.data, _dataNotification );
+		} else {
+			ContentReady();
+		}
 	}
 
 	/**
@@ -175,33 +164,13 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	public function onLeave():void {
 	//==================================================================================================
-//		trace("> Nest -> ScreenMediator > onLeave:", Screen(viewComponent));
 		/** ADNROID - When we go to game we disable this for screen  */
 		this.isBackPossible = false;
-		RemoveScrollerIfAvailable();
-		RemoveComponentListeners();
+		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable ) 
+			this.send( ScrollerNotifications.RESET_SCROLLER );
 	}
 
-	//==================================================================================================
-	public function getDataForScreen(criteria:Object = null):void {
-	//=================================================================================================
-		this.exec( _dataCommand, criteria );
-	}
-
-	//==================================================================================================
-	private function SetupScrollerIfAvailable():void {
-	//==================================================================================================
-		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable )
-			this.send( ScrollerNotifications.SETUP_SCROLLER, ScrollScreen(viewComponent).getScrollContainer() );
-	}
-
-	//==================================================================================================
-	private function RemoveScrollerIfAvailable():void {
-	//==================================================================================================
-		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable ) this.send( ScrollerNotifications.RESET_SCROLLER );
-	}
-
-	protected  function get screen():Screen { return Screen(viewComponent); }
+	protected function get screen():Screen { return Screen(viewComponent); }
 
 }
 }

@@ -8,7 +8,6 @@ package nest.patterns.command
 import nest.injector.Injector;
 import nest.interfaces.IAsyncCommand;
 import nest.interfaces.ICommand;
-import nest.interfaces.INotifier;
 import nest.patterns.observer.Notifier;
 
 public class AsyncMacroCommand extends Notifier	implements IAsyncCommand
@@ -53,7 +52,7 @@ public class AsyncMacroCommand extends Notifier	implements IAsyncCommand
 
 	public function setOnComplete ( value:Function ) : void { _onComplete = value; }
 
-	public final function execute( body:Object, type:String ) : void {
+	public function execute( body:Object, type:String ) : void {
 		this._body = body;
 		this._type = type;
 		ExecuteNextCommand();
@@ -67,15 +66,14 @@ public class AsyncMacroCommand extends Notifier	implements IAsyncCommand
 			_body 			=	null;
 			_onComplete		=	null;
 			_subCommands 	= 	null;
-			facade		 	= 	null;
 		}
 	}
 
 	private function NextCommand () : void {
-		const commandClassRef	:Class = Class(_subCommands[_counter++]);
-		const commandInstance	:ICommand	= new commandClassRef();
-		const multitonKey		:String = getMultitonKey();
-		const isAsync			:Boolean = commandInstance is IAsyncCommand;
+		const commandClassRef	: Class = Class(_subCommands[_counter++]);
+		const commandInstance	: ICommand = new commandClassRef();
+		const multitonKey		: String = getMultitonKey();
+		const isAsync			: Boolean = commandInstance is IAsyncCommand;
 
 		commandInstance.initializeNotifier( multitonKey );
 		if (isAsync) IAsyncCommand( commandInstance ).setOnComplete( ExecuteNextCommand );
@@ -83,7 +81,7 @@ public class AsyncMacroCommand extends Notifier	implements IAsyncCommand
 		if(Injector.hasTarget(commandClassRef, multitonKey))
 			Injector.injectTo( commandClassRef, commandInstance );
 
-		commandInstance.execute( _body, _type );
+		commandInstance.execute.call(this, _body, _type );
 		if (!isAsync) ExecuteNextCommand();
 	}
 }

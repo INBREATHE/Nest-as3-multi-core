@@ -12,13 +12,13 @@ package nest.entities.elements.transitions
 	{
 		private static const 
 			SCREEN_FADE_TIME	:Number = 0.25125
-		,	SCREEN_FADE_EASE	:String = Transitions.EASE_IN
+		,	SCREEN_FADE_EASE	:String = Transitions.EASE_IN;
 		
 		private var
 			_cover			: Quad
-		,	_screen			: Screen
 		,	_fadeOutTween	: Tween
 		,	_fadeInTween	: Tween
+		;
 		
 		public override function get isShowPossible():Boolean {
 			return _cover.parent == null;
@@ -79,7 +79,7 @@ package nest.entities.elements.transitions
 		//==================================================================================================
 			if (_cover.parent) _cover.removeFromParent();
 			Starling.juggler.removeTweens(_cover);
-			
+
 			if(onShowComplete) onShowComplete(newScreen);
 			SetupTransitions();
 		}

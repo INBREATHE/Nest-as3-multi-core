@@ -5,15 +5,24 @@
 */
 package nest.entities.popup
 {
+import nest.entities.EntityType;
 import nest.entities.elements.Element;
 import nest.interfaces.IPopup;
 
+import starling.events.Event;
+
 public class Popup extends Element implements IPopup
 {
-	protected var _commandID:uint;
-	protected var _commands:Array;
-	protected var _locale:XMLList;
+	protected var 
+		_commandID	: uint
+	,	_commands	: Array
+	,	_locale		: XMLList
 
+	,	_onAdded	: Function
+	,	_onShown	: Function
+	,	_onRemoved	: Function
+	;
+	
 	/**
 	 * This is a number in popupsArray
 	 * It's used for removing popups from screen
@@ -28,17 +37,42 @@ public class Popup extends Element implements IPopup
 	public function Popup( name : String ) {
 		this.name = name;
 		super();
+		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE );
+	}
+	
+	private function Handler_REMOVED_FROM_STAGE(e:Event):void {
+		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
+		this.removeEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
+		
+		_onRemoved && _onRemoved() && (_onRemoved = null) && (_onShown = null);
+	}
+	
+	private function Handler_ADDED_TO_STAGE(e:Event):void {
+		this.removeEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
+		this.addEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
+		
+		_onAdded && _onAdded() && (_onAdded = null);
 	}
 
-	protected function dispatchToExecuteCommand(commandID:uint, data:Object = null, type:String = null):void {
+	protected function dispatchToExecuteCommand(commandID:uint, data:PopupEventData = null):void {
 		_commandID = commandID;
-		if(type != null) data = new PopupEventData(data, type);
 		this.dispatchEventWith(PopupEvents.COMMAND_FROM_POPUP, false, data);
 	}
 
 	//==================================================================================================
-	public function setup( data:Object ):void { }
+	public function setup( popupData:PopupData ):void 
+	{
+		_onAdded 	= popupData.onAdded;
+		_onShown 	= popupData.onShown;
+		_onRemoved 	= popupData.onRemoved;
+		
+		prepare(popupData.data);
+	}
+
 	public function localize( data:XMLList ):void { _locale = data; }
+	public function getLocaleID():String { return this.name; }
+	public function getEntityType():uint { return EntityType.POPUP; }
+
 	public function prepare( params:Object ):void { }
 	/**
 	 * ANDROID ONLY

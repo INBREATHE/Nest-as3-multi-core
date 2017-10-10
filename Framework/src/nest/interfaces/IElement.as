@@ -7,8 +7,8 @@ package nest.interfaces
 {
 public interface IElement
 {
-	function set prioritet(value:int):void;
-	function get prioritet():int;
+	function set order(value:int):void;
+	function get order():int;
 }
 	
 }

@@ -24,7 +24,7 @@ public final class NetworkService extends EventDispatcher implements IService
 	public function init(app:Object):void
 	{
 		_isNetworkAvailable = CheckInternetConnection();
-		trace("> Nest -> NetworkService -> init: isNetworkAvailable = " +  _isNetworkAvailable);
+		trace("> Nest -> \t> NetworkService \t-> init: isNetworkAvailable = " +  _isNetworkAvailable);
 		NativeApplication.nativeApplication.addEventListener(Event.NETWORK_CHANGE, HandleNetworkChange);
 	}
 

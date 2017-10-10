@@ -21,15 +21,19 @@ public class NetworkProxy extends Proxy
 		super(NetworkService.getInstance());
 		network.addEventListener(NetworkService.NETWORK_CHANGED, HandleNetworkChange);
 	}
+	
+	//==================================================================================================
+	override public function onRegister():void { trace(">\t NetworkProxy: Registered"); }
+	//==================================================================================================
 
 	public function get isNetworkAvailable():Boolean { return network.isNetworkAvailable; }
 
 	//==================================================================================================
-	private function HandleNetworkChange(event:Object, status:Boolean):void {
+	private function HandleNetworkChange(event:NetworkStatusEvent):void {
 	//==================================================================================================
-		trace("> Nest -> HandleNetworkChange :", status);
+		trace("> Nest -> HandleNetworkChange :", event);
 		var command:String = _networkDisabledCommand;
-		if(status) command = _networkEnabledCommand;
+		if(event.available) command = _networkEnabledCommand;
 		if(command != null) this.exec( command );
 	}
 

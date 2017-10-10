@@ -24,15 +24,15 @@ import nest.services.worker.process.WorkerTask;
 public class WorkerModule extends PipeAwareModule implements IWorkerModule
 {
 	static public const
-		TO_WRK		:String 	= 'toWorkerTee'		/** Worker output out. */
-	,	FROM_WRK	:String 	= 'fromWorkerTee'	/** Worker output in. */
-	,	WRK_IN		:String 	= 'workerIn'		/** Worker input in. */
-	,	WRK_OUT		:String 	= 'workerOut' 		/** Worker output out. */
+		TO_WRK		:String 	= 'toWorkerPipe'	/** Worker output out. 	*/
+	,	FROM_WRK	:String 	= 'fromWorkerPipe'	/** Worker output in. 	*/
+	,	WRK_IN		:String 	= 'workerIn'		/** Worker input in. 	*/
+	,	WRK_OUT		:String 	= 'workerOut' 		/** Worker output out. 	*/
 	;
 
 	static private const
 		NAME						: String 	= "worker.module"
-	,	INCOMIMG_MESSAGE_CHANNEL	: String 	= "incomimgMessageChannel"
+	,	INCOMING_MESSAGE_CHANNEL	: String 	= "incomingMessageChannel"
 	,	OUTGOING_MESSAGE_CHANNEL	: String 	= "outgoingMessageChannel"
 	,	SHARE_DATA_PIPE				: String 	= "shareDataPipe"
 	;
@@ -40,8 +40,8 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	static public const
 		CONNECT_THROGH_JUNCTION		: String 	= "connectThroughJunction"
 	,	CONNECT_MODULE_TO_WORKER	: String 	= "connectModuleToWorker"
-	,	DICONNECT_OUTPUT_PIPE		: String 	= "diconnectOutputPipe"
-	,	DICONNECT_INPUT_PIPE		: String 	= "diconnectInputPipe"
+	,	DISCONNECT_OUTPUT_PIPE		: String 	= "disconnectOutputPipe"
+	,	DISCONNECT_INPUT_PIPE		: String 	= "disconnectInputPipe"
 	;
 
 	public var
@@ -100,7 +100,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 				incomingMessageChannel = Worker.current.createMessageChannel(_worker);
 				outgoingMessageChannel = _worker.createMessageChannel(Worker.current);
 
-				setSharedProperty(INCOMIMG_MESSAGE_CHANNEL, incomingMessageChannel);
+				setSharedProperty(INCOMING_MESSAGE_CHANNEL, incomingMessageChannel);
 				setSharedProperty(OUTGOING_MESSAGE_CHANNEL, outgoingMessageChannel);
 
 				_shareable = new ByteArray();
@@ -109,7 +109,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 				applicationStorageDirectory = File.applicationStorageDirectory.nativePath;
 
-				setSharedData(applicationStorageDirectory);
+				_shareable.writeObject(applicationStorageDirectory);
 
 				// Because we cant run task before worker is being ready
 				// So we mark "task execution" as Busy to store all WorkerTasks in a Queue for later execution
@@ -118,14 +118,14 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 				_worker.start();
 			}
-			else 
+			else // WORKER
 			{
 				_worker = Worker.current;
 
 				_worker.addEventListener(Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true);
 
 				outgoingMessageChannel = getSharedProperty(OUTGOING_MESSAGE_CHANNEL);
-				incomingMessageChannel = getSharedProperty(INCOMIMG_MESSAGE_CHANNEL);
+				incomingMessageChannel = getSharedProperty(INCOMING_MESSAGE_CHANNEL);
 
 				_shareable = getSharedProperty(SHARE_DATA_PIPE);
 				_shareable.shareable = true;
@@ -139,10 +139,10 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 		}
         else
         {
+			applicationStorageDirectory = File.applicationStorageDirectory.nativePath;
 			isSupported = false;
             isInited = true;
             start();
-            ready();
         }
 	}
 
@@ -150,15 +150,17 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function get inputChannel():MessageChannel { return isMaster ? outgoingMessageChannel : incomingMessageChannel; }
 
 	//==================================================================================================
-	public function send(task:WorkerTask):void {
+	public function send(task:WorkerTask):Boolean {
 	//==================================================================================================
-		if(isBusy) {
+		if(isBusy && task.id != WorkerTask.COMPLETE) {
 			_tasksQueue.push(task);
 		} else {
 			isBusy = true;
-			setSharedData(task.data);
+			_shareable.clear();
+			if(task.hasData()) _shareable.writeObject(task.data);
 			outputChannel.send(task.id, 0);
 		}
+		return true;
 	}
 
 	//==================================================================================================
@@ -170,8 +172,9 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	//==================================================================================================
 	public function terminate():void {
 	//==================================================================================================
-		if(!isMaster)
+		if(!isMaster) {
 			NativeApplication.nativeApplication.dispatchEvent(new Event(Event.EXITING));
+		}
 		_worker.terminate();
 	}
 
@@ -179,10 +182,10 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function completeTask():void {
 	//==================================================================================================
 		isBusy = false;
-		trace("> Nest -> COMPLETE TASK => TASK QUEUE:", isMaster, _tasksQueue.length);
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", isMaster ? "MASTER" : "SLAVE", "length =",_tasksQueue.length);
 		if(_tasksQueue.length) {
 			const task:WorkerTask = _tasksQueue.shift();
-			trace("\t\t : TASK:", (typeof task));
+			trace("\t : SEND NEXT TASK:", task.id);
 			this.send(task);
 		}
 	}
@@ -196,11 +199,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	//==================================================================================================
 	public function setSharedData(data:*):void {
 	//==================================================================================================
-		_shareable.clear();
-		if(data) {
-			trace("> Nest -> Worker Module ", isMaster ? "MASTER" : "SLAVE"," setSharedData ", data);
-			_shareable.writeObject(data);
-		}
+		
 	}
 
 	//==================================================================================================
@@ -209,7 +208,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 		_shareable.position = 0;
 		if(_shareable.bytesAvailable) {
 			const obj:* = _shareable.readObject();
-			trace("> Nest -> Worker Module ", isMaster ? "MASTER" : "SLAVE"," getSharedData:", (typeof obj));
+			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "SLAVE","getSharedData:", JSON.stringify(obj));
 			return obj;
 		}
 		return null;

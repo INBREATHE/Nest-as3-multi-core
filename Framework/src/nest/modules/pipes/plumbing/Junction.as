@@ -176,21 +176,47 @@ package nest.modules.pipes.plumbing
 		
 		/**
 		 * Send a message on an OUTPUT pipe.
-		 * 
+		 *
 		 * @param name the OUTPUT pipe to send the message on
-		 * @param message the IPipeMessage to send  
+		 * @param message the IPipeMessage to send
 		 * @param individual message will be send only to pipe from where this message is comming from, by channelID
 		 */
-		public function sendMessage( outputPipeName:String, message:IPipeMessage, individual:Boolean = true ):Boolean 
+		public function sendMessage( outputPipeName:String, message:IPipeMessage, individual:Boolean = true ):Boolean
 		{
 			var success:Boolean = false;
-//			trace(">\tJunction.sendMessage: hasOutputPipe =",outputPipeName, hasOutputPipe(outputPipeName) )
-			if ( hasOutputPipe(outputPipeName) )
+			const outputPipeExist:Boolean = hasOutputPipe(outputPipeName);
+//			trace(">\tJunction.sendMessage: hasOutputPipe =", outputPipeExist );
+//			trace(">\tJunction.sendMessage: outputPipeName =", outputPipeName );
+			if ( outputPipeExist )
 			{
 				const pipe:IPipeFitting = pipesMap[outputPipeName] as IPipeFitting;
 				if(individual && !message.getPipeID()) message.setPipeID(pipe.channelID);
+//				trace(">\tJunction.sendMessage: message responsePipeID = " + message.getResponsePipeID(), "| pipeID = " + message.getPipeID() );
 				success = pipe.write(message);
-			} 
+			}
+			return success;
+		}
+
+		/**
+		 * Send a message on an OUTPUT pipe.
+		 *
+		 * @param name the OUTPUT pipe to send the message on
+		 * @param message the IPipeMessage to send
+		 * @param individual message will be send only to pipe from where this message is comming from, by channelID
+		 */
+		public function acceptMessage( inputPipeName:String, message:IPipeMessage, individual:Boolean = true ):Boolean
+		{
+			var success:Boolean = false;
+			const checkInputPipe:Boolean = hasInputPipe(inputPipeName);
+//			trace(">\tJunction.sendMessage: hasInputPipe =", checkInputPipe );
+//			trace(">\tJunction.sendMessage: inputPipeName =", inputPipeName );
+//			trace(">\tJunction.sendMessage: message =", message );
+			if ( checkInputPipe )
+			{
+				const pipe:IPipeFitting = pipesMap[inputPipeName] as IPipeFitting;
+				if(individual && !message.getPipeID()) message.setPipeID(pipe.channelID);
+				success = pipe.write(message);
+			}
 //			trace(">\tJunction.sendMessage: success =",success);
 			return success;
 		}
@@ -198,22 +224,22 @@ package nest.modules.pipes.plumbing
 		/**
 		 *  The names of the INPUT pipes
 		 */
-		protected var inputPipes:Array = new Array();
+		protected var inputPipes:Array = [];
 		
 		/**
 		 *  The names of the OUTPUT pipes
 		 */
-		protected var outputPipes:Array = new Array();
+		protected var outputPipes:Array = [];
 		
 		/** 
 		 * The map of pipe names to their pipes
 		 */
-		protected var pipesMap:Array = new Array();
+		protected var pipesMap:Array = [];
 		
 		/**
 		 * The map of pipe names to their types
 		 */
-		protected var pipeTypesMap:Array = new Array();
+		protected var pipeTypesMap:Array = [];
 
 	}
 }

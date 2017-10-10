@@ -74,7 +74,7 @@ package nest.modules.pipes.plumbing
 		 */
 		override public function write( message:IPipeMessage ):Boolean
 		{
-			var outputMessage:IPipeMessage;
+			var outputMessage:IPipeMessage = message;
 			var success:Boolean = true;
 
 //			trace("FILTER WRITE:", message.getType() == Message.NORMAL);
@@ -84,11 +84,10 @@ package nest.modules.pipes.plumbing
 			// Filter normal messages
 			switch ( message.getType() )
 			{
+				case  Message.WORKER: 	
 				case  Message.NORMAL: 	
 					if ( mode == FilterControlMessage.FILTER ) {
 						outputMessage = applyFilter( message );
-					} else {
-						outputMessage = message;
 					}
 //					trace("> FILTER\t\t : Output:", output);
 //					trace("> FILTER\t\t : outputMessage:", JSON.stringify(outputMessage));

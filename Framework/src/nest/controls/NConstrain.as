@@ -10,7 +10,7 @@ import flash.display.DisplayObject;
 public class NConstrain extends DisplayObject
 {
 	static public var 
-		LEFT		:Object = "left"
+		LEFT		:Object = "left" 
 	,	RIGHT		:Object = "right"
 	,	CENTER		:Object = "center"
 	,	NONE		:Object = "none"

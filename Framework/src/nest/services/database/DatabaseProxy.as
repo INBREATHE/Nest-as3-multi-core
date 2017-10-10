@@ -8,9 +8,7 @@ package nest.services.database
 import flash.events.Event;
 import flash.utils.Dictionary;
 
-import nest.interfaces.ILocalize;
-import nest.interfaces.IProxy;
-import nest.patterns.proxy.Proxy;
+import nest.services.localization.LanguageDependentProxy;
 
 /**
  * C:\Users\DQvsRA\AppData\Roaming\[App Identifier]\Local Store\
@@ -23,11 +21,15 @@ import nest.patterns.proxy.Proxy;
 	info: http://help.adobe.com/en_US/as3/dev/WS8AFC5E35-DC79-4082-9AD4-DE1A2B41DAAF.html
 */
 
-public class DatabaseProxy extends Proxy implements IProxy, ILocalize
+public class DatabaseProxy extends LanguageDependentProxy
 {
 	private const _events : Dictionary = new Dictionary();
 
 	public function DatabaseProxy() { super( DatabaseService.getInstance() ); }
+	
+	//==================================================================================================
+	override public function onRegister():void { trace(">\t DatabaseProxy: Registered"); }
+	//==================================================================================================
 	
 	public function get dbExist():Boolean { return _dbService.dbExist; }
 
@@ -87,9 +89,10 @@ public class DatabaseProxy extends Proxy implements IProxy, ILocalize
 	}
 
 	//==================================================================================================
-	public function setupLanguage(value:String):void {
+	override public function languageChanged():void {
 	//==================================================================================================
-		_dbService.language = value;
+		_dbService.language = this.facade.currentLanguage;
+		trace(">\t DatabaseProxy: languageChanged");
 	}
 
 	//==================================================================================================
@@ -97,10 +100,6 @@ public class DatabaseProxy extends Proxy implements IProxy, ILocalize
 	//==================================================================================================
 		_dbService.listen(eventType, table, classRef, callback);
 	}
-
-	//==================================================================================================
-	override public function onRegister():void { }
-	//==================================================================================================
 
 	private function get _dbService():DatabaseService { return data as DatabaseService; }
 }

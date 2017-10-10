@@ -2,6 +2,11 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="nest.services.database.DatabaseTable"/>
+    <classEntry path="nest.services.localization.commands.ChangeLanguageCommand"/>
+    <classEntry path="nest.entities.EntityType"/>
+    <classEntry path="nest.interfaces.IEntity"/>
+    <classEntry path="nest.entities.screen.ScreenData"/>
+    <classEntry path="nest.entities.popup.PopupData"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

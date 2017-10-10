@@ -57,8 +57,16 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		
 		_dbExist = file.exists;
 		_sqlConnection = new SQLConnection();
-		Capabilities.isDebugger && Application.log("> Nest -> DB exist:",_dbExist, "at path:",file.nativePath);
+		_sqlConnection.addEventListener(SQLEvent.OPEN, Handler_DatabaseOpenned);
+		Capabilities.isDebugger && Application.log("> Nest -> \t> DatabaseService \t-> init: DB exist: " + _dbExist + " at path: " + file.nativePath);
 		_sqlConnection.open(file, _dbExist ? SQLMode.UPDATE : SQLMode.CREATE);
+	}
+	
+	//==================================================================================================
+	private function Handler_DatabaseOpenned(e:SQLEvent):void {
+	//==================================================================================================
+		_sqlConnection.removeEventListener(SQLEvent.OPEN, Handler_DatabaseOpenned);
+		this.dispatchEvent(e);
 	}
 
 	//==================================================================================================
@@ -67,7 +75,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		var dbName:String, dbClass:Class;
 		for (dbName in tables) {
 			dbClass = tables[dbName];
-			Capabilities.isDebugger && Application.log("> Nest -> DatabaseService: create db " + dbName);
+			Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + dbName);
 			ExecuteStatement(DatabaseQuery.CreateTableFromClass(dbName, dbClass), false);
 		}
 	}
@@ -75,7 +83,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	//==================================================================================================
 	public function createTable(tableName:String, tableClass:Class):void {
 	//==================================================================================================
-		Capabilities.isDebugger && Application.log("> Nest -> DatabaseService: create db " + tableName, tableClass);
+		Capabilities.isDebugger && Application.log("> Nest -> \t\t\tDatabaseService: create db " + tableName, tableClass);
 		ExecuteStatement(DatabaseQuery.CreateTableFromClass(tableName, tableClass), false, null, true);
 	}
 
@@ -83,9 +91,16 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	public function retrieve(query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true):Object {
 	//==================================================================================================
 		ExecuteStatement(query, languageDependent, classRef);
+		var result:Object = null;
 		const sqlResult:SQLResult = _sqlStatement.getResult();
-		const data:Array = sqlResult.data;
-		return data ? (all ? data : data[0]) : null;
+		if(sqlResult) {
+			const data:Array = sqlResult.data;
+//			trace("> Nest -> DatabaseService: retrieve sqlResult =", sqlResult, sqlResult.data);
+			result = data ? (all ? data : data[0]) : null;
+		} else {
+//			trace("> Nest -> DatabaseService: ERROR retrieve:", query);
+		}
+		return result;
 	}
 
 	//==================================================================================================
@@ -198,14 +213,14 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 
 	private function Execute(stmt:SQLStatement):void {
 		try {
-//            trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
+//            trace("> Nest -> DatabaseService: Execute QUERY: " + _sqlStatement.text);
 //    		Capabilities.isDebugger && Application.log("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
 			stmt.execute();
 		} catch (e:SQLError) {
 			if(e.errorID == 3119) { // Error #3119: Database file is currently locked.
 				Execute(stmt);
 			} else {
-//                trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
+                trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
 				if(_sqlConnection != null && _sqlConnection.inTransaction) {
                     _sqlConnection.rollback();
 				}

@@ -5,11 +5,11 @@
 */
 package nest.interfaces
 {
-public interface IModel
+public interface IModel extends ILanguageDependent
 {
-	function registerProxy		( proxy:Class ) 		: void;
-	function retrieveProxy		( proxyName:String ) 	: IProxy;
-	function removeProxy		( proxyName:String ) 	: IProxy;
-	function hasProxy			( proxyName:String ) 	: Boolean;
+	function registerProxy		( proxyClass:Class ) 	: void;
+	function retrieveProxy		( proxyClass:Class ) 	: IProxy;
+	function removeProxy		( proxyClass:Class ) 	: IProxy;
+	function hasProxy			( proxyClass:Class ) 	: Boolean;
 }
 }

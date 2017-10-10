@@ -3,9 +3,9 @@ package nest.modules.pipes.interfaces
 	/** 
 	 * Pipe Message Interface.
 	 * <P>
-	 * <code>IPipeMessage</code>s are objects written intoto a Pipeline, 
+	 * <code>IPipeMessage</code>s are objects written into to a Pipeline,
 	 * composed of <code>IPipeFitting</code>s. The message is passed from 
-	 * one fitting to the next in syncrhonous fashion.</P> 
+	 * one fitting to the next in synchronous fashion.</P>
 	 * <P>
 	 */
 	public interface IPipeMessage
@@ -26,6 +26,9 @@ package nest.modules.pipes.interfaces
 		
 		function getPipeID():uint;
 		function setPipeID(value:uint):void;
+
+		function getResponsePipeID():uint;
+		function setResponsePipeID(value:uint):void;
 
 		function getMessageID():String;
 	}

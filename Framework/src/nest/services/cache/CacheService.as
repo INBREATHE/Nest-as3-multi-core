@@ -8,6 +8,9 @@ package nest.services.cache
 import flash.data.EncryptedLocalStore;
 import flash.desktop.NativeApplication;
 import flash.events.Event;
+import flash.filesystem.File;
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
 import flash.system.Capabilities;
 import flash.system.Worker;
 import flash.utils.ByteArray;
@@ -33,16 +36,21 @@ public final class CacheService implements IServiceLocale
 
 	private var
 		_oData 	: Object
-	,	_path	: String
+	,	_stream	: FileStream
 	;
 
 	//==================================================================================================
 	public function init(path:Object):void {
 	//==================================================================================================
+		trace("> Nest -> \t> CacheService  \t-> init: _isSupported =", _isSupported, path);
 		if(!_isSupported && path) {
-			_path = String(path) + FILE_NAME;
-			_oData = GetCacheDataFromFile(_path);
-			return;
+			const filePath:String = String(path) + FILE_NAME;
+			const fileCache:File = File.applicationDirectory.resolvePath(filePath); 
+			trace("> Nest -> \t> CacheService  \t-> file exist:", fileCache.exists);
+			_stream = new FileStream();
+			_stream.open(fileCache, FileMode.UPDATE);
+			_oData = _stream.bytesAvailable > 0 ? _stream.readObject() : {};
+			trace("> Nest -> \t> CacheService  \t-> init: EncryptedLocalStore not supported, use plane json file: " + filePath);
 		}
 
 		//http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
@@ -55,18 +63,18 @@ public final class CacheService implements IServiceLocale
 			}
 		});
 		
-		trace("> Nest -> CacheService -> init: language = " +  this.language, "_reports = " + _reports.length);
-
 		_reports.sort(function compare(x:CacheReport, y:CacheReport):Number {
 			return x.time < y.time ? -1 : 1;
 		});
 
 		this.parse(REQUESTS, function(item:Object, index:uint, arr:Array):void {
 			if(item) {
-				trace("> Nest -> Cached REQUEST:", item.type, item.method, item.data);
+//				trace("> Nest -> Cached REQUEST:", item.type, item.method, item.data);
 				_requests.push(new CacheRequest(item.type, item.method, item.data));
 			}
 		});
+
+		trace("> Nest -> \t> CacheService  \t-> init: language = " +  this.language, "_reports = " + _reports.length, "_requests = " + _requests.length);
 
 		NativeApplication.nativeApplication.addEventListener(Event.EXITING, HandleExiting);
 	}
@@ -84,13 +92,15 @@ public final class CacheService implements IServiceLocale
 	public function get requestsCount()	: uint { return _requests.length; }
 
 	//==================================================================================================
-	public function store(key:String, value:String):void {
+	public function store(key:String, value:Object):void {
 	//==================================================================================================
 		if(_isSupported) {
 			const bytes:ByteArray = new ByteArray();
-			bytes.writeUTFBytes(value);
+			bytes.writeUTFBytes(String(value));
 			EncryptedLocalStore.setItem(key, bytes);
-		} else _oData[key] = value;
+		} else {
+			_oData[key] = value;
+		}
 	}
 
 	//==================================================================================================
@@ -99,7 +109,7 @@ public final class CacheService implements IServiceLocale
 		if(_isSupported) {
 			const ba:ByteArray = EncryptedLocalStore.getItem(key);
 			return ba && ba.length ? ba.readUTFBytes(ba.length) : null;
-		} else return _oData[key] as String;
+		} else return _oData[key];
 	}
 
 	//==================================================================================================
@@ -111,14 +121,14 @@ public final class CacheService implements IServiceLocale
 	}
 
 	//==================================================================================================
-	public function parse(key:String, parse:Function, willremove:Boolean = false):void {
+	public function parse(key:String, parse:Function, keyWillBeRemoved:Boolean = false):void {
 	//==================================================================================================
 		const value:String = retrieve(key);
 		if(value != null) {
 			const result:Object = JSON.parse(value);
 			if(result is Array && (result as Array).length > 0) (result as Array).forEach(parse);
 			else if(result is String || !isNaN(Number(result))) parse.call(null, result);
-			if(willremove) remove(key);
+			if(keyWillBeRemoved) remove(key);
 		} else {
 			parse.apply(null, new Array(parse.length));
 		}
@@ -127,29 +137,17 @@ public final class CacheService implements IServiceLocale
 	//==================================================================================================
 	private function HandleExiting(event:Event):void {
 	//==================================================================================================
-		trace("> Nest ->", Worker.current.isPrimordial ? "MASTER" : "SLAVE", " HANDLE EXITING: events | request =",_reports.length, _requests.length);
-		if(_reports.length) 	this.store( REPORTS, 	JSON.stringify(_reports));
-		else 					this.remove(REPORTS);
-		if(_requests.length) 	this.store( REQUESTS, 	JSON.stringify(_requests));
-		else					this.remove(REQUESTS);
+		trace("> Nest -> CacheService", Worker.current.isPrimordial ? "MASTER" : "SLAVE", "> HANDLE EXITING: events | request =",_reports.length, _requests.length);
+		if(_reports.length) 	this.store( REPORTS, 	JSON.stringify(_reports));  else this.remove(REPORTS);
+		if(_requests.length) 	this.store( REQUESTS, 	JSON.stringify(_requests)); else this.remove(REQUESTS);
 
-		if(_oData && _path)
+		trace("> \t\t", "_oData:", JSON.stringify(_oData));
+		if(_oData)
 		{
-			const bytes:ByteArray = new ByteArray();
-			bytes.writeObject(_oData);
-			FileUtils.writeBytesToFile(_path, bytes, true);
+			_stream.writeObject(_oData);
+			_stream.close();
 		}
-
 		NativeApplication.nativeApplication.removeEventListener(Event.EXITING, HandleExiting);
-	}
-
-	//==================================================================================================
-	private function GetCacheDataFromFile(path:String):Object {
-	//==================================================================================================
-		var result:Object = {};
-		const ba:ByteArray = FileUtils.readBytesFromFile(path, true);
-		if(ba.length) result = ba.readObject();
-		return result;
 	}
 
 	private static const _instance:CacheService = new CacheService();

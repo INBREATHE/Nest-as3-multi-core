@@ -44,7 +44,7 @@ public final class ServerService extends URLLoader implements IServiceLocale
 		REQUEST[0] = serverVO.url;
 		_header = new URLRequestHeader(serverVO.head, serverVO.key);
 		
-		trace("> Nest -> ServerService -> init: serverVO ", serverVO);
+		trace("> Nest -> \t> ServerService \t-> init: serverVO ", serverVO);
 
 		this.dataFormat = URLLoaderDataFormat.TEXT;
 		this.addEventListener(IOErrorEvent.IO_ERROR, Handle_LoadError);

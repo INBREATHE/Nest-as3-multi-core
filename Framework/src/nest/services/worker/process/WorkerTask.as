@@ -31,6 +31,7 @@ public final class WorkerTask
 
 	public function get id():int { return _id; }
 	public function get data():IPipeMessage { return _data; }
+	public function hasData():Boolean { return _data != null; }
 }
 }
 

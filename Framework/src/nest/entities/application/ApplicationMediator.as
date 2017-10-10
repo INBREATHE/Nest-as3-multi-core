@@ -60,22 +60,23 @@ public class ApplicationMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	private function HideScreen( obj:Screen, isReturn:String ):void {
+	private function HideScreen( obj:Screen, nextScreenName:String ):void {
 	//==================================================================================================
 //		trace("> Nest -> ApplicationMediator HideScreen", obj, " \n");
-		application.hideScreen(obj, isReturn === "");
+		application.hideScreen(obj, nextScreenName == Screen.PREVIOUS);
 	}
 
 	//==================================================================================================
-	private function ShowScreen( obj:Screen, isReturn:String ):void {
+	private function ShowScreen( obj:Screen, screenName:String ):void {
 	//==================================================================================================
 //		trace("> Nest -> ApplicationMediator ShowScreen", isReturn === "", obj);
-		application.showScreen(obj, isReturn === "");
+		application.showScreen(obj, screenName == Screen.PREVIOUS);
 	}
 
 	//==================================================================================================
 	override public function onRegister():void {
 	//==================================================================================================
+		// This event fired after catching ApplicationNotification.INITIALIZED  
 		application.addEventListener( ApplicationEvent.READY, ApplicationReadyHandler );
 	}
 

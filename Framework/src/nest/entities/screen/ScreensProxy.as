@@ -33,6 +33,17 @@ public class ScreensProxy extends Proxy implements IProxy
 	//==================================================================================================
 		return this.getCacheByScreenName(value).screen;
 	}
+	
+	//==================================================================================================
+	public function getFirstCachedScreen():ScreenCache {
+	//==================================================================================================
+		var result:ScreenCache;
+		for (var cachedScreenNames:String in cache) {
+			result = cache[cachedScreenNames];
+			break;
+		}
+		return result;
+	}
 
 	private function get cache():Dictionary { return Dictionary(data); }
 

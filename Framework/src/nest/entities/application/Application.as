@@ -48,7 +48,7 @@ public class Application extends Sprite
 	,	_navigator		: Navigator
 	;
 
-	public static function log(...message):void { if(console) console.text = "\n> " + message + console.text; }
+	public static function log(...message):void { if(console) console.text = "\n> " + message + console.text; else trace(message); }
 	
 	private const _screensContainer : Element = new Element();
 
@@ -107,7 +107,7 @@ public class Application extends Sprite
 	public function addElement(obj:DisplayObject):void {
 	//==================================================================================================
 		if (obj is IElement) {
-			this.addChildAt(obj, getObjectPositionWithPrioriotet(IElement(obj).prioritet))
+			this.addChildAt(obj, getObjectPositionWithPrioriotet(IElement(obj).order))
 		} else {
 			this.addChild(obj);
 		}
@@ -158,7 +158,7 @@ public class Application extends Sprite
 		if(counter > 0) {
 			var child:DisplayObject = DisplayObject(this.getChildAt(--counter));
 			while (counter && child is IElement) {
-				if (IElement(child).prioritet <= prioritet) break;
+				if (IElement(child).order <= prioritet) break;
 				child = DisplayObject(this.getChildAt(--counter));
 			}
 			return ++counter;

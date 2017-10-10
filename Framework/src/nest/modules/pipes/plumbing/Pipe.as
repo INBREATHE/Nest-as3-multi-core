@@ -19,7 +19,7 @@ package nest.modules.pipes.plumbing
 		public var chainLength:uint = 0;
 		
 		private var
-			_channelID			: uint = 0
+			_channelID	: uint = 0
 		,	_pipeName	: String
 		;
 
@@ -80,7 +80,7 @@ package nest.modules.pipes.plumbing
 		 */
 		public function write( message:IPipeMessage ) : Boolean
 		{
-//			trace("======> Pipe("+pipeName+").write:",output, message);
+//			trace("======> Pipe( " + pipeName + " id:" + channelID + " ).write: ouput =",output, output.pipeName, message);
 			return output && output.write( message );
 		}
 
