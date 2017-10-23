@@ -29,13 +29,12 @@ public class ScreenMediator extends Mediator implements IMediator
 		dataNotification	: String,
 		dataCommand			: String = null
 	) {
-		super(viewComponent);
-
-		screen.rebuildable = true;
-		
 		this._dataRequest = dataCommand;
 		this._dataNotification = dataNotification;
 
+		super(viewComponent);
+
+		screen.rebuildable = true;
 		screen.addEventListener(Event.ADDED_TO_STAGE, Handle_AddComponentToStage);
 	}
 
@@ -89,7 +88,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	
 	//==================================================================================================
-	override public function listNotificationInterests():Vector.<String> {
+	override protected function listNotificationInterests():Vector.<String> {
 	//==================================================================================================
 		return new <String>[
 			_dataNotification

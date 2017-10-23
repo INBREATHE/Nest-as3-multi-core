@@ -51,7 +51,7 @@ public final class TimeUtils
 
 	private static const TIMECODE:Array = ["days", "hours", "minutes", "seconds"];
 	public static function timeCode(sec:uint, devider:Number = 0.001):String {
-		sec = sec * devider;
+		if(devider != 1) sec = sec * devider;
 		const his:uint = sec % HOUR_IN_SECONDS;
 		const d:uint = Math.floor(sec / DAY_IN_SECONDS);
 		const h:uint = Math.floor(sec / HOUR_IN_SECONDS);

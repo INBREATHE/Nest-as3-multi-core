@@ -28,7 +28,7 @@ public class ApplicationMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	override public function listNotificationsFunctions():Vector.<NFunction> {
+	override protected function listNotificationsFunctions():Vector.<NFunction> {
 	//==================================================================================================
 		return new <NFunction>[
 			new NFunction( ApplicationNotification.SHOW_SCREEN, 		ShowScreen		)
@@ -39,7 +39,7 @@ public class ApplicationMediator extends Mediator implements IMediator
 		];
 	}
 	//==================================================================================================
-	override public function listNotificationInterests():Vector.<String> {
+	override protected function listNotificationInterests():Vector.<String> {
 	//==================================================================================================
 		return new <String>[
 			ApplicationNotification.PREPARE
@@ -88,10 +88,8 @@ public class ApplicationMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	override public function onRemove():void {
+	override public function onRemove():void { super.onRemove(); }
 	//==================================================================================================
-
-	}
 
 	private function get application():Application { return Application(viewComponent); }
 }

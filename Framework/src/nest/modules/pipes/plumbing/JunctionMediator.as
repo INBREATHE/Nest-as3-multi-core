@@ -39,7 +39,7 @@ package nest.modules.pipes.plumbing
 		 * to get this list, then add any sublcass interests to 
 		 * the array before returning.</P>
 		 */
-		override public function listNotificationInterests():Vector.<String>
+		override protected function listNotificationInterests():Vector.<String>
 		{
 			return new <String>[ 
 				JunctionMediator.ACCEPT_INPUT_PIPE, 

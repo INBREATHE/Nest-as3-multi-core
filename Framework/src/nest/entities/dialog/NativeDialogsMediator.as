@@ -17,7 +17,7 @@ public class NativeDialogsMediator extends Mediator implements IMediator
 	public static const NAME:String = "DialogsMediator";
 	public function NativeDialogsMediator() { super( null ); }
 
-	override public function listNotificationInterests():Vector.<String>
+	override protected function listNotificationInterests():Vector.<String>
 	{
 		return new <String>[
 			NativeDialogNotification.ALERT

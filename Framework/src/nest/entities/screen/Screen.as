@@ -47,10 +47,6 @@ public class Screen extends Sprite implements IScreen
 		if(callback) callback.call();
 	}
 	
-	//==================================================================================================
-	public function screenHidden():void { }
-	//==================================================================================================
-
 	/**
 	 * This function called from ScreenMediator after screen removed when:
 	 * if(_rebuild) screen.clear();

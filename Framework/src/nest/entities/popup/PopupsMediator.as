@@ -25,7 +25,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 
 	public function PopupsMediator() { super( null ); }
 
-	override public function listNotificationInterests():Vector.<String> {
+	override protected function listNotificationInterests():Vector.<String> {
 		return new <String>[
 			PopupNotification.SHOW_POPUP
 		,	PopupNotification.SHOW_POPUP_BY_NAME

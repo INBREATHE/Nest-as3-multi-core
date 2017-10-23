@@ -18,7 +18,6 @@ import flash.utils.ByteArray;
 import nest.interfaces.IServiceLocale;
 import nest.services.cache.entities.CacheReport;
 import nest.services.cache.entities.CacheRequest;
-import nest.utils.FileUtils;
 
 public final class CacheService implements IServiceLocale
 {
@@ -32,7 +31,7 @@ public final class CacheService implements IServiceLocale
 	private const
 		_reports		: Vector.<CacheReport> 		= new Vector.<CacheReport>
 	,	_requests		: Vector.<CacheRequest> 	= new Vector.<CacheRequest>
-	,	_isSupported	: Boolean = EncryptedLocalStore.isSupported;
+	,	_isSupported	: Boolean = false//EncryptedLocalStore.isSupported;
 
 	private var
 		_oData 	: Object
@@ -49,8 +48,12 @@ public final class CacheService implements IServiceLocale
 			trace("> Nest -> \t> CacheService  \t-> file exist:", fileCache.exists);
 			_stream = new FileStream();
 			_stream.open(fileCache, FileMode.UPDATE);
-			_oData = _stream.bytesAvailable > 0 ? _stream.readObject() : {};
+			const dataString:String = _stream.bytesAvailable ? _stream.readUTF() : null;
+			_oData = dataString ? JSON.parse(dataString) : {};
 			trace("> Nest -> \t> CacheService  \t-> init: EncryptedLocalStore not supported, use plane json file: " + filePath);
+			trace("> Nest -> \t> CacheService  \t-> init: _oData", JSON.stringify(_oData));
+			_stream.close();
+			_stream.open(fileCache, FileMode.WRITE);
 		}
 
 		//http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
@@ -108,8 +111,12 @@ public final class CacheService implements IServiceLocale
 	//==================================================================================================
 		if(_isSupported) {
 			const ba:ByteArray = EncryptedLocalStore.getItem(key);
-			return ba && ba.length ? ba.readUTFBytes(ba.length) : null;
-		} else return _oData[key];
+			return (ba && ba.bytesAvailable) ? ba.toString() : null;
+		} else{
+			trace("> Nest -> CacheService > retrieve: key =", key);
+			trace("> Nest -> CacheService > retrieve: value =", _oData[key]);
+			return _oData[key];
+		}
 	}
 
 	//==================================================================================================
@@ -144,7 +151,7 @@ public final class CacheService implements IServiceLocale
 		trace("> \t\t", "_oData:", JSON.stringify(_oData));
 		if(_oData)
 		{
-			_stream.writeObject(_oData);
+			_stream.writeUTF(JSON.stringify(_oData));
 			_stream.close();
 		}
 		NativeApplication.nativeApplication.removeEventListener(Event.EXITING, HandleExiting);

@@ -9,6 +9,7 @@ public interface IGame
 {
 	function show():void;
 	function hide(callback:Function = null):void;
+	function clear():void;
 	function reset():void;
 }
 }

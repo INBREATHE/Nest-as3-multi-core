@@ -10,31 +10,32 @@ import nest.interfaces.IObserver;
 
 public class Observer implements IObserver
 {
-	private var notify:Function;
-	private var context:Object;
-	private var advance:Boolean = false;
+	private var _notify:Function;
+	private var _context:Object;
+	private var _advance:Boolean = false;
 
 	public function Observer( notifyMethod:Function, notifyContext:Object, advance:Boolean = false ) {
-		this.notify = notifyMethod;
-		this.context = notifyContext;
-		this.advance = advance;
+		this._notify = notifyMethod;
+		this._context = notifyContext;
+		this._advance = advance;
 	}
 
 	public function notifyObserver( notification:INotification ):void {
-		if(advance){ 
-			const paramsCount:uint = notify.length;
+//		trace("> \t\t _context =", _context, "_notify =", _notify);
+		if(_advance) {
+			const paramsCount:uint = _notify.length;
 			switch(paramsCount) {
-			case 0: default: notify.call( context ); break;
-			case 1: notify.call( context, notification.getBody() ); break;
-			case 2: notify.call( context, notification.getBody(), notification.getType() ); break;
+			case 0: default: _notify.call( _context ); break;
+			case 1: _notify.call( _context, notification.getBody() ); break;
+			case 2: _notify.call( _context, notification.getBody(), notification.getType() ); break;
 		}}
 		else {
-			notify.call( context, notification );
+			_notify.call( _context, notification );
 		}
 	}
 
 	public function compareNotifyContext( object:Object ):Boolean {
-		return object === this.context;
+		return object === this._context;
 	}
 }
 }

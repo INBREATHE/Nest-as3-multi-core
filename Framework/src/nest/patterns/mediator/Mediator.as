@@ -19,9 +19,15 @@ public class Mediator extends Notifier implements IMediator
 	protected var mediatorName:String;
 	protected var viewComponent:Object;
 
+	protected var _listNotifications:Vector.<String>;
+	protected var _listNFunctions:Vector.<NFunction>;
+	
 	public function Mediator( viewComponent:Object=null ) {
 		this.mediatorName = getQualifiedClassName(this);
 		if( viewComponent != null ) this.viewComponent = viewComponent;
+		_listNotifications = listNotificationInterests();
+		_listNFunctions = listNotificationsFunctions();
+		trace("> Nest -> Mediator:", mediatorName, "notes =", _listNotifications.length, " nfunc =", _listNFunctions.length);
 	}
 
 	public function getMediatorName()							: String 	{ return mediatorName; }
@@ -29,10 +35,15 @@ public class Mediator extends Notifier implements IMediator
 	public function getViewComponent()							: Object 	{ return viewComponent; }
 	public function handleNotification(note:INotification)		: void 		{ }
 	public function onRegister()								: void 		{ }
-	public function onRemove()									: void 		{ }
+	public function onRemove()									: void 		{ 
+		while(_listNFunctions.length) _listNFunctions.shift().clear(); 
+		_listNotifications.length = 0;
+	}
+	public function get listNotifications()						: Vector.<String> 		{ return _listNotifications; }
+	public function get listNFunctions()						: Vector.<NFunction> 	{ return _listNFunctions; }
 
-	public function listNotificationInterests()					: Vector.<String> 		{ return new Vector.<String>(); }
-	public function listNotificationsFunctions()				: Vector.<NFunction> 	{ return new Vector.<NFunction>(); }
+	protected function listNotificationInterests()				: Vector.<String> 		{ return new Vector.<String>(); }
+	protected function listNotificationsFunctions()				: Vector.<NFunction> 	{ return new Vector.<NFunction>(); }
 
 	protected function applyViewComponentMethod(name:String, body:Object):void {
 		const func:Function = viewComponent[name] as Function;

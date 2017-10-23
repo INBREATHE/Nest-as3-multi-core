@@ -17,5 +17,10 @@ public class NFunction extends Object
 		this.name = name;
 		this.func = func;
 	}
+	
+	public function clear():void {
+		func = null;
+		name = null;
+	}
 }
 }

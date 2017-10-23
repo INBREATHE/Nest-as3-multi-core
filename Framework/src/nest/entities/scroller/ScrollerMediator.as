@@ -15,7 +15,7 @@ import nest.patterns.mediator.Mediator;
 public class ScrollerMediator extends Mediator implements IMediator
 {
 	public function ScrollerMediator(areaWidth:uint, areaHeight:uint) { super(new Scroller(areaWidth, areaHeight)); }
-	override public function listNotificationInterests():Vector.<String> {
+	override protected function listNotificationInterests():Vector.<String> {
 		return new <String>[
 			ScrollerNotifications.SETUP_SCROLLER,
 			ScrollerNotifications.RESET_SCROLLER

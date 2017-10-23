@@ -37,7 +37,7 @@ public class Navigator
 		} else {
 			setTimeout(function():void { 
 				_transition.show(screen, isReturn);
-			}, 10);
+			}, 20);
 			System.gc;
 			System.pauseForGCIfCollectionImminent();
 		}

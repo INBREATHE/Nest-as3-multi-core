@@ -111,12 +111,12 @@ public final class WorkerJunction extends Junction
 					const pipe		: IPipeFitting = __getPipe(__channel);
 					trace("\n> Nest -> WorkerJunction > CHANNEL_MESSAGE on", __isMaster ? "MASTER" : "SLAVE");
 					trace("> Nest -> WorkerJunction > channel = " + __channel, pipe, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
-					if(message) 
-					{
-						trace("> Nest -> WorkerJunction > message", message);
-						trace("> Nest -> WorkerJunction > message : pipeID = " + message.getPipeID());
-						trace("> Nest -> WorkerJunction > message : messageID = " + message.getMessageID());
-					}
+//					if(message) 
+//					{
+//						trace("> Nest -> WorkerJunction > message", message);
+//						trace("> Nest -> WorkerJunction > message : pipeID = " + message.getPipeID());
+//						trace("> Nest -> WorkerJunction > message : messageID = " + message.getMessageID());
+//					}
 						if (taskType is int) {
 							switch(taskType)
 							{
@@ -127,7 +127,7 @@ public final class WorkerJunction extends Junction
 								case /* 12 */ WorkerTask.MESSAGE: {
 									// Because pipe.write(...) has check for channel
 									__isMaster && message.setPipeID(message.getResponsePipeID())
-									trace("> Nest -> WorkerJunction > transfer message to channel =", __channel);
+//									trace("> Nest -> WorkerJunction > transfer message to channel =", __channel);
 									__transfer(__channel, message);
 									
 									// Every worker task must be completed to be able for worker to send next task

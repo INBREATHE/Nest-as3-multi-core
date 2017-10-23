@@ -43,6 +43,7 @@ public class View implements IView
 	public function registerObserver ( notificationName:String, observer:IObserver ) : void {
 	//==================================================================================================
 		const observers:Vector.<IObserver> = observerMap[ notificationName ];
+//		trace("> Nest -> View > registerObserver: name =", notificationName);
 		if( observers ) {
 			observers.push( observer );
 		} else {
@@ -55,6 +56,8 @@ public class View implements IView
 	//==================================================================================================
 		const notificationName:String = notification.getName();
 		const observers:Vector.<IObserver> = observerMap[ notificationName ];
+//		trace("> Nest -> View > notifyObservers: name =", notificationName);
+//		trace("> Nest -> View > notifyObservers: observers =", observers);
 		if( observers != null ) {
 			observers.forEach(function(observer:IObserver, index:uint, vector:Vector.<IObserver>) : void {
 				if(observer) observer.notifyObserver( notification );
@@ -73,11 +76,18 @@ public class View implements IView
 
 		Injector.mapInject( mediator );
 
-		const interests:Vector.<String> = mediator.listNotificationInterests();
+//		trace("\n> Nest -> View -> registerMediator:", mediatorName);
+		
+		const interests:Vector.<String> = mediator.listNotifications;
 		var listCounter:uint = interests.length;
+		var notificationName:String;
 		if ( listCounter > 0 ) {
 			const observer:Observer = new Observer( mediator.handleNotification, mediator );
-			while(listCounter--) registerObserver( interests[listCounter], observer );
+			while(listCounter--) {
+				notificationName = interests[listCounter];
+				if(notificationName.length > 0) 
+					registerObserver( notificationName , observer );
+			}
 		}
 		mediator.onRegister();
 	}
@@ -88,45 +98,51 @@ public class View implements IView
 		const mediatorName:String = mediator.getMediatorName();
 		if ( mediatorMap[ mediatorName ] != null ) return;
 
-		const viewComponent:Object = mediator.getViewComponent();
-
 		mediator.initializeNotifier( multitonKey );
 		mediatorMap[ mediatorName ] = mediator;
 
 		Injector.mapInject( mediator );
 
-		const interestsNotes:Vector.<String> 		= mediator.listNotificationInterests();
-		const interestsNFunc:Vector.<NFunction> 	= mediator.listNotificationsFunctions();
+		const interestsNotes:Vector.<String> 		= mediator.listNotifications;
+		const interestsNFunc:Vector.<NFunction> 	= mediator.listNFunctions;
 
-		var listCounter:uint = interestsNFunc.length;
-
-		var notifyMethod	: Function
+		var listCounter		: uint = interestsNFunc.length
+		,	notifyMethod	: Function
 		,	notifyContext	: Object
 		,	notifyName		: String
 		;
 
+		const viewComponent:Object = mediator.getViewComponent();
+		
+//		trace("\n> Nest -> View -> registerMediatorAdvance:", mediatorName);
+//		trace("> Nest -> View -> REGISTER NFunction");
+		
 		var observer:Observer;
 		var nFunction:NFunction;
 		if ( listCounter > 0 ) {
 			var nFunctionType:String;
+			var nFunctionFunc:Object;
 			while(listCounter--) {
 				nFunction = interestsNFunc[listCounter];
 				notifyName = nFunction.name;
-				nFunctionType = typeof nFunction.func;
+				nFunctionFunc = nFunction.func;
+				nFunctionType = typeof nFunctionFunc;
 				switch(nFunctionType) {
 					case NFunction.TYPE_STRING:
-						notifyContext = Object(mediator.getViewComponent());
-						notifyMethod = notifyContext[String(nFunction.func)] as Function;
+						notifyContext = Object(viewComponent);
+						notifyMethod = notifyContext[String(nFunctionFunc)] as Function;
 						break;
 					case NFunction.TYPE_FUNCTION:
+						notifyMethod = nFunctionFunc as Function;
 						notifyContext = mediator;
-						notifyMethod = nFunction.func as Function;
 						break;
 				}
 				observer = new Observer( notifyMethod, notifyContext, true );
 				registerObserver( notifyName, observer );
 			}
 		}
+		
+//		trace("> Nest -> View -> REGISTER Notifications");
 
 		//REGISTER LIST NOTIFICATIONS
 		listCounter = interestsNotes.length;
@@ -134,25 +150,47 @@ public class View implements IView
 			observer = new Observer( mediator.handleNotification, mediator );
 			while( listCounter-- ){
 				notifyName = interestsNotes[ listCounter ];
-				registerObserver( notifyName,  observer );
+				if(notifyName.length > 0) registerObserver( notifyName,  observer );
 			}
 		}
 
 		mediator.onRegister();
 	}
-
+	
 	//==================================================================================================
 	public function removeMediator( mediatorName:String ) : IMediator {
 	//==================================================================================================
 		const mediator:IMediator = mediatorMap[ mediatorName ] as IMediator;
+//		trace("> Nest -> View > removeMediator: name =", mediatorName);
+//		trace("> Nest -> View > removeMediator: mediator =", mediator);
 		if ( mediator ) {
-			const interests:Vector.<String> = mediator.listNotificationInterests();
-			var listCounter:uint = interests.length;
+			const interestsNotes:Vector.<String> = mediator.listNotifications;
+			var listCounter:uint = interestsNotes.length;
 			var notificationName:String = "";
 			while( listCounter-- ) {
-				notificationName = interests[ listCounter ];
+				notificationName = interestsNotes[ listCounter ];
 				removeObserver( notificationName , mediator );
 			}
+			
+			const interestsNFunc:Vector.<NFunction> = mediator.listNFunctions;
+			const viewComponent:Object = mediator.getViewComponent();
+			
+			listCounter = interestsNFunc.length;
+			
+			var nFunction:NFunction;
+			var nContext:Object;
+			var nFunctionType:String;
+			while(listCounter--) {
+				nFunction = interestsNFunc[listCounter];
+				notificationName = nFunction.name;
+				nFunctionType = typeof nFunction.func;
+				switch(nFunctionType) {
+					case NFunction.TYPE_STRING: nContext = viewComponent; break;
+					case NFunction.TYPE_FUNCTION: nContext = mediator; break;
+				}
+				removeObserver( notificationName , nContext );
+			}
+			
 			delete mediatorMap[ mediatorName ];
 			mediator.onRemove();
 		}
@@ -177,7 +215,7 @@ public class View implements IView
 		while(count--) {
 			observer = IObserver(observers[ count ]);
 			if ( observer.compareNotifyContext( notifyContext ) == true ) {
-				observers.splice(count, 1);
+				observers.removeAt(count);
 				break;
 			}
 		}

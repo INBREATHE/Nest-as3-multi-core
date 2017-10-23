@@ -28,7 +28,7 @@ public class WorkerModuleMediator extends Mediator
 		super( module );
 	}
 
-	override public function listNotificationsFunctions():Vector.<NFunction> {
+	override protected function listNotificationsFunctions():Vector.<NFunction> {
 		return new <NFunction>[
 			new NFunction(WorkerModule.CONNECT_THROGH_JUNCTION, ConnectThrowJunction)
 		,	new NFunction(WorkerModule.CONNECT_MODULE_TO_WORKER, ConnectModuleToWorker)

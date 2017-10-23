@@ -7,6 +7,7 @@
     <classEntry path="nest.interfaces.IEntity"/>
     <classEntry path="nest.entities.screen.ScreenData"/>
     <classEntry path="nest.entities.popup.PopupData"/>
+    <classEntry path="nest.utils.ArrayUtils"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

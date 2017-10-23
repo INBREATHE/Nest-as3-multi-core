@@ -18,7 +18,7 @@ public final class VisualizerMediator extends Mediator
 	}
 
 	//==================================================================================================
-	override public function listNotificationsFunctions():Vector.<NFunction> {
+	override protected function listNotificationsFunctions():Vector.<NFunction> {
 		//==================================================================================================
 		return new <NFunction>[
 			new NFunction( VisualizerNotification.SHOW,  ShowVisualizer )
@@ -27,7 +27,7 @@ public final class VisualizerMediator extends Mediator
 	}
 
 	//==================================================================================================
-	override public function listNotificationInterests():Vector.<String> {
+	override protected function listNotificationInterests():Vector.<String> {
 	//==================================================================================================
 		return new <String>[
 		];
@@ -63,7 +63,7 @@ public final class VisualizerMediator extends Mediator
 	}
 
 	//==================================================================================================
-	override public function onRemove():void {
+	override public function onRemove():void { super.onRemove();
 	//==================================================================================================
 
 	}
