@@ -9,7 +9,7 @@ public class ScreenCache
 {
 	public var screen:Screen;
 	public var mediatorName:String;
-	public var previousScreen:ScreenCache;
+	public var prevScreenCache:ScreenCache;
 
 	public function ScreenCache(screen:Screen, mediatorName:String )
 	{

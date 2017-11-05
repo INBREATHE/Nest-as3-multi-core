@@ -9,13 +9,13 @@ import nest.patterns.observer.NFunction;
 
 public interface IMediator extends INotifier
 {
-	function getMediatorName():String;
-	function getViewComponent():Object;
-	function setViewComponent(value:Object):void;
-	function get listNotifications():Vector.<String>;
-	function get listNFunctions():Vector.<NFunction>;
-	function handleNotification(note:INotification):void;
-	function onRegister():void;
-	function onRemove():void;
+	function getMediatorName		() : String;
+	function getViewComponent		() : Object;
+	function setViewComponent		( value : Object ) : void;
+	function get listNotifications	() : Vector.<String>;
+	function get listNFunctions		() : Vector.<NFunction>;
+	function handleNotification		( note : INotification ):void;
+	function onRegister				() : void;
+	function onRemove				() : void;
 }
 }

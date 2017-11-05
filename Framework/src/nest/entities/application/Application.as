@@ -33,6 +33,8 @@ public class Application extends Sprite
 	static public const isIOS			: Boolean = (Capabilities.manufacturer.indexOf("iOS") != -1);
 	static public const isAndroid		: Boolean = (Capabilities.manufacturer.indexOf("Android") != -1);
 
+	static public var EVENT_READY : String = "application_event_ready";
+	
 	static public var SCALEFACTOR		: Number = 1;
 	static public var SCREEN_WIDTH		: uint = Capabilities.screenResolutionX;
 	static public var SCREEN_HEIGHT		: uint = Capabilities.screenResolutionY;
@@ -142,7 +144,7 @@ public class Application extends Sprite
 	//==================================================================================================
 	public function initialized():void {
 	//==================================================================================================
-		_that.dispatchEventWith( ApplicationEvent.READY );
+		_that.dispatchEventWith( EVENT_READY );
 	}
 
 	//==================================================================================================
@@ -170,7 +172,7 @@ public class Application extends Sprite
 	//==================================================================================================
 		if( event.keyCode == Keyboard.BACK )
 		{
-			event.preventDefault();
+			event.preventDefault(); 
 			event.stopImmediatePropagation();
 			_notifier.send( ApplicationNotification.ANDROID_BACK_BUTTON );
 		}

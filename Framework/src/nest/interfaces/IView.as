@@ -9,11 +9,10 @@ public interface IView
 {
 	function registerObserver( notificationName:String, observer:IObserver ) : void;
 
-	function notifyObservers( note:INotification ) : void;
-	function registerMediator( mediator:IMediator ) : void;
-	function registerMediatorAdvance( mediator:IMediator ) : void;
-	function retrieveMediator( mediatorName:String ) : IMediator;
-	function removeMediator( mediatorName:String ) : IMediator;
-	function hasMediator( mediatorName:String ) : Boolean;
+	function notifyObservers		( note : INotification ) : void;
+	function registerMediator		( name : String, mediator : IMediator ) : void;
+	function retrieveMediator		( name : String ) : IMediator;
+	function removeMediator			( name : String ) : IMediator;
+	function hasMediator			( name : String ) : Boolean;
 }
 }

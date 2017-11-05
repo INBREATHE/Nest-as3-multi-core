@@ -1,6 +1,6 @@
 package nest.modules.pipes.plumbing
 {
-import nest.modules.pipes.messages.*;
+    import nest.modules.pipes.messages.Message;
 	
 	/**
 	 * Filter Control Message.

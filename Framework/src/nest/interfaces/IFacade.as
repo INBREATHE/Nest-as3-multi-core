@@ -13,26 +13,25 @@ public interface IFacade
 	function set currentLanguage(value:String):void;
 
 	function registerProxy		( proxyClass : Class ) : void;
-	function retrieveProxy		( proxyClass : Class ) : IProxy;
 	function removeProxy		( proxyClass : Class ) : IProxy;
 	function hasProxy			( proxyClass : Class ) : Boolean;
+	function getProxy			( proxyClass : Class ) : IProxy;
 
 	function registerCommand	( commandName : String, commandClassRef : Class ) : void;
-	function removeCommand		( name : String ) : void;
-	function hasCommand			( name : String ) : Boolean;
+	function removeCommand		( commandName : String ) : void; 
+	function hasCommand			( commandName : String ) : Boolean;
 
 	function registerProcess	( processClassRef : Class ) : void;
 	function removeProcess		( processClassRef : Class ) : void;
 	function hasProcess			( processClassRef : Class ) : Boolean;
 
-	function registerMediatorAdvance	( mediator : IMediator ) : void;
 	function registerPoolCommand		( commandName : String, commandClassRef : Class ) : void;
 	function registerCountCommand		( commandName : String, commandClassRef : Class, count:int ) : void;
 
-	function registerMediator	( mediator : IMediator ) : void;
-	function retrieveMediator	( mediatorName : String ) : IMediator;
+	function registerMediator	( name:String, mediator : IMediator ) : void;
 	function removeMediator		( mediatorName : String ) : IMediator;
 	function hasMediator		( mediatorName : String ) : Boolean;
+	function getMediator		( mediatorName : String ) : IMediator;
 
 	function sendNotification	( notification : INotification ):void;
 	function executeCommand		( notification : INotification ):void;

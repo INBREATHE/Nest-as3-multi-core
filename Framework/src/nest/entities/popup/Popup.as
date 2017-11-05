@@ -14,8 +14,8 @@ import starling.events.Event;
 public class Popup extends Element implements IPopup
 {
 	protected var 
-		_commandID	: uint
-	,	_commands	: Array
+		_actionID	: uint
+	,	_actions	: Array
 	,	_locale		: XMLList
 
 	,	_onAdded	: Function
@@ -40,28 +40,34 @@ public class Popup extends Element implements IPopup
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE );
 	}
 	
+	//==================================================================================================
 	private function Handler_REMOVED_FROM_STAGE(e:Event):void {
+	//==================================================================================================
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.removeEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		
 		_onRemoved && _onRemoved() && (_onRemoved = null) && (_onShown = null);
 	}
 	
+	//==================================================================================================
 	private function Handler_ADDED_TO_STAGE(e:Event):void {
+	//==================================================================================================
 		this.removeEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.addEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		
 		_onAdded && _onAdded() && (_onAdded = null);
 	}
 
-	protected function dispatchToExecuteCommand(commandID:uint, data:PopupEventData = null):void {
-		_commandID = commandID;
-		this.dispatchEventWith(PopupEvents.COMMAND_FROM_POPUP, false, data);
+	//==================================================================================================
+	protected function dispatchToExecuteAction(actionID:uint, data:PopupEventData = null):void {
+	//==================================================================================================
+		_actionID = actionID;
+		this.dispatchEventWith(PopupEvents.ACTION_FROM_POPUP, false, data);
 	}
 
 	//==================================================================================================
-	public function setup( popupData:PopupData ):void 
-	{
+	public function setup( popupData:PopupData ):void {
+	//==================================================================================================
 		_onAdded 	= popupData.onAdded;
 		_onShown 	= popupData.onShown;
 		_onRemoved 	= popupData.onRemoved;
@@ -82,8 +88,8 @@ public class Popup extends Element implements IPopup
 
 	public function show():void { }
 	public function hide(next:Function):void { next.apply(null, [this.name]); }
-	public function get command():String { return _commands[_commandID]; }
-	public function set commands(value:Array):void { _commands = value; }
+	public function get command():String { return _actions[_actionID]; }
+	public function set actions(value:Array):void { _actions = value; }
 	//==================================================================================================
 }
 }

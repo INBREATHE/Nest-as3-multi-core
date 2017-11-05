@@ -6,11 +6,10 @@
 package nest.entities.screen
 {
 import nest.entities.EntityType;
+import nest.entities.elements.Element;
 import nest.interfaces.IScreen;
 
-import starling.display.Sprite;
-
-public class Screen extends Sprite implements IScreen
+public class Screen extends Element implements IScreen
 {
 	public static const PREVIOUS:String = "nest_screen_mark_previous";
 	
@@ -28,6 +27,7 @@ public class Screen extends Sprite implements IScreen
 	public var rebuildable	: Boolean = false;
 
 	public function Screen(name:String) {
+		this.order = -1;
 		this.name = name;
 		this.touchable = false;
 	}
@@ -35,6 +35,7 @@ public class Screen extends Sprite implements IScreen
 	//==================================================================================================
 	public function show():void {
 	//==================================================================================================
+		trace("> Nest -> Screen > show");
 		isShown = true;
 		this.touchable = true;
 	}

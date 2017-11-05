@@ -38,7 +38,7 @@ public class ApplicationFacade extends Facade implements IFacade
 		super.initializeView();
 		
 		trace("> Nest ->", multitonKey, "> ApplicationFacade > initializeView" );
-		registerMediatorAdvance(new ApplicationMediator(Starling.current.root));
+		registerMediator(ApplicationMediator.NAME, new ApplicationMediator(Starling.current.root));
 	}
 
 	//==================================================================================================

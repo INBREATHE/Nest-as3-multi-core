@@ -15,7 +15,8 @@ import nest.patterns.observer.NFunction;
 public class WorkerModuleMediator extends Mediator
 {
 	public static const NAME:String = 'WorkerModuleMediator';
-
+	override public function getMediatorName():String { return NAME; }
+	
 	/**
 	 * This is intermediate object which connect other modules to worker module
 	 * - with Junction

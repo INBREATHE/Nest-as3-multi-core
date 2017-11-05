@@ -11,7 +11,7 @@ package nest.entities.visualizer.commands
 			var visualizerMediator : VisualizerMediator = new VisualizerMediator();
 			
 			this.facade.registerProxy( VisualizerProxy );
-			this.facade.registerMediatorAdvance( visualizerMediator );
+//			this.facade.registerMediatorAdvance( visualizerMediator );
 		}
 	}
 }

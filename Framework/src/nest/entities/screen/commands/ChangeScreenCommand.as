@@ -25,15 +25,15 @@ package nest.entities.screen.commands
 		{
 			const currentScreen 	: ScreenCache 		= screensProxy.currentScreen;
 			const currentScreenName	: String 			= currentScreen ? currentScreen.name : null;
-			const goPrevious		: Boolean			= nextScreenName == Screen.PREVIOUS || (currentScreen && currentScreen.previousScreen && currentScreen.previousScreen.name == nextScreenName);
-			const targetScreen		: ScreenCache 		= (goPrevious ? currentScreen.previousScreen : screensProxy.getCacheByScreenName(nextScreenName)) || screensProxy.getFirstCachedScreen();
-			const screenMediator	: ScreenMediator 	= facade.retrieveMediator(targetScreen.mediatorName) as ScreenMediator;
+			const goPrevious		: Boolean			= nextScreenName == Screen.PREVIOUS || (currentScreen && currentScreen.prevScreenCache && currentScreen.prevScreenCache.name == nextScreenName);
+			const targetScreen		: ScreenCache 		= (goPrevious ? currentScreen.prevScreenCache : screensProxy.getCacheByScreenName(nextScreenName)) || screensProxy.getFirstCachedScreen();
+			const screenMediator	: ScreenMediator 	= facade.getMediator(targetScreen.mediatorName) as ScreenMediator;
 
 			if(currentScreen) {
-				if(!goPrevious && targetScreen.previousScreen == null)	targetScreen.previousScreen = currentScreen;
-				else currentScreen.previousScreen = null;
+				if(!goPrevious && targetScreen.prevScreenCache == null)	targetScreen.prevScreenCache = currentScreen;
+				else currentScreen.prevScreenCache = null;
 				
-				ScreenMediator(facade.retrieveMediator(currentScreen.mediatorName)).onLeave();
+				ScreenMediator(facade.getMediator(currentScreen.mediatorName)).onLeave();
 				
 				this.send( ApplicationNotification.HIDE_SCREEN, currentScreen.screen, nextScreenName ); 
 			}

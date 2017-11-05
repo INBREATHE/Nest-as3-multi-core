@@ -1,7 +1,6 @@
 package nest.modules.pipes.messages
 {
 	import nest.modules.pipes.interfaces.IPipeMessage;
-	import nest.utils.UIDUtil;
 
 	/**
 	 * Pipe Message.
@@ -10,6 +9,8 @@ package nest.modules.pipes.messages
 	[RemoteClass]
 	public class Message implements IPipeMessage
 	{
+		public static var INDEX	: uint = 0;
+		
 		public static const BASE	: String = "pipe-message/";
 		public static const NORMAL 	: String = BASE + "normal/";
 		public static const WORKER 	: String = BASE + "worker/";
@@ -27,7 +28,7 @@ package nest.modules.pipes.messages
 			setHeader( header );
 
 			this.messageType = messageType;
-			this.messageID = UIDUtil.create();
+			this.messageID = String(++INDEX);
 		}
 		
 		public function getType():String { return this.messageType; }

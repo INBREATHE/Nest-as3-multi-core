@@ -14,6 +14,8 @@ import nest.patterns.mediator.Mediator;
  */
 public class ScrollerMediator extends Mediator implements IMediator
 {
+	static public const NAME:String = "ScrollerMediator";
+	
 	public function ScrollerMediator(areaWidth:uint, areaHeight:uint) { super(new Scroller(areaWidth, areaHeight)); }
 	override protected function listNotificationInterests():Vector.<String> {
 		return new <String>[

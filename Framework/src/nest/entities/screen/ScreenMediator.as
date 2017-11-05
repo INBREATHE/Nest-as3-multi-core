@@ -43,9 +43,10 @@ public class ScreenMediator extends Mediator implements IMediator
 	/**
 	 * When screen mediator ready to use we first register him in ScreenProxy
 	 */
-	override public function onRegister():void { this.exec( ScreenCommand.REGISTER, viewComponent, mediatorName ); }
+	override public function onRegister():void { this.exec( ScreenCommand.REGISTER, viewComponent, this.getMediatorName() ); }
 	
 	private function Handle_AddComponentToStage(e:Event):void {
+		trace("> Nest -> ScreenMediator > Handle_AddComponentToStage :", screen);
 		screen.onAdded();
 		SetupComponentListeners();
 		screen.removeEventListener(	Event.ADDED_TO_STAGE, 		Handle_AddComponentToStage);
@@ -126,7 +127,8 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	protected function ContentReady():void { 
 	//==================================================================================================
-		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable )
+		trace("> Application -> ScreenMediator > ContentReady: screen is ScrollScreen = " + (screen is ScrollScreen));
+		if( screen is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable )
 			this.send( ScrollerNotifications.SETUP_SCROLLER, ScrollScreen(viewComponent).getScrollContainer() );
 
 		if(_dataForScreen && _dataForScreen.hasContentReadyCallback()) 

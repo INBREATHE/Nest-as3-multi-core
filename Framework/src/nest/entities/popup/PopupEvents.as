@@ -9,7 +9,7 @@ public final class PopupEvents
 {
 	private static const PREFIX:String = "event_popup_";
 	static public const 
-		COMMAND_FROM_POPUP		: String = PREFIX + "commandFromPopup"
+		ACTION_FROM_POPUP		: String = PREFIX + "commandFromPopup"
 	,	TAP_HAPPEND_OK			: String = PREFIX + "tapHappendOk"
 	,	TAP_HAPPEND_CLOSE		: String = PREFIX + "tapHappendClose"
 	, 	POPUP_SHOWN				: String = PREFIX + "popup_shown"

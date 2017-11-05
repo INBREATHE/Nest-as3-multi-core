@@ -15,6 +15,6 @@ public interface IPopup extends IEntity
 	function hide(next:Function):void;
 
 	function get command():String;
-	function set commands(value:Array):void;
+	function set actions(value:Array):void;
 }
 }

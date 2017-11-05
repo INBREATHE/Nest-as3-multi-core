@@ -5,7 +5,6 @@ import flash.display.Sprite;
 import nest.interfaces.IFacade;
 import nest.modules.pipes.interfaces.IPipeAware;
 import nest.modules.pipes.interfaces.IPipeFitting;
-import nest.modules.pipes.plumbing.JunctionMediator;
 import nest.patterns.observer.Notification;
 
 public class PipeAwareModule extends Sprite implements IPipeAware

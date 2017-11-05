@@ -59,8 +59,8 @@ public class Facade implements IFacade
 
 	// PROPERTIES
 	//========================================================================================================================================
-	public function get currentLanguage():String { return _language; }
-	public function set currentLanguage(value:String):void {
+	public function get currentLanguage() : String { return _language; }
+	public function set currentLanguage( value : String ):void {
 		_language = value;
 		(model as ILanguageDependent).languageChanged();
 	}
@@ -75,37 +75,36 @@ public class Facade implements IFacade
 
 	// REGISTER
 	//========================================================================================================================================
-	public function registerProxy 			( proxyClass:Class )			: void 		{ model.registerProxy ( proxyClass ); 			}
-	public function registerProcess			( process:Class )				: void 		{ }
-	public function registerCommand			( name:String, clss:Class )		: void 		{ controller.registerCommand( name, clss );  	}
-	public function registerPoolCommand		( name:String, clss:Class )		: void 		{ controller.registerPoolCommand( name, clss );  	}
+	public function registerProxy 			( proxyClass : Class )			: void 		{ model.registerProxy ( proxyClass ); 			}
+	public function registerProcess			( process : Class )				: void 		{ }
+	public function registerCommand			( name : String, clss : Class )	: void 		{ controller.registerCommand( name, clss );  	}
+	public function registerPoolCommand		( name : String, clss : Class )	: void 		{ controller.registerPoolCommand( name, clss );  	}
 
-	public function registerCountCommand	( name:String, clss:Class, count:int ) : void { controller.registerCountCommand( name, clss, count );  	}
+	public function registerCountCommand	( name : String, clss : Class, count : int ) : void { controller.registerCountCommand( name, clss, count );  	}
 
-	public function registerMediator		( mediator:IMediator )			: void 		{ view.registerMediator( mediator ); 			}
-	public function registerMediatorAdvance	( mediator:IMediator )			: void 		{ view.registerMediatorAdvance( mediator ); 	}
+	public function registerMediator		( name:String, mediator : IMediator )		: void 		{ view.registerMediator( name, mediator ); 			}
 	//========================================================================================================================================
 
 	// HAS
 	//========================================================================================================================================
-	public function hasProxy			( proxyClass:Class ) 			: Boolean 	{ return model.hasProxy( proxyClass ); }
-	public function hasProcess			( process:Class ) 				: Boolean 	{ return false; }
-	public function hasCommand			( commandName:String ) 			: Boolean 	{ return controller.hasCommand( commandName ); }
-	public function hasMediator			( mediatorName:String ) 		: Boolean 	{ return view.hasMediator( mediatorName ); }
+	public function hasProxy			( proxyClass : Class ) 			: Boolean 	{ return model.hasProxy( proxyClass ); }
+	public function hasProcess			( process : Class ) 			: Boolean 	{ return false; }
+	public function hasCommand			( commandName : String ) 		: Boolean 	{ return controller.hasCommand( commandName ); }
+	public function hasMediator			( mediatorName : String ) 		: Boolean 	{ return view.hasMediator( mediatorName ); }
 	//========================================================================================================================================
 
 	// RETRIEVE
 	//========================================================================================================================================
-	public function retrieveProxy 		( proxyClass:Class )			: IProxy 	{ return model.retrieveProxy ( proxyClass ); }
-	public function retrieveMediator	( mediatorName:String )			: IMediator { return view.retrieveMediator( mediatorName ) as IMediator; }
+	public function getProxy 			( proxyClass : Class )			: IProxy 	{ return model.retrieveProxy ( proxyClass ); }
+	public function getMediator			( mediatorName : String )		: IMediator { return view.retrieveMediator( mediatorName ) as IMediator; }
 	//========================================================================================================================================
 
 	// REMOVE
 	//========================================================================================================================================
-	public function removeProxy 		( proxyClass:Class )			: IProxy 	{ return model.removeProxy ( proxyClass ); }
-	public function removeProcess 		( processName:Class )			: void	 	{ }
-	public function removeCommand		( commandName:String )			: void 		{ controller.removeCommand( commandName ); }
-	public function removeMediator		( mediatorName:String ) 		: IMediator { return view.removeMediator( mediatorName ); }
+	public function removeProxy 		( proxyClass : Class )			: IProxy 	{ return model.removeProxy ( proxyClass ); }
+	public function removeProcess 		( processName : Class )			: void	 	{ }
+	public function removeCommand		( commandName : String )		: void 		{ controller.removeCommand( commandName ); }
+	public function removeMediator		( mediatorName : String ) 		: IMediator { return view.removeMediator( mediatorName ); }
 	//========================================================================================================================================
 
 	// IFacade

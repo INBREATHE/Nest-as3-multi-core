@@ -66,40 +66,12 @@ public class View implements IView
 	}
 
 	//==================================================================================================
-	public function registerMediator( mediator:IMediator ) : void {
+	public function registerMediator( name:String, mediator:IMediator ) : void {
 	//==================================================================================================
-		const mediatorName:String = mediator.getMediatorName();
-		if ( mediatorMap[ mediatorName ] != null ) return;
-
-		mediator.initializeNotifier( multitonKey );
-		mediatorMap[ mediatorName ] = mediator;
-
-		Injector.mapInject( mediator );
-
-//		trace("\n> Nest -> View -> registerMediator:", mediatorName);
+		if ( mediatorMap[ name ] != null ) return;
 		
-		const interests:Vector.<String> = mediator.listNotifications;
-		var listCounter:uint = interests.length;
-		var notificationName:String;
-		if ( listCounter > 0 ) {
-			const observer:Observer = new Observer( mediator.handleNotification, mediator );
-			while(listCounter--) {
-				notificationName = interests[listCounter];
-				if(notificationName.length > 0) 
-					registerObserver( notificationName , observer );
-			}
-		}
-		mediator.onRegister();
-	}
-
-	//==================================================================================================
-	public function registerMediatorAdvance( mediator:IMediator ) : void {
-	//==================================================================================================
-		const mediatorName:String = mediator.getMediatorName();
-		if ( mediatorMap[ mediatorName ] != null ) return;
-
 		mediator.initializeNotifier( multitonKey );
-		mediatorMap[ mediatorName ] = mediator;
+		mediatorMap[ name ] = mediator;
 
 		Injector.mapInject( mediator );
 

@@ -32,7 +32,7 @@ public final class ScrollCounter extends Canvas
 	,	_type					: int
 	;
 
-	public function ScrollCounter(type:int = TYPE_CIRCLE, color:uint = 0xCCCCCC, activeColor:uint = 0x232323) {
+	public function ScrollCounter(type:int = TYPE_SQUARE, color:uint = 0xCCCCCC, activeColor:uint = 0x232323) {
 		_type = type;
 		_color = color;
 		_colorActive = activeColor;

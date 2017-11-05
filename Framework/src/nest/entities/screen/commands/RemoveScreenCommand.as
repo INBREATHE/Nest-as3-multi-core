@@ -18,7 +18,7 @@ package nest.entities.screen.commands
 		override public function execute( screenData:Object, screenName:String ):void 
 		{
 			var screenCache		: ScreenCache = screensProxy.getCacheByScreenName(screenName);
-			var screenMediator	: ScreenMediator = facade.retrieveMediator(screenCache.mediatorName) as ScreenMediator;
+			var screenMediator	: ScreenMediator = facade.getMediator(screenCache.mediatorName) as ScreenMediator;
 
 //			screensProxy.currentScreen = screenCache;
 //			this.send( ApplicationNotification.HIDE_SCREEN );

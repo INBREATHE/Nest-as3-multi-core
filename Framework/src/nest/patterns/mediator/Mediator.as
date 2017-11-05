@@ -5,7 +5,6 @@
 */
 package nest.patterns.mediator
 {
-import flash.utils.getQualifiedClassName;
 
 import nest.interfaces.IMediator;
 import nest.interfaces.INotification;
@@ -16,21 +15,19 @@ public class Mediator extends Notifier implements IMediator
 {
 	private static const ERROR_NO_CHILD:String = "There is no child function";
 
-	protected var mediatorName:String;
 	protected var viewComponent:Object;
 
 	protected var _listNotifications:Vector.<String>;
 	protected var _listNFunctions:Vector.<NFunction>;
 	
-	public function Mediator( viewComponent:Object=null ) {
-		this.mediatorName = getQualifiedClassName(this);
+	public function Mediator( viewComponent:Object = null ) {
 		if( viewComponent != null ) this.viewComponent = viewComponent;
 		_listNotifications = listNotificationInterests();
 		_listNFunctions = listNotificationsFunctions();
-		trace("> Nest -> Mediator:", mediatorName, "notes =", _listNotifications.length, " nfunc =", _listNFunctions.length);
+//		trace("> Nest -> Mediator:", mediatorName, "notes =", _listNotifications.length, " nfunc =", _listNFunctions.length);
 	}
 
-	public function getMediatorName()							: String 	{ return mediatorName; }
+	public function getMediatorName()							: String 	{ throw new Error("NO MEDIATOR NAME"); return ""; }
 	public function setViewComponent(value:Object)				: void 		{ this.viewComponent = value; }
 	public function getViewComponent()							: Object 	{ return viewComponent; }
 	public function handleNotification(note:INotification)		: void 		{ }

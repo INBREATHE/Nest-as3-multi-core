@@ -13,6 +13,8 @@ import nest.patterns.observer.NFunction;
 
 public class ApplicationMediator extends Mediator implements IMediator
 {
+	static public const NAME:String = "ApplicationMediator";
+	
 	static private const
 		APP_METHOD__PREPARE			: String = "prepare"
 	,	APP_METHOD__INITIALIZED		: String = "initialized"
@@ -26,7 +28,7 @@ public class ApplicationMediator extends Mediator implements IMediator
 		super( viewComponent );
 		application.notifier = this;
 	}
-
+	
 	//==================================================================================================
 	override protected function listNotificationsFunctions():Vector.<NFunction> {
 	//==================================================================================================
@@ -69,7 +71,7 @@ public class ApplicationMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function ShowScreen( obj:Screen, screenName:String ):void {
 	//==================================================================================================
-//		trace("> Nest -> ApplicationMediator ShowScreen", isReturn === "", obj);
+		trace("> Nest -> ApplicationMediator ShowScreen", screenName, obj);
 		application.showScreen(obj, screenName == Screen.PREVIOUS);
 	}
 
@@ -77,14 +79,14 @@ public class ApplicationMediator extends Mediator implements IMediator
 	override public function onRegister():void {
 	//==================================================================================================
 		// This event fired after catching ApplicationNotification.INITIALIZED  
-		application.addEventListener( ApplicationEvent.READY, ApplicationReadyHandler );
+		application.addEventListener( Application.EVENT_READY, ApplicationReadyHandler );
 	}
 
 	//==================================================================================================
 	private function ApplicationReadyHandler():void {
 	//==================================================================================================
 		this.exec( ApplicationFacade.READY );
-		application.removeEventListener( ApplicationEvent.READY, ApplicationReadyHandler );
+		application.removeEventListener( Application.EVENT_READY, ApplicationReadyHandler );
 	}
 
 	//==================================================================================================

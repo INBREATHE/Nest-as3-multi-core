@@ -28,6 +28,7 @@ public class Observer implements IObserver
 			case 0: default: _notify.call( _context ); break;
 			case 1: _notify.call( _context, notification.getBody() ); break;
 			case 2: _notify.call( _context, notification.getBody(), notification.getType() ); break;
+			case 3: _notify.call( _context, notification.getName(), notification.getBody(), notification.getType() ); break;
 		}}
 		else {
 			_notify.call( _context, notification );
