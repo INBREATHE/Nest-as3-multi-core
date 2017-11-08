@@ -27,9 +27,9 @@ public final class FileUtils
 	}
 
 	static public function readBytesFromFile(path:String, uncompressed:Boolean = false):ByteArray {
-		const file			:File 			= File.applicationDirectory.resolvePath(path);
-		const fileStream	:FileStream 	= new FileStream();
-		const byteArray		:ByteArray 		= new ByteArray();
+		const file			: File 			= File.applicationDirectory.resolvePath(path);
+		const fileStream	: FileStream 	= new FileStream();
+		const byteArray		: ByteArray 	= new ByteArray();
 
 		if(!file.exists) return byteArray;
 

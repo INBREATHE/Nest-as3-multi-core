@@ -19,8 +19,8 @@ public class Screen extends Element implements IScreen
 	,	sh					: uint 		= 0
 	,	swhalf				: uint		= 0
 	,	shhalf				: uint		= 0
-	
 	;
+
 	protected var _locale:XMLList;
 
 	public var isShown		: Boolean = false;

@@ -232,7 +232,7 @@ public class RasterizerService extends EventDispatcher
 		}
 	}
 
-	public function process(usecache:Boolean = true):void {
+	public function process(usecache:Boolean = true, save:Boolean = true):void {
 		if (_isCacheExist && usecache) {
 			ProcessFromLoad();
 		} else {
@@ -366,7 +366,7 @@ public class RasterizerService extends EventDispatcher
 		return result;
 	}
 
-	private function ProcessAndSave():void {
+	private function ProcessAndSave(save:Boolean = true):void {
 		Capabilities.isDebugger && Application.log("Atlas expected size | min | max:", _currentAtlasSize, _minAtlasSize * _minAtlasSize, _maxAtlasSize * _maxAtlasSize);
 
 		if(_currentAtlasSize == 0) {

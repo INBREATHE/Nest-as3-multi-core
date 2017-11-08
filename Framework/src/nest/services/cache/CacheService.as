@@ -31,7 +31,7 @@ public final class CacheService implements IServiceLocale
 	private const
 		_reports		: Vector.<CacheReport> 		= new Vector.<CacheReport>
 	,	_requests		: Vector.<CacheRequest> 	= new Vector.<CacheRequest>
-	,	_isSupported	: Boolean = false//EncryptedLocalStore.isSupported;
+	,	_isSupported	: Boolean = EncryptedLocalStore.isSupported;
 
 	private var
 		_oData 	: Object

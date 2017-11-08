@@ -16,7 +16,6 @@ import flash.net.URLRequestMethod;
 import flash.net.URLVariables;
 import flash.system.Capabilities;
 
-import nest.entities.application.Application;
 import nest.interfaces.IServiceLocale;
 import nest.services.cache.entities.CacheReport;
 import nest.services.reports.entities.ReportResponce;
@@ -43,7 +42,7 @@ public final class ReportService extends EventDispatcher implements IServiceLoca
 		,	uuid		: ""
 		,	time 		: _date.time
 		,	offset 		: _date.timezoneOffset
-		,	version		: Application.version
+		,	version		: Capabilities.version
 		,	os			: Capabilities.version
 		,	lng			: ""
 	}

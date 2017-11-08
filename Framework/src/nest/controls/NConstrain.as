@@ -22,7 +22,6 @@ public class NConstrain extends DisplayObject
 	public var constrainY:Object;
 	
 	public function NConstrain()
-	{
-	}
+	{}
 }
 }

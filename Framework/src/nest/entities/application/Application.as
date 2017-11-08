@@ -32,6 +32,7 @@ public class Application extends Sprite
 {
 	static public const isIOS			: Boolean = (Capabilities.manufacturer.indexOf("iOS") != -1);
 	static public const isAndroid		: Boolean = (Capabilities.manufacturer.indexOf("Android") != -1);
+	static public var isPhone			: Boolean;
 
 	static public var EVENT_READY : String = "application_event_ready";
 	

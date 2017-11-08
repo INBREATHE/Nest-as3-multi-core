@@ -13,8 +13,6 @@ import flash.system.Worker;
 import flash.system.WorkerDomain;
 import flash.system.WorkerState;
 import flash.utils.ByteArray;
-import flash.utils.CompressionAlgorithm;
-import flash.utils.getQualifiedClassName;
 
 import nest.interfaces.IFacade;
 import nest.modules.pipes.PipeAwareModule;
