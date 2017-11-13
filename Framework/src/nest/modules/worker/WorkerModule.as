@@ -84,7 +84,11 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 	public function initialize(bytes:ByteArray, enabled:Boolean = true):void
 	{
-		trace("\n> Nest -> Worker Module START:", isMaster ? "MASTER" : "SLAVE", "enabled =", enabled + "; is supported =", Worker.isSupported + "; facade =", facade);
+		trace("\n> Nest -> WorkerModule START:", 
+			isMaster ? "MASTER" : "SLAVE", "enabled =", 
+			enabled + "; is supported =", 
+			Worker.isSupported + "; facade =", facade.key
+		);
 
 		if (isSupported && enabled)
 		{
@@ -114,6 +118,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 				isBusy = true;
 				isInited = true;
 
+				trace("> Nest -> WorkerModule -> MASTER launching worker!");
 				_worker.start();
 			}
 			else // WORKER
@@ -132,6 +137,9 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 				isInited = true;
 				// Worker don't need to wait, it's start immediately
+				
+				trace("> Nest -> WorkerModule -> SLAVE starts immediately!");
+				
 				start();
 			}
 		}

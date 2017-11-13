@@ -6,6 +6,7 @@
 package nest.entities.screen
 {
 import nest.entities.EntityType;
+import nest.entities.application.Application;
 import nest.entities.elements.Element;
 import nest.interfaces.IScreen;
 
@@ -30,6 +31,7 @@ public class Screen extends Element implements IScreen
 		this.order = -1;
 		this.name = name;
 		this.touchable = false;
+		super(Application.ENVIROMENT);
 	}
 
 	//==================================================================================================

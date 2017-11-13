@@ -94,8 +94,8 @@ public class ScreenMediator extends Mediator implements IMediator
 		return new <String>[
 			_dataNotification
 		,	ApplicationNotification.ANDROID_BACK_BUTTON
-		,	ApplicationNotification.POPUP_CLOSED
-		,	ApplicationNotification.POPUP_OPENED
+		,	ApplicationNotification.POPUP_REMOVED
+		,	ApplicationNotification.POPUP_ADDED
 		,	ApplicationNotification.LANGUAGE_CHANGED
 		];
 	}
@@ -112,8 +112,8 @@ public class ScreenMediator extends Mediator implements IMediator
 		}
 		else if(name == ApplicationNotification.LANGUAGE_CHANGED) LocalizeScreen();
 		else if(name == ApplicationNotification.ANDROID_BACK_BUTTON && screen.isShown && isBackPossible) Handle_Android_BackButton();
-		else if(name == ApplicationNotification.POPUP_CLOSED) Handle_PopupClosed(uint(body), notification.getType())
-		else if(name == ApplicationNotification.POPUP_OPENED) Handle_PopupOpened(uint(body), notification.getType())
+		else if(name == ApplicationNotification.POPUP_REMOVED) Handle_PopupClosed(uint(body), notification.getType())
+		else if(name == ApplicationNotification.POPUP_ADDED) Handle_PopupOpened(uint(body), notification.getType())
 	}
 	
 	//==================================================================================================

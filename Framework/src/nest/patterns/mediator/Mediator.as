@@ -35,6 +35,7 @@ public class Mediator extends Notifier implements IMediator
 	public function onRemove()									: void 		{ 
 		while(_listNFunctions.length) _listNFunctions.shift().clear(); 
 		_listNotifications.length = 0;
+		facade = null;
 	}
 	public function get listNotifications()						: Vector.<String> 		{ return _listNotifications; }
 	public function get listNFunctions()						: Vector.<NFunction> 	{ return _listNFunctions; }

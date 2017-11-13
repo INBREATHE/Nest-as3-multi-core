@@ -15,11 +15,13 @@ public class Asset
 {
 	public var classlink:Class;
 	public var type:int = int.MAX_VALUE;
+	public var scaleType:int;
 	public var obj:* = null;
 
-	public function Asset(type:int, classlink:Class) {
+	public function Asset(type:int, classlink:Class, scale:int = AssetScales.HOR) {
 		this.type = type;
 		this.classlink = classlink;
+		this.scaleType = scale;
 	}
 
 	/**

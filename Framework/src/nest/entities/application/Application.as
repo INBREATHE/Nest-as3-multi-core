@@ -12,7 +12,9 @@ import flash.system.Capabilities;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.ui.Keyboard;
+import flash.utils.setTimeout;
 
+import nest.Enviroment;
 import nest.entities.elements.Element;
 import nest.entities.elements.Navigator;
 import nest.entities.elements.transitions.FadeTransition;
@@ -22,6 +24,7 @@ import nest.interfaces.INotifier;
 
 import starling.display.DisplayObject;
 import starling.display.Sprite;
+import starling.events.Event;
 
 /**
  * This is screen navigator and main class of application
@@ -30,48 +33,8 @@ import starling.display.Sprite;
  */
 public class Application extends Sprite
 {
-	static public const isIOS			: Boolean = (Capabilities.manufacturer.indexOf("iOS") != -1);
-	static public const isAndroid		: Boolean = (Capabilities.manufacturer.indexOf("Android") != -1);
-	static public var isPhone			: Boolean;
-
-	static public var EVENT_READY : String = "application_event_ready";
-	
-	static public var SCALEFACTOR		: Number = 1;
-	static public var SCREEN_WIDTH		: uint = Capabilities.screenResolutionX;
-	static public var SCREEN_HEIGHT		: uint = Capabilities.screenResolutionY;
-
 	static private var console:TextField;
-	
-	static public var
-		version			: String
-	;
-
-	private var
-		_that			: Application
-	,	_navigator		: Navigator
-	;
-
 	public static function log(...message):void { if(console) console.text = "\n> " + message + console.text; else trace(message); }
-	
-	private const _screensContainer : Element = new Element();
-
-	protected var _notifier	: INotifier;
-
-	public function Application() 
-	{
-		_that = this;
-
-		this.addElement(_screensContainer);
-
-		Init_AppParams();
-		Init_Navigator();
-
-		if(isAndroid || Capabilities.isDebugger)
-		{
-			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown)
-		}
-	}
-	
 	//==================================================================================================
 	public static function setupConsole(stage:DisplayObjectContainer, fontSize:uint = 15, fontColor:uint = 0xff0000):void {
 	//==================================================================================================
@@ -91,20 +54,33 @@ public class Application extends Sprite
 			}
 		});
 	}
+	
+	static public var isPhone			: Boolean;
 
-	//==================================================================================================
-	private function Init_AppParams():void {
-	//==================================================================================================
-		const descriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
-		const ns:Namespace = descriptor.namespace();
-		version = descriptor.ns::versionNumber;
-	}
+	static public var EVENT_READY : String = "application_event_ready";
+	
+	static public var SCALEFACTOR		: Number = 1;
+	static public var SCREEN_WIDTH		: uint = Capabilities.screenResolutionX;
+	static public var SCREEN_HEIGHT		: uint = Capabilities.screenResolutionY;
 
-	//==================================================================================================
-	private function Init_Navigator():void {
-	//==================================================================================================
-		_navigator = new Navigator(_screensContainer, new FadeTransition());
+	public static const ENVIROMENT:Enviroment = new Enviroment();
+	
+	private const _screensContainer : Element = new Element(ENVIROMENT);
+	private const _navigator		: Navigator = new Navigator(_screensContainer, new FadeTransition());
+
+	protected var _notifier	: INotifier;
+
+	public function Application() 
+	{
+		this.addElement(_screensContainer);
+
+		if(ENVIROMENT.isAndroid || Capabilities.isDebugger)
+		{
+			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown)
+		}
 	}
+	
+	
 
 	//==================================================================================================
 	public function addElement(obj:DisplayObject):void {
@@ -145,7 +121,7 @@ public class Application extends Sprite
 	//==================================================================================================
 	public function initialized():void {
 	//==================================================================================================
-		_that.dispatchEventWith( EVENT_READY );
+		this.dispatchEventWith( EVENT_READY );
 	}
 
 	//==================================================================================================

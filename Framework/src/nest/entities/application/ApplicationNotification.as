@@ -18,8 +18,8 @@ public final class ApplicationNotification
 	,	REMOVE_ELEMENT			: String = PREFIX + "removeelement"
 	,	LANGUAGE_CHANGED		: String = PREFIX + "language_changed"
 
-	,	POPUP_CLOSED			: String = PREFIX + "popupclosed"
-	,	POPUP_OPENED			: String = PREFIX + "popupopened"
+	,	POPUP_REMOVED			: String = PREFIX + "popupclosed"
+	,	POPUP_ADDED			: String = PREFIX + "popupopened"
 	,	ANDROID_BACK_BUTTON		: String = PREFIX + "androidbackbutton"
 	;
 }

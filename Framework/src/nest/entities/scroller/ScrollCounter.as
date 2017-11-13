@@ -5,8 +5,10 @@
 */
 package nest.entities.scroller
 {
-import starling.display.Canvas;
+import nest.Enviroment;
 import nest.entities.application.Application;
+
+import starling.display.Canvas;
 
 public final class ScrollCounter extends Canvas
 {
@@ -19,24 +21,23 @@ public final class ScrollCounter extends Canvas
 	public var numChildrens:uint;
 
 	private const
-		scalefactor				: Number 	= Application.SCALEFACTOR
-	,	COUNTER_SIZE			: int 		= 12 * scalefactor
-	,	COUNTER_RADIUS			: int 		= COUNTER_SIZE * 0.5
-	,	COUNTER_DELTA_X			: int		= 8 * scalefactor
-	,	COUNTER_OFFSET			: int 		= COUNTER_SIZE + COUNTER_DELTA_X
-	,	POSITION_Y				: int 		= 76 * scalefactor
+		ENV					: Enviroment = Application.ENVIROMENT
+	,	COUNTER_SIZE		: int 		= 12 * ENV.scaleFactor.y
+	,	COUNTER_RADIUS		: int 		= COUNTER_SIZE * 0.5
+	,	COUNTER_OFFSET		: int 		= COUNTER_SIZE + 8 * ENV.scaleFactor.y
 	;
+		
 	private var
-		_color					: uint
-	,	_colorActive			: uint
-	,	_type					: int
+		_color				: uint
+	,	_colorActive		: uint
+	,	_type				: int
 	;
 
 	public function ScrollCounter(type:int = TYPE_SQUARE, color:uint = 0xCCCCCC, activeColor:uint = 0x232323) {
 		_type = type;
 		_color = color;
 		_colorActive = activeColor;
-		this.y = POSITION_Y;
+		this.y = (ENV.isPhone ? 88 : 72) * ENV.scaleFactor.y;
 	}
 
 	public function reset():void {

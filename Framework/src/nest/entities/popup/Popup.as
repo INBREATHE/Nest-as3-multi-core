@@ -5,10 +5,15 @@
 */
 package nest.entities.popup
 {
+import flash.utils.clearTimeout;
+import flash.utils.setTimeout;
+
 import nest.entities.EntityType;
+import nest.entities.application.Application;
 import nest.entities.elements.Element;
 import nest.interfaces.IPopup;
 
+import starling.display.DisplayObject;
 import starling.events.Event;
 
 public class Popup extends Element implements IPopup
@@ -36,8 +41,16 @@ public class Popup extends Element implements IPopup
 
 	public function Popup( name : String ) {
 		this.name = name;
-		super();
+		super(Application.ENVIROMENT);
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE );
+	}
+	
+	// This method called from RemovePopupFromStage only in case when forcing it to close
+	// Notification_HideAllPopups or Notification_HidePopup(name, force==true)
+	public function clear():void {
+		_onRemoved = null;
+		_onAdded = null;
+		_onShown = null;
 	}
 	
 	//==================================================================================================
@@ -45,8 +58,16 @@ public class Popup extends Element implements IPopup
 	//==================================================================================================
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.removeEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
+		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ," > REMOVED_FROM_STAGE : _onRemoved", _onRemoved);
 		
-		_onRemoved && _onRemoved() && (_onRemoved = null) && (_onShown = null);
+		if(_onRemoved){
+			const onRemove:Function = _onRemoved;
+			clear();
+			const timeoutID:uint = setTimeout(function():void{
+				clearTimeout(timeoutID);
+				onRemove(); 
+			}, 0);
+		}
 	}
 	
 	//==================================================================================================
@@ -55,7 +76,11 @@ public class Popup extends Element implements IPopup
 		this.removeEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.addEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		
-		_onAdded && _onAdded() && (_onAdded = null);
+		if(_onAdded){
+			const onAdded:Function = _onAdded;
+			_onAdded = null;
+			onAdded();
+		}
 	}
 
 	//==================================================================================================
@@ -71,6 +96,10 @@ public class Popup extends Element implements IPopup
 		_onAdded 	= popupData.onAdded;
 		_onShown 	= popupData.onShown;
 		_onRemoved 	= popupData.onRemoved;
+		
+		trace("> Nest -> Popup > setup: _onRemoved", _onRemoved != null);
+		trace("> Nest -> Popup > setup: _onShown", _onShown != null);
+		trace("> Nest -> Popup > setup: _onAdded", _onAdded != null);
 		
 		prepare(popupData.data);
 	}

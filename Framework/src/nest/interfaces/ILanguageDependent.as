@@ -5,13 +5,11 @@
 */
 package nest.interfaces
 {
-	import nest.Enviroment;
-
-public interface IElement
-{
-	function set order(value:int):void;
-	function get order():int;
-	function get env():Enviroment;
-}
-	
+	/**
+	 * To changed language execute command: 
+	 */
+	public interface ILanguageDependent
+	{
+		function languageChanged():void;
+	}
 }

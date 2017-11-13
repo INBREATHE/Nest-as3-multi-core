@@ -8,6 +8,8 @@
     <classEntry path="nest.entities.screen.ScreenData"/>
     <classEntry path="nest.entities.popup.PopupData"/>
     <classEntry path="nest.utils.ArrayUtils"/>
+    <classEntry path="nest.Enviroment"/>
+    <classEntry path="nest.entities.assets.AssetScales"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

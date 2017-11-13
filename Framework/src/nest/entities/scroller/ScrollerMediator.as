@@ -16,7 +16,7 @@ public class ScrollerMediator extends Mediator implements IMediator
 {
 	static public const NAME:String = "ScrollerMediator";
 	
-	public function ScrollerMediator(areaWidth:uint, areaHeight:uint) { super(new Scroller(areaWidth, areaHeight)); }
+	public function ScrollerMediator(areaWidth:uint, areaHeight:uint) { super(new Scroller()); }
 	override protected function listNotificationInterests():Vector.<String> {
 		return new <String>[
 			ScrollerNotifications.SETUP_SCROLLER,

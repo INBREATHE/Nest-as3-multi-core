@@ -12,6 +12,7 @@ public interface IPopup extends IEntity
 	function setup(data:PopupData):void;
 	function prepare(params:Object):void;
 	function show():void;
+	function clear():void;
 	function hide(next:Function):void;
 
 	function get command():String;

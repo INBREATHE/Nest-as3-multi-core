@@ -20,9 +20,14 @@ public final class StringUtils
 	}
 
 	public static function getStringFromEmptyCharactersInArray(arr:Array, replacer:String = "-"):String {
-		return arr.filter(function(item:String, index:uint, arr:Array):Boolean {
-			return item == null || item == "";
-		}).join(replacer);
+		const res:Array = []; 
+		arr.forEach(function(item:String, index:uint, arr:Array):void {
+			if( item == null || (item && (item.length == 0 || item.charCodeAt() == 0)) ){
+				res.push(replacer);
+			}
+		});
+//		trace("> StringUtils -> getStringFromEmptyCharactersInArray: res =", res.length, res);
+		return res.join("");
 	}
 }
 }

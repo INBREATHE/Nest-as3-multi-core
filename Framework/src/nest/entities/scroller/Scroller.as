@@ -8,6 +8,7 @@ package nest.entities.scroller
 import flash.geom.Point;
 import flash.utils.getTimer;
 
+import nest.Enviroment;
 import nest.entities.application.Application;
 import nest.entities.screen.ScrollScreen;
 import nest.interfaces.IScrollItem;
@@ -24,14 +25,12 @@ import starling.events.TouchPhase;
 public class Scroller
 {
 	private const
-		sf					:Number 	= Application.SCALEFACTOR
 
-	,	MOVE_FRICTION		:Number 	= 0.8
+		MOVE_FRICTION		:Number 	= 0.8
 	,	SCALE_TIME			:Number 	= 0.15
 	,	HOLD_START_DELAY	:Number 	= 0.3
 	,	HOLD_END_DELAY		:Number 	= 0.2
 	,	SCALE_TO			:Number 	= 1.050
-	,	TOUCH_ACCURACY		:int 		= 20 * sf
 	,	ALPHA_LEFT			:Number 	= 0.10
 	,	ALPHA_RIGHT			:Number 	= 1 + ALPHA_LEFT
 	,	SCROLL_SPEED		:Number 	= 0.0015
@@ -104,18 +103,26 @@ public class Scroller
 
 	,	_container			:ScrollContainer
 	
-	,	areaWidth					:uint	 	= 0
-	,	areaHeight					:uint	 	= 0
-	,	areaWidthHalf				:Number 	= 0
-	,	areaHeightHalf				:Number 	= 0
+	,	areaWidth			:uint	 	= 0
+	,	areaHeight			:uint	 	= 0
+	,	areaWidthHalf		:Number 	= 0
+	,	areaHeightHalf		:Number 	= 0
+	
+	,	TOUCH_ACCURACY		:int 		= 20
 	;
+
+	private var _env:Enviroment;
 		
-	public function Scroller(w:uint, h:uint) 
+	public function Scroller() 
 	{
-		this.areaWidth = w;
-		this.areaHeight = h;
-		areaWidthHalf = w * 0.5;
-		areaHeightHalf = h * 0.5;
+		_env = Application.ENVIROMENT;
+		this.areaWidth = _env.viewportSize.x;
+		this.areaHeight = _env.viewportSize.y;
+		
+		TOUCH_ACCURACY *= _env.scaleFactor.x;
+		
+		areaWidthHalf = areaWidth * 0.5;
+		areaHeightHalf = areaHeight * 0.5;
 	}
 
 	public function reset():void
@@ -314,7 +321,7 @@ public class Scroller
 //						trace("_currentTargetIndex = " + _currentTargetIndex);
 
 					if(_isTapPossible == false && _deltaPosXAbs > 0) {
-						_tweenMove = new Tween(_container, _deltaPosXAbs * SCROLL_SPEED / sf, Transitions.EASE_OUT);
+						_tweenMove = new Tween(_container, _deltaPosXAbs * SCROLL_SPEED / _env.scaleFactor.x, Transitions.EASE_OUT);
 						_tweenMove.onUpdate = MoveUpdate;
 						_tweenMove.onComplete = MoveComplete;
 						_tweenMove.animate("x", _posX);

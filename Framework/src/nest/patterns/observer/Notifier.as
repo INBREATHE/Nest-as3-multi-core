@@ -15,7 +15,7 @@ public class Notifier implements INotifier
 {
 	protected var facade:IFacade;
 	public function send( notificationName:String, body:Object = null, type:String = null ):void {
-		trace("> Nest -> Notifier", this, "-> send:", notificationName);
+//		trace("> Nest -> Notifier", this, "-> send:", notificationName);
 		facade.sendNotification( new Notification( notificationName, body, type ) );
 	}
 

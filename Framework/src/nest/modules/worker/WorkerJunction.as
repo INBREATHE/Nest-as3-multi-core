@@ -109,8 +109,8 @@ public final class WorkerJunction extends Junction
 					const taskType 	: * = (e.currentTarget as MessageChannel).receive(true);
 					const message 	: IPipeMessage = __getData() as IPipeMessage;
 					const pipe		: IPipeFitting = __getPipe(__channel);
-					trace("\n> Nest -> WorkerJunction > CHANNEL_MESSAGE on", __isMaster ? "MASTER" : "SLAVE");
-					trace("> Nest -> WorkerJunction > channel = " + __channel, pipe, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
+//					trace("\n> Nest -> WorkerJunction > CHANNEL_MESSAGE on", __isMaster ? "MASTER" : "SLAVE");
+//					trace("> Nest -> WorkerJunction > channel = " + __channel, pipe, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
 //					if(message) 
 //					{
 //						trace("> Nest -> WorkerJunction > message", message);

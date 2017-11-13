@@ -35,10 +35,10 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	private const _objectPropertyNamesCache:Object = {};
 
 	private var
-		_sqlConnection			: SQLConnection
-	,	_sqlStatement			: SQLStatement
-	,	_dbExist				: Boolean = false
-	,	_events					: Dictionary = new Dictionary()
+		_sqlConnection	: SQLConnection
+	,	_sqlStatement	: SQLStatement
+	,	_dbExist		: Boolean = false
+	,	_events			: Dictionary = new Dictionary()
 	;
 	
 	public function get dbExist():Boolean { return _dbExist; }
@@ -83,7 +83,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	//==================================================================================================
 	public function createTable(tableName:String, tableClass:Class):void {
 	//==================================================================================================
-		Capabilities.isDebugger && Application.log("> Nest -> \t\t\tDatabaseService: create db " + tableName, tableClass);
+		Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + tableName, tableClass);
 		ExecuteStatement(DatabaseQuery.CreateTableFromClass(tableName, tableClass), false, null, true);
 	}
 
