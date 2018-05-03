@@ -5,7 +5,7 @@
 */
 package nest.entities.scroller
 {
-import nest.Enviroment;
+import nest.Environment;
 import nest.entities.application.Application;
 
 import starling.display.Canvas;
@@ -21,7 +21,7 @@ public final class ScrollCounter extends Canvas
 	public var numChildrens:uint;
 
 	private const
-		ENV					: Enviroment = Application.ENVIROMENT
+		ENV					: Environment = Application.ENVIRONMENT
 	,	COUNTER_SIZE		: int 		= 12 * ENV.scaleFactor.y
 	,	COUNTER_RADIUS		: int 		= COUNTER_SIZE * 0.5
 	,	COUNTER_OFFSET		: int 		= COUNTER_SIZE + 8 * ENV.scaleFactor.y

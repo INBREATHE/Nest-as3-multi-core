@@ -14,7 +14,7 @@ import flash.text.TextFormat;
 import flash.ui.Keyboard;
 import flash.utils.setTimeout;
 
-import nest.Enviroment;
+import nest.Environment;
 import nest.entities.elements.Element;
 import nest.entities.elements.Navigator;
 import nest.entities.elements.transitions.FadeTransition;
@@ -55,18 +55,19 @@ public class Application extends Sprite
 		});
 	}
 	
-	static public var isPhone			: Boolean;
-
-	static public var EVENT_READY : String = "application_event_ready";
+	static public var
+			IS_PHONE			: Boolean
+		, EVENT_READY   : String = "application_event_ready"
 	
-	static public var SCALEFACTOR		: Number = 1;
-	static public var SCREEN_WIDTH		: uint = Capabilities.screenResolutionX;
-	static public var SCREEN_HEIGHT		: uint = Capabilities.screenResolutionY;
+		, SCALEFACTOR		: Number = 1
+		, SCREEN_WIDTH	: uint = Capabilities.screenResolutionX
+		, SCREEN_HEIGHT	: uint = Capabilities.screenResolutionY
+	;
 
-	public static const ENVIROMENT:Enviroment = new Enviroment();
+	static public const ENVIRONMENT  : Environment = new Environment();
 	
-	private const _screensContainer : Element = new Element(ENVIROMENT);
-	private const _navigator		: Navigator = new Navigator(_screensContainer, new FadeTransition());
+	private const _screensContainer : Element = new Element(ENVIRONMENT);
+	private const _navigator		    : Navigator = new Navigator(_screensContainer, new FadeTransition());
 
 	protected var _notifier	: INotifier;
 
@@ -74,19 +75,17 @@ public class Application extends Sprite
 	{
 		this.addElement(_screensContainer);
 
-		if(ENVIROMENT.isAndroid || Capabilities.isDebugger)
+		if(ENVIRONMENT.isAndroid || Capabilities.isDebugger)
 		{
 			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown)
 		}
 	}
-	
-	
 
 	//==================================================================================================
 	public function addElement(obj:DisplayObject):void {
 	//==================================================================================================
 		if (obj is IElement) {
-			this.addChildAt(obj, getObjectPositionWithPrioriotet(IElement(obj).order))
+			this.addChildAt(obj, getObjectPositionWithPriority(IElement(obj).order))
 		} else {
 			this.addChild(obj);
 		}
@@ -131,13 +130,13 @@ public class Application extends Sprite
 	}
 
 	//==================================================================================================
-	public function getObjectPositionWithPrioriotet(prioritet:int):uint {
+	public function getObjectPositionWithPriority(priority:int):uint {
 	//==================================================================================================
 		var counter:uint = this.numChildren;
 		if(counter > 0) {
 			var child:DisplayObject = DisplayObject(this.getChildAt(--counter));
 			while (counter && child is IElement) {
-				if (IElement(child).order <= prioritet) break;
+				if (IElement(child).order <= priority) break;
 				child = DisplayObject(this.getChildAt(--counter));
 			}
 			return ++counter;

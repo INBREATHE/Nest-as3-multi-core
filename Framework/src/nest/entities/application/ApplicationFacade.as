@@ -20,7 +20,7 @@ import starling.core.Starling;
 public class ApplicationFacade extends Facade implements IFacade
 {
 	public static const
-		STARTUP		: String = "nest_command_application_startup"
+		STARTUP	: String = "nest_command_application_startup"
 	,	READY		: String = "nest_command_application_ready"
 	,	CORE		: String = "nest_application_core"
 	;

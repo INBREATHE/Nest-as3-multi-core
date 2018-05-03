@@ -8,7 +8,7 @@ package nest.entities.scroller
 import flash.geom.Point;
 import flash.utils.getTimer;
 
-import nest.Enviroment;
+import nest.Environment;
 import nest.entities.application.Application;
 import nest.entities.screen.ScrollScreen;
 import nest.interfaces.IScrollItem;
@@ -111,11 +111,11 @@ public class Scroller
 	,	TOUCH_ACCURACY		:int 		= 20
 	;
 
-	private var _env:Enviroment;
+	private var _env:Environment;
 		
 	public function Scroller() 
 	{
-		_env = Application.ENVIROMENT;
+		_env = Application.ENVIRONMENT;
 		this.areaWidth = _env.viewportSize.x;
 		this.areaHeight = _env.viewportSize.y;
 		

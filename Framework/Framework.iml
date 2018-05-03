@@ -15,7 +15,7 @@
           <map>
             <entry key="compiler.debug.swc" value="true" />
             <entry key="compiler.keep-as3-metadata" value="" />
-            <entry key="compiler.keep-generated-actionscript" value="false" />
+            <entry key="compiler.keep-generated-actionscript" value="true" />
           </map>
           <option name="additionalOptions" value="-keep-as3-metadata+=Inject" />
         </compiler-options>

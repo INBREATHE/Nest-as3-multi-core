@@ -44,7 +44,7 @@ public final class WorkerJunction extends Junction
 	 * From this object pipes messages sends
 	 * - WorkerModule.WRK_IN : 
 	 * 		1) from application trasfered to worker through WorkerModule.send (outputChannel.send(task.id, 0))
-	 * 		2) catched by worker and trasfered to junction mediator (DataProcessorJunctionMediator)
+	 * 		2) catched by worker and trasfered to junction mediators (DataProcessorJunctionMediator)
 	 * - WorkerModule.WRK_OUT : 
 	 * 		1) from worker transfered to application through WorkerModule.send (outputChannel.send(task.id, 0))
 	 * 		2) catched from other side by this junction and sent to pipe specified in WorkerRequestMessage.responsePipeID

@@ -41,7 +41,7 @@ public class Popup extends Element implements IPopup
 
 	public function Popup( name : String ) {
 		this.name = name;
-		super(Application.ENVIROMENT);
+		super(Application.ENVIRONMENT);
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE );
 	}
 	

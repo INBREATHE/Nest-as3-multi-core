@@ -41,7 +41,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	public function get isReady():Boolean { return _isReady; }
 
 	/**
-	 * When screen mediator ready to use we first register him in ScreenProxy
+	 * When screen mediators ready to use we first register him in ScreenProxy
 	 */
 	override public function onRegister():void { this.exec( ScreenCommand.REGISTER, viewComponent, this.getMediatorName() ); }
 	
@@ -103,7 +103,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	override public function handleNotification(notification:INotification):void {
 	//==================================================================================================
-//		trace("> Nest -> ScreenMediator > handleNotification:", notification.getName());
+		trace("> Nest -> ScreenMediator > " + this.getMediatorName() + " > handleNotification:", notification.getName());
 		const body:Object = notification.getBody();
 		const name:String = notification.getName();
 		if(name == _dataNotification) { 
@@ -165,7 +165,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	public function onLeave():void {
 	//==================================================================================================
-		/** ADNROID - When we go to game we disable this for screen  */
+		/** ANDROID - When we go to game we disable this for screen  */
 		this.isBackPossible = false;
 		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable ) 
 			this.send( ScrollerNotifications.RESET_SCROLLER );

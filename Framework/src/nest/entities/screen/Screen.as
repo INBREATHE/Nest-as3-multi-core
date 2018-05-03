@@ -31,7 +31,7 @@ public class Screen extends Element implements IScreen
 		this.order = -1;
 		this.name = name;
 		this.touchable = false;
-		super(Application.ENVIROMENT);
+		super(Application.ENVIRONMENT);
 	}
 
 	//==================================================================================================

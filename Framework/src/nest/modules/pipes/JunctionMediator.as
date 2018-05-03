@@ -71,7 +71,7 @@ package nest.modules.pipes
 			{
 				// accept an input pipe
 				// register the pipe and if successful 
-				// set this mediator as its listener
+				// set this mediators as its listener
 				case JunctionMediator.ACCEPT_INPUT_PIPE:
 					trace("\t\t : ACCEPT_INPUT_PIPE channel:", connectionChannel);
 					trace("\t\t : hasInputPipe =", junction.hasInputPipe(connectionChannel));

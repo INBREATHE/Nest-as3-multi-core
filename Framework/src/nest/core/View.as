@@ -134,7 +134,7 @@ public class View implements IView
 	//==================================================================================================
 		const mediator:IMediator = mediatorMap[ mediatorName ] as IMediator;
 //		trace("> Nest -> View > removeMediator: name =", mediatorName);
-//		trace("> Nest -> View > removeMediator: mediator =", mediator);
+//		trace("> Nest -> View > removeMediator: mediators =", mediators);
 		if ( mediator ) {
 			const interestsNotes:Vector.<String> = mediator.listNotifications;
 			var listCounter:uint = interestsNotes.length;

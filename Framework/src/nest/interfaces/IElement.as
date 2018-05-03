@@ -5,13 +5,13 @@
 */
 package nest.interfaces
 {
-	import nest.Enviroment;
+	import nest.Environment;
 
 public interface IElement
 {
 	function set order(value:int):void;
 	function get order():int;
-	function get env():Enviroment;
+	function get env():Environment;
 }
 	
 }
