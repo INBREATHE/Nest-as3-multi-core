@@ -22,30 +22,30 @@ import nest.services.worker.process.WorkerTask;
 public class WorkerModule extends PipeAwareModule implements IWorkerModule
 {
 	static public const
-		TO_WRK		:String 	= 'toWorkerPipe'	/** Worker output out. 	*/
+		TO_WRK		:String 	= 'toWorkerPipe'	  /** Worker output out. 	*/
 	,	FROM_WRK	:String 	= 'fromWorkerPipe'	/** Worker output in. 	*/
-	,	WRK_IN		:String 	= 'workerIn'		/** Worker input in. 	*/
-	,	WRK_OUT		:String 	= 'workerOut' 		/** Worker output out. 	*/
+	,	WRK_IN		:String 	= 'workerIn'		    /** Worker input in. 	  */
+	,	WRK_OUT		:String 	= 'workerOut' 		  /** Worker output out. 	*/
 	;
 
 	static private const
-		NAME						: String 	= "worker.module"
+		NAME						          : String 	= "worker.module"
 	,	INCOMING_MESSAGE_CHANNEL	: String 	= "incomingMessageChannel"
 	,	OUTGOING_MESSAGE_CHANNEL	: String 	= "outgoingMessageChannel"
-	,	SHARE_DATA_PIPE				: String 	= "shareDataPipe"
+	,	SHARE_DATA_PIPE				    : String 	= "shareDataPipe"
 	;
 
 	static public const
-		CONNECT_THROGH_JUNCTION		: String 	= "connectThroughJunction"
+		CONNECT_THROUGH_JUNCTION  : String 	= "connectThroughJunction"
 	,	CONNECT_MODULE_TO_WORKER	: String 	= "connectModuleToWorker"
 	,	DISCONNECT_OUTPUT_PIPE		: String 	= "disconnectOutputPipe"
-	,	DISCONNECT_INPUT_PIPE		: String 	= "disconnectInputPipe"
+	,	DISCONNECT_INPUT_PIPE		  : String 	= "disconnectInputPipe"
 	;
 
 	public var
 		isReady 		: Boolean
 	,	isMaster 		: Boolean
-	,	isSupported		: Boolean
+	,	isSupported	: Boolean
 	,	isInited		: Boolean
 	,	isBusy			: Boolean
 	;
@@ -58,7 +58,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	;
 
 	private var
-		_worker  	: Worker
+		_worker  	  : Worker
 	,	_shareable	: ByteArray
 	;
 
@@ -73,14 +73,14 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	 * It's a facade holder - entry point for worker application (like Main)
 	 */
 	public function WorkerModule(facade:IFacade)
-    {
-        super(facade);
+  {
+    super(facade);
 		isSupported = Worker.isSupported;
 		isMaster = Worker.current.isPrimordial;
 		isInited = false;
 		isReady = false;
 		isBusy = false;
-    }
+  }
 
 	public function initialize(bytes:ByteArray, enabled:Boolean = true):void
 	{
@@ -97,7 +97,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 				_worker = WorkerDomain.current.createWorker(bytes, true);
 				_worker.addEventListener(Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true);
 
-				NativeApplication.nativeApplication.addEventListener(Event.EXITING, MasterHanlder_ApplicationTerminated);
+				NativeApplication.nativeApplication.addEventListener(Event.EXITING, MasterHandler_ApplicationTerminated);
 
 				incomingMessageChannel = Worker.current.createMessageChannel(_worker);
 				outgoingMessageChannel = _worker.createMessageChannel(Worker.current);
@@ -143,13 +143,13 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 				start();
 			}
 		}
-        else
-        {
+    else
+    {
 			applicationStorageDirectory = File.applicationStorageDirectory.nativePath;
 			isSupported = false;
-            isInited = true;
-            start();
-        }
+      isInited = true;
+      start();
+    }
 	}
 
 	public function get outputChannel():MessageChannel { return isMaster ? incomingMessageChannel : outgoingMessageChannel; }
@@ -246,7 +246,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	}
 
 	//==================================================================================================
-	private function MasterHanlder_ApplicationTerminated(e:Event):void {
+	private function MasterHandler_ApplicationTerminated(e:Event):void {
 	//==================================================================================================
 		trace("> Nest -> WorkerModule -> MasterHanlder_ApplicationTerminated:", e);
 		send( new WorkerTask(WorkerTask.TERMINATE) );

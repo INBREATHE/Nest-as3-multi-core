@@ -31,7 +31,7 @@ public class WorkerModuleMediator extends Mediator
 
 	override protected function listNotificationsFunctions():Vector.<NFunction> {
 		return new <NFunction>[
-			new NFunction(WorkerModule.CONNECT_THROGH_JUNCTION, ConnectThrowJunction)
+			new NFunction(WorkerModule.CONNECT_THROUGH_JUNCTION, ConnectThrowJunction)
 		,	new NFunction(WorkerModule.CONNECT_MODULE_TO_WORKER, ConnectModuleToWorker)
 		];
 	}
