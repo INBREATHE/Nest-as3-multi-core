@@ -18,8 +18,8 @@ public class Screen extends Element implements IScreen
 		sf					: Number	= 0
 	,	sw					: uint 		= 0
 	,	sh					: uint 		= 0
-	,	swhalf				: uint		= 0
-	,	shhalf				: uint		= 0
+	,	swhalf			: uint		= 0
+	,	shhalf			: uint		= 0
 	;
 
 	protected var _locale:XMLList;

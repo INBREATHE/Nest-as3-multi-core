@@ -145,14 +145,14 @@ public class DisplayUtils
 		return new Button(buttonUpTexture, "", buttonDownTexture);
 	}
 	//==================================================================================================
-	public static function textureFromClass(classRef:Class, sf:Number):Texture {
+	public static function textureFromClass(classRef:Class, sf:Number, rect:Rectangle = null):Texture {
 	//==================================================================================================
 		const displayObject:DisplayObject = new classRef() as DisplayObject;
 		mtr = displayObject.transform.matrix;
 		displayObject.scaleX = displayObject.scaleY = sf;
 		mtr.scale(sf, sf);
-		bmd = new BitmapData(displayObject.width, displayObject.height, true, 0x00000000);
-		bmd.draw(displayObject, mtr);
+		bmd = new BitmapData(rect ? rect.width : displayObject.width, rect ? rect.height : displayObject.height, true, 0x00000000);
+		bmd.draw(displayObject, mtr, null, null, rect);
 		return Texture.fromBitmapData(bmd, false, false);
 	}
 }

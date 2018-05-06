@@ -11,22 +11,23 @@ import starling.display.Sprite;
 public final class ScrollContainer extends Sprite
 {
 	public var
-		current			:int
-	,	minimum			:int
-	,	maximum			:int
-	,	itemsize		:int
-	,	itemid			:uint
+		current			: int
+	,	minimum			: int
+	,	maximum			: int
+	,	itemsize		: int
+	,	itemid			: uint
 
-	,	fadeFromCenter	:Boolean = false
-	,	doHoldAction	:Boolean = false
-	,	needTouchPoint	:Boolean = false
+	,	fadeFromCenter	: Boolean = false
+	,	doHoldAction	  : Boolean = false
+	,	needTouchPoint	: Boolean = false
+	,	hideInvisible	  : Boolean = false
 
-	,	startFunction	:Function
-	,	moveFunction	:Function
-	,	endFunction		:Function
+	,	startFunction	: Function
+	,	moveFunction	: Function
+	,	endFunction		: Function
 
-	,	holdStartFunction	:Function
-	,	holdEndFunction		:Function
+	,	holdStartFunction	: Function
+	,	holdEndFunction		: Function
 	;
 
 	private var _type:int;

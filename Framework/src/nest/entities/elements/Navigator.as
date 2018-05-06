@@ -23,7 +23,7 @@ public class Navigator
 		_transition = transition;
 
 		_transition.onHideComplete 	= RemoveScreen;
-		_transition.onShowStart 	= AddScreenToApp;
+		_transition.onShowStart 	  = AddScreenToApp;
 		_transition.onShowComplete 	= ScreenChangeComplete;
 	}
 

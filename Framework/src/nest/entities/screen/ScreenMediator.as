@@ -16,10 +16,10 @@ import starling.events.Event;
 public class ScreenMediator extends Mediator implements IMediator
 {
 	private var
-		_dataRequest		: String = ""
+		_dataRequest		  : String = ""
 	,	_dataNotification	: String = ""
 	,	_dataForScreen		: ScreenData
-	,	_isReady			: Boolean
+	,	_isReady			    : Boolean
 	;
 
 	public var isBackPossible:Boolean = false;
@@ -51,15 +51,15 @@ public class ScreenMediator extends Mediator implements IMediator
 		SetupComponentListeners();
 		screen.removeEventListener(	Event.ADDED_TO_STAGE, 		Handle_AddComponentToStage);
 		screen.addEventListener(	Event.REMOVED_FROM_STAGE, 	Handle_RemoveComponentFromStage);
-		screen.addEventListener(	Event.TRIGGERED, 			ComponentTrigger);
+		screen.addEventListener(	Event.TRIGGERED, 			      ComponentTrigger);
 	}
 
 	private function Handle_RemoveComponentFromStage(e:Event):void {
 		screen.onRemoved();
 		RemoveComponentListeners();
-		screen.addEventListener(	Event.ADDED_TO_STAGE, 		Handle_AddComponentToStage);
+		screen.addEventListener(	Event.ADDED_TO_STAGE, 		    Handle_AddComponentToStage);
 		screen.removeEventListener(	Event.REMOVED_FROM_STAGE, 	Handle_RemoveComponentFromStage);
-		screen.removeEventListener(	Event.TRIGGERED, 			ComponentTrigger);
+		screen.removeEventListener(	Event.TRIGGERED, 			      ComponentTrigger);
 		if(screen.rebuildable) screen.clear();
 	}
 
@@ -172,6 +172,5 @@ public class ScreenMediator extends Mediator implements IMediator
 	}
 
 	protected function get screen():Screen { return Screen(viewComponent); }
-
 }
 }

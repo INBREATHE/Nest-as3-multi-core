@@ -21,19 +21,19 @@ public final class ScrollCounter extends Canvas
 	public var numChildrens:uint;
 
 	private const
-		ENV					: Environment = Application.ENVIRONMENT
-	,	COUNTER_SIZE		: int 		= 12 * ENV.scaleFactor.y
-	,	COUNTER_RADIUS		: int 		= COUNTER_SIZE * 0.5
-	,	COUNTER_OFFSET		: int 		= COUNTER_SIZE + 8 * ENV.scaleFactor.y
+		ENV					    : Environment = Application.ENVIRONMENT
+	,	COUNTER_SIZE		: int 		= 16 * ENV.scaleFactor.y
+	,	COUNTER_RADIUS	: int 		= COUNTER_SIZE * 0.5
+	,	COUNTER_OFFSET	: int 		= COUNTER_SIZE + 8 * ENV.scaleFactor.y
 	;
 		
 	private var
 		_color				: uint
-	,	_colorActive		: uint
-	,	_type				: int
+	,	_colorActive	: uint
+	,	_type				  : int
 	;
 
-	public function ScrollCounter(type:int = TYPE_SQUARE, color:uint = 0xCCCCCC, activeColor:uint = 0x232323) {
+	public function ScrollCounter( type:int = TYPE_SQUARE, color:uint = 0xCCCCCC, activeColor:uint = 0x232323 ) {
 		_type = type;
 		_color = color;
 		_colorActive = activeColor;
@@ -46,11 +46,16 @@ public final class ScrollCounter extends Canvas
 		this.clear();
 	}
 
+	public function setColors( passiveColor:uint, activeColor:uint ):void {
+		_color = passiveColor;
+		_colorActive = activeColor;
+	}
+
 	override public function get width():Number {
 		return (numChildrens - 1) * COUNTER_OFFSET;
 	}
 
-	public function addCount(index:uint):void {
+	public function increaseCounter():void {
 		numChildrens++;
 	}
 

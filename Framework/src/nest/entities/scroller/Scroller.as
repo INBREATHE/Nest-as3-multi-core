@@ -28,38 +28,40 @@ public class Scroller
 
 		MOVE_FRICTION		:Number 	= 0.8
 	,	SCALE_TIME			:Number 	= 0.15
-	,	HOLD_START_DELAY	:Number 	= 0.3
-	,	HOLD_END_DELAY		:Number 	= 0.2
-	,	SCALE_TO			:Number 	= 1.050
+	,	HOLD_START_DELAY:Number 	= 0.3
+	,	HOLD_END_DELAY	:Number 	= 0.2
+	,	SCALE_TO			  :Number 	= 1.050
 	,	ALPHA_LEFT			:Number 	= 0.10
 	,	ALPHA_RIGHT			:Number 	= 1 + ALPHA_LEFT
 	,	SCROLL_SPEED		:Number 	= 0.0015
 	,	SWIPE_SPEED			:Number 	= 1.5
+	;
 
 	private var
-		__limitXMin			:int 		= int.MAX_VALUE
-	,	__limitXMax			:int 		= int.MIN_VALUE
+		__limitXMin			  :int 		= int.MAX_VALUE
+	,	__limitXMax			  :int 		= int.MIN_VALUE
 
-	,	__itemSize			:uint 		= uint.MIN_VALUE
+	,	__itemSize			  :uint 		= uint.MIN_VALUE
 	,	__itemSizeDouble	:uint 		= uint.MIN_VALUE
 	,	__itemSizeHalf		:uint 		= uint.MIN_VALUE
 	,	__itemSizeQuater	:uint 		= uint.MIN_VALUE
 
-	,	__limitTapMin		:uint 		= uint.MIN_VALUE
-	,	__limitTapMax		:uint 		= uint.MIN_VALUE
+	,	__limitTapMin		  :uint 		= uint.MIN_VALUE
+	,	__limitTapMax		  :uint 		= uint.MIN_VALUE
 
-	,	__childNum			:uint 		= uint.MIN_VALUE
+	,	__childNum			  :uint 		= uint.MIN_VALUE
 
 	,	_fadeFromCenter		:Boolean 	= false
-	,	_doHoldAction		:Boolean 	= false
-	,	_doHoldScale		:Boolean 	= false
+	,	_doHoldAction		  :Boolean 	= false
+	,	_doHoldScale		  :Boolean 	= false
 	,	_needTouchPoint		:Boolean 	= false
+	,	_hideInvisible		:Boolean 	= false
 
 	,	_isScrollPossible	:Boolean	= false
 	,	_isTapPossible		:Boolean 	= false
 	,	_isFindCurrent		:Boolean 	= false
 	,	_isHoldSelected		:Boolean 	= false
-	,	_isHoldStart		:Boolean 	= false
+	,	_isHoldStart		  :Boolean 	= false
 	,	_isHoldComplete		:Boolean 	= false
 
 	,	_tweenScale			:Tween
@@ -67,14 +69,14 @@ public class Scroller
 
 	,	_touchStartCallback	:Function
 	,	_touchMoveCallback	:Function
-	,	_touchEndcallback	:Function
+	,	_touchEndCallback	  :Function
 	,	_holdStartCallback	:Function
-	,	_holdEndCallback	:Function
+	,	_holdEndCallback	  :Function
 
-	,	_touch				:Touch
+	,	_touch				  :Touch
 
-	,	_movement			:Point
-	,	_target				:DisplayObject
+	,	_movement			  :Point
+	,	_target				  :DisplayObject
 	,	_currentTarget		:Sprite
 
 	,	_startTime			:Number 	= Number.MAX_VALUE
@@ -82,31 +84,31 @@ public class Scroller
 	,	_startTouchX		:Number 	= Number.MAX_VALUE
 	,	_startTouchY		:Number 	= Number.MAX_VALUE
 
-	,	_endTime			:Number 	= Number.MAX_VALUE
+	,	_endTime			  :Number 	= Number.MAX_VALUE
 
-	,	_posX				:int 		= int.MAX_VALUE
-	,	_targetPos			:int 		= int.MAX_VALUE
+	,	_posX				        :int 		= int.MAX_VALUE
+	,	_targetPos			    :int 		= int.MAX_VALUE
 	,	_currentTargetIndex	:int 		= int.MAX_VALUE
-	,	_targetPropScreen	:Number 	= Number.MAX_VALUE
-	,	_targetAlpha		:Number 	= Number.MAX_VALUE
+	,	_targetPropScreen	  :Number = Number.MAX_VALUE
+	,	_targetAlpha		    :Number = Number.MAX_VALUE
 
 	,	_deltaPosX			:int 		= int.MAX_VALUE
-	,	_deltaPosXAbs		:uint 		= uint.MAX_VALUE
+	,	_deltaPosXAbs		:uint 	= uint.MAX_VALUE
 	,	_deltaTouchX		:int 		= int.MAX_VALUE
-	,	_deltaTime			:uint 		= uint.MAX_VALUE
+	,	_deltaTime			:uint 	= uint.MAX_VALUE
 	,	_deltaSign			:int 		= int.MAX_VALUE
 
-	,	_speed				:Number 	= Number.MAX_VALUE
-	,	_offset				:Number 	= Number.MAX_VALUE
+	,	_speed				  :Number = Number.MAX_VALUE
+	,	_offset				  :Number = Number.MAX_VALUE
 
-	,	_counter			:int 		= int.MAX_VALUE
+	,	_counter			  :int 		= int.MAX_VALUE
 
 	,	_container			:ScrollContainer
 	
-	,	areaWidth			:uint	 	= 0
+	,	areaWidth			  :uint	 	= 0
 	,	areaHeight			:uint	 	= 0
-	,	areaWidthHalf		:Number 	= 0
-	,	areaHeightHalf		:Number 	= 0
+	,	areaWidthHalf		:Number = 0
+	,	areaHeightHalf	:Number = 0
 	
 	,	TOUCH_ACCURACY		:int 		= 20
 	;
@@ -141,14 +143,14 @@ public class Scroller
 
 	public function setup(container:Object):void
 	{
-		_container = ScrollContainer(container);
+		_container      = ScrollContainer(container);
 
-		_posX 				= _container.current;
+		_posX 				  = _container.current;
 
 		__limitXMin 		= _container.minimum;
 		__limitXMax 		= _container.maximum;
 
-		__itemSize 			= _container.itemsize;
+		__itemSize 			  = _container.itemsize;
 		__itemSizeDouble 	= __itemSize * 2;
 		__itemSizeHalf 		= __itemSize * 0.50;
 		__itemSizeQuater 	= __itemSize * 0.250;
@@ -156,9 +158,10 @@ public class Scroller
 		_fadeFromCenter 	= _container.fadeFromCenter;
 		_doHoldAction 		= _container.doHoldAction;
 		_needTouchPoint		= _container.needTouchPoint;
+		_hideInvisible		= _container.hideInvisible;
 
-		_holdStartCallback = _container.holdStartFunction;
-		_holdEndCallback = _container.holdEndFunction;
+		_holdStartCallback  = _container.holdStartFunction;
+		_holdEndCallback    = _container.holdEndFunction;
 
 		__limitTapMin = areaWidthHalf - __itemSizeHalf;
 		__limitTapMax = areaWidthHalf + __itemSizeHalf;
@@ -170,9 +173,9 @@ public class Scroller
 
 		_touchStartCallback = _container.startFunction;
 		_touchMoveCallback = _container.moveFunction;
-		_touchEndcallback = _container.endFunction;
+		_touchEndCallback = _container.endFunction;
 
-//			trace("_isScrollPossible: " + _isScrollPossible);
+//		trace("> Scroller > _isScrollPossible: " + _isScrollPossible);
 
 		if(_isScrollPossible){
 			if(_container.type == ScrollerType.HORIZONTAL)
@@ -283,35 +286,35 @@ public class Scroller
 						}
 					}
 
-					_endTime 		= getTimer();
+					_endTime 		  = getTimer();
 					_deltaTime 		= _endTime - _startTime;
 					_deltaPosX 		= _startPosX - _posX;
-					_deltaPosXAbs 	= Math.abs(_deltaPosX);
+					_deltaPosXAbs = Math.abs(_deltaPosX);
 					_deltaSign 		= _deltaPosX > 0 ? -1 :  1;
-					_speed 			= _deltaPosXAbs / _deltaTime;
+					_speed 			  = _deltaPosXAbs / _deltaTime;
 
 //						if(_currentTargetIndex == 0 && _deltaPosX < 0) {
 //							_posX = __limitXMin; // Если мы двигаем вправо первый элемент
 //						} else {
-						_posX = __limitXMin;
-						if (_deltaPosXAbs > 0 && _deltaPosXAbs < __itemSizeHalf && _speed > SWIPE_SPEED) {
-							_offset = (_currentTargetIndex - _deltaSign) * __itemSize;
-							if (_deltaPosXAbs < __itemSizeHalf) _deltaPosXAbs = __itemSizeHalf;
-						} else {
-							_offset = _currentTargetIndex  * __itemSize;
-						}
+					_posX = __limitXMin;
+					if (_deltaPosXAbs > 0 && _deltaPosXAbs < __itemSizeHalf && _speed > SWIPE_SPEED) {
+						_offset = (_currentTargetIndex - _deltaSign) * __itemSize;
+						if (_deltaPosXAbs < __itemSizeHalf) _deltaPosXAbs = __itemSizeHalf;
+					} else {
+						_offset = _currentTargetIndex  * __itemSize;
+					}
 
-						_posX -= _offset;
+					_posX -= _offset;
 
-						// Ограничения
-						if (_posX <= __limitXMax) _posX = __limitXMax;
-						else if ( _posX >= __limitXMin) _posX = __limitXMin;
+					// Ограничения
+					if (_posX <= __limitXMax) _posX = __limitXMax;
+					else if ( _posX >= __limitXMin) _posX = __limitXMin;
 
-						// Смотрим находится ли элемент на который кликнули в области активности
-						if(_isTapPossible) {
-							_targetPos = _touch.globalX;
-							_isTapPossible = (_targetPos > __limitTapMin && _targetPos < __limitTapMax);
-						}
+					// Смотрим находится ли элемент на который кликнули в области активности
+					if(_isTapPossible) {
+						_targetPos = _touch.globalX;
+						_isTapPossible = (_targetPos > __limitTapMin && _targetPos < __limitTapMax);
+					}
 //						}
 //						trace("_posX = " + _posX);
 //						trace("_offset = " + _offset);
@@ -320,27 +323,43 @@ public class Scroller
 //						trace("_isTapPossible = " + _isTapPossible);
 //						trace("_currentTargetIndex = " + _currentTargetIndex);
 
-					if(_isTapPossible == false && _deltaPosXAbs > 0) {
-						_tweenMove = new Tween(_container, _deltaPosXAbs * SCROLL_SPEED / _env.scaleFactor.x, Transitions.EASE_OUT);
-						_tweenMove.onUpdate = MoveUpdate;
-						_tweenMove.onComplete = MoveComplete;
-						_tweenMove.animate("x", _posX);
-						Starling.juggler.add(_tweenMove);
-					} else {
-						_container.x = _posX;
-						MoveComplete();
-					}
-					break;
+				if(_isTapPossible == false && _deltaPosXAbs > 0) {
+					_tweenMove = new Tween(_container, _deltaPosXAbs * SCROLL_SPEED / _env.scaleFactor.x, Transitions.EASE_OUT);
+					_tweenMove.onUpdate = MoveUpdate;
+					_tweenMove.onComplete = MoveComplete;
+					_tweenMove.animate("x", _posX);
+					Starling.juggler.add(_tweenMove);
+				} else {
+					_container.x = _posX;
+					MoveComplete();
+				}
+				break;
 			}
 		}
 	}
+	//==================================================================================================
+	private function HideInvisible():void {
+	//==================================================================================================
+		_counter = 0;
+//		var visible = 0;
+		var leftEdge:int;
+		while (++_counter < __childNum) {
+			_target = _container.getChildAt(_counter);
+			leftEdge = -_target.width;
+			_targetPos = _target.x + _posX;
+			_target.visible = _targetPos > leftEdge && _targetPos < areaWidth;
+//			if(_target.visible) visible++;
+		}
+//		trace("> Scroller -> visible: " + visible + "/" + __childNum);
+	}
+
 	//==================================================================================================
 	private function FadeFromCenter():void {
 	//==================================================================================================
 		_counter = 0;
 		_isFindCurrent = false;
 		while (++_counter < __childNum) {
-			_target 	= _container.getChildAt(_counter);
+			_target 	  = _container.getChildAt(_counter);
 			_targetPos 	= _target.x + _posX;
 
 			if (!_isFindCurrent && _targetPos > __limitTapMin && _targetPos < __limitTapMax) {
@@ -392,6 +411,8 @@ public class Scroller
 		if (_fadeFromCenter) FadeFromCenter();
 		else _currentTargetIndex = getCurrentIndex();
 
+		if(_hideInvisible) HideInvisible();
+
 		if (_touchMoveCallback) _touchMoveCallback(_currentTargetIndex);
 		_container.itemid = _currentTargetIndex;
 	}
@@ -412,10 +433,10 @@ public class Scroller
 	private function MoveComplete():void {
 	//==================================================================================================
 		MoveUpdate();
-//			trace("MoveComplete", _isTapPossible,  _touchEndcallback);
-		if (_isTapPossible && _touchEndcallback) {
-			if (_needTouchPoint) _touchEndcallback(_currentTargetIndex, new Point(_touch.globalX, _touch.globalY));
-			else _touchEndcallback(_currentTargetIndex);
+		trace("MoveComplete", _isTapPossible,  _touchEndCallback != null);
+		if (_isTapPossible && _touchEndCallback) {
+			if (_needTouchPoint) _touchEndCallback(_currentTargetIndex, new Point(_touch.globalX, _touch.globalY));
+			else _touchEndCallback(_currentTargetIndex);
 		}
 	}
 }
