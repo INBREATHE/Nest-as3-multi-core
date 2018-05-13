@@ -27,10 +27,11 @@ public final class FileUtils
 	}
 
 	static public function readBytesFromFile(path:String, uncompressed:Boolean = false):ByteArray {
-		const file			: File 			= File.applicationDirectory.resolvePath(path);
+		const file			  : File 			  = File.applicationDirectory.resolvePath(path);
 		const fileStream	: FileStream 	= new FileStream();
-		const byteArray		: ByteArray 	= new ByteArray();
+		const byteArray	: ByteArray 	= new ByteArray();
 
+//		trace("> FileUtils > readBytesFromFile:", file.exists, path);
 		if(!file.exists) return byteArray;
 
 		fileStream.open(file, FileMode.READ);

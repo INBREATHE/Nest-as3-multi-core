@@ -21,9 +21,10 @@ public class Observer implements IObserver
 	}
 
 	public function notifyObserver( notification:INotification ):void {
-//		trace("> \t\t _context =", _context, "_notify =", _notify);
+//		trace("> \t\t notifyObserver: _context =", _context, "_notify =", _notify);
 		if(_advance) {
 			const paramsCount:uint = _notify.length;
+//			trace("> \t\t notifyObserver: paramsCount =", paramsCount);
 			switch(paramsCount) {
 			case 0: default: _notify.call( _context ); break;
 			case 1: _notify.call( _context, notification.getBody() ); break;

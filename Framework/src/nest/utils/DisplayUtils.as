@@ -150,6 +150,10 @@ public class DisplayUtils
 		const displayObject:DisplayObject = new classRef() as DisplayObject;
 		mtr = displayObject.transform.matrix;
 		displayObject.scaleX = displayObject.scaleY = sf;
+		if(rect) {
+			rect.width *= sf;
+			rect.height *= sf;
+		}
 		mtr.scale(sf, sf);
 		bmd = new BitmapData(rect ? rect.width : displayObject.width, rect ? rect.height : displayObject.height, true, 0x00000000);
 		bmd.draw(displayObject, mtr, null, null, rect);
