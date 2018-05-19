@@ -75,13 +75,13 @@ public class View implements IView
 
 		Injector.mapInject( mediator );
 
-		const interestsNotes:Vector.<String> 		= mediator.listNotifications;
+		const interestsNotes:Vector.<String> 		  = mediator.listNotifications;
 		const interestsNFunc:Vector.<NFunction> 	= mediator.listNFunctions;
 
 		var listCounter		: uint = interestsNFunc.length
-		,	notifyMethod	: Function
-		,	notifyContext	: Object
-		,	notifyName		: String
+		,	notifyMethod	  : Function
+		,	notifyContext	  : Object
+		,	notifyName		  : String
 		;
 
 		const viewComponent:Object = mediator.getViewComponent();

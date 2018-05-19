@@ -37,7 +37,7 @@ public class ApplicationMediator extends Mediator implements IMediator
 		,	new NFunction( ApplicationNotification.HIDE_SCREEN, 		HideScreen		)
 
 		,	new NFunction( ApplicationNotification.ADD_ELEMENT, 		APP_METHOD__ADD_ELEMENT		)
-		,	new NFunction( ApplicationNotification.REMOVE_ELEMENT, 		APP_METHOD__REM_ELEMENT		)
+		,	new NFunction( ApplicationNotification.REMOVE_ELEMENT, APP_METHOD__REM_ELEMENT		)
 		];
 	}
 	//==================================================================================================

@@ -42,6 +42,8 @@ public class ScrollScreen extends Screen
 	public function checkIfTouchPossible(scrollItem:IScrollItem):Boolean {
 	//==================================================================================================
 		const result : Boolean = this.isShown && !scrollItem.isLocked();
+//		trace("> Application -> ScrollScreen > checkIfTouchPossible: this.isShown =", this.isShown);
+//		trace("> Application -> ScrollScreen > checkIfTouchPossible: scrollItem.isLocked =", scrollItem.isLocked());
 		return result;
 	}
 
