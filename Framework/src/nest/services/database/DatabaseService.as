@@ -220,9 +220,9 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 			if(e.errorID == 3119) { // Error #3119: Database file is currently locked.
 				Execute(stmt);
 			} else {
-                trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
+        trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
 				if(_sqlConnection != null && _sqlConnection.inTransaction) {
-                    _sqlConnection.rollback();
+              _sqlConnection.rollback();
 				}
 			}
 		}
