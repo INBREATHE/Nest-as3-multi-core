@@ -77,7 +77,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_UnlockPopup(popupName:String):void {
 	//==================================================================================================
-		trace("> Nest -> PopupsMediator > Notification_UnlockPopup:", popupName)
+		trace("> Nest -> PopupsMediator > Notification_UnlockPopup:", popupName);
 		if(popupName == null) return;
 		const popup:Popup = _popupsStorage[popupName];
 		popup.touchable = true;
