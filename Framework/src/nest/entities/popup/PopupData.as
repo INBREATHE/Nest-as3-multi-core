@@ -3,10 +3,10 @@ package nest.entities.popup
 	public final class PopupData
 	{
 		private var 
-			_data			: Object
-		,	_onPopupAdded	: Function
+			_data			      : Object
+		,	_onPopupAdded	  : Function
 		,	_onPopupRemoved	: Function
-		,	_onPopupShown	: Function
+		,	_onPopupShown	  : Function
 		;
 		
 		public function PopupData(data:Object = null)

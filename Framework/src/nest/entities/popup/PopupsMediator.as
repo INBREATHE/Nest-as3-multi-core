@@ -36,8 +36,8 @@ public final class PopupsMediator extends Mediator implements IMediator
 		,	PopupNotification.HIDE_ALL_POPUPS
 		,	PopupNotification.UNLOCK_POPUP
 		,	PopupNotification.UPDATE_POPUP
-		, 	ApplicationNotification.ANDROID_BACK_BUTTON
-		, 	ApplicationNotification.LANGUAGE_CHANGED
+		, ApplicationNotification.ANDROID_BACK_BUTTON
+		, ApplicationNotification.LANGUAGE_CHANGED
 		];
 	}
 
@@ -68,7 +68,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_UpdatePopup(popupData:Object, popupName:String):void {
 	//==================================================================================================
-		trace("> Nest -> PopupsMediator > Notification_UpdatePopup:", popupName, popupData)
+		trace("> Nest -> PopupsMediator > Notification_UpdatePopup:", popupName, popupData);
 		if(popupName == null) return;
 		const popup:Popup = _popupsStorage[popupName];
 		popup.prepare(popupData);
@@ -86,11 +86,11 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function Notification_ShowPopupByName(popupData:PopupData, name:String):void {
 	//==================================================================================================
 		const popup:Popup = _popupsStorage[name];
-		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name)
-		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage:", GetPopupByName(name))
+		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
+		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage:", GetPopupByName(name));
 		if (GetPopupByName(name) != null) 
 			popup.hide(function():void {
-				trace("> Nest -> PopupsMediator > Hide Popup:", name)
+				trace("> Nest -> PopupsMediator > Hide Popup:", name);
 				RemovePopupFromStage(name, true);
 				popup.setup(popupData);
 				AddPopup(popup);
@@ -129,7 +129,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		const popup:Popup = this.GetPopupByName(popupName);
 		if (popup) {
 			if(force) RemovePopupFromStage(popup.name, true);
-			else popup.hide(RemovePopupFromStage);
+			else RemovePopup(popup);
 		}
 	}
 
@@ -140,7 +140,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 			const popup:Popup = _popupsQueue[_popupsCount-1];
 			if (popup && popup.parent && popup.backRemovable) {
 				popup.androidBackButtonPressed();
-				popup.hide(RemovePopupFromStage);
+				RemovePopup(popup);
 			}
 		}
 	}
@@ -175,8 +175,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Handle_ClosePopup(e:Event):void {
 	//==================================================================================================
-		const popup:Popup = Popup(e.currentTarget);
-		popup.hide(function(popupname:String):Function{ return function():void{ RemovePopupFromStage(popupname)} }(popup.name));
+		RemovePopup(Popup(e.currentTarget));
 	}
 
 	//==================================================================================================
@@ -197,8 +196,8 @@ public final class PopupsMediator extends Mediator implements IMediator
 		trace("> Nest -> PopupsMediator > SetupListeners");
 		popup.addEventListener(PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup);
 
-		popup.addEventListener(PopupEvents.POPUP_SHOWN, 		Handle_PopupShown);
-		popup.addEventListener(PopupEvents.TAP_HAPPEND_OK, 		Handle_ClosePopup);
+		popup.addEventListener(PopupEvents.POPUP_SHOWN, 		    Handle_PopupShown);
+		popup.addEventListener(PopupEvents.TAP_HAPPEND_OK, 		  Handle_ClosePopup);
 		popup.addEventListener(PopupEvents.TAP_HAPPEND_CLOSE, 	Handle_ClosePopup);
 	}
 
@@ -212,9 +211,10 @@ public final class PopupsMediator extends Mediator implements IMediator
 		popup.removeEventListener(PopupEvents.TAP_HAPPEND_OK, 	Handle_ClosePopup);
 		popup.removeEventListener(PopupEvents.TAP_HAPPEND_CLOSE, Handle_ClosePopup);
 	}
-	
-	private function Handle_PopupShown(e:Event):void
-	{
+
+	//==================================================================================================
+	private function Handle_PopupShown(e:Event):void {
+	//==================================================================================================
 		const popup:Popup = Popup(e.currentTarget);
 		popup.removeEventListener(PopupEvents.POPUP_SHOWN, 	Handle_PopupShown);
 		trace("> Nest -> PopupsMediator > Handle_PopupShown");
@@ -251,6 +251,12 @@ public final class PopupsMediator extends Mediator implements IMediator
 		Dictionary(viewComponent)[value.name] = value;
 		if(value.parent == null) AddPopupToStageAndShow(value);
 		else IPopup(value).show();
+	}
+
+	//==================================================================================================
+	private function RemovePopup( popup:Popup ):void {
+	//==================================================================================================
+		popup.hide(function(popupName:String):Function{ return function():void{ RemovePopupFromStage(popupName)} }(popup.name));
 	}
 
 	//==================================================================================================

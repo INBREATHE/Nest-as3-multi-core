@@ -9,7 +9,10 @@ public interface IGame
 {
 	function show():void;
 	function hide(callback:Function = null):void;
-	function clear():void;
+	function clear():void; // Called from GameMediator at REMOVED_FROM_STAGE handler
 	function reset():void;
+
+	function lock():void;
+	function unlock():void;
 }
 }
