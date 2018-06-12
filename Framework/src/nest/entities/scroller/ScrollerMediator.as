@@ -20,6 +20,7 @@ public class ScrollerMediator extends Mediator implements IMediator
 	override protected function listNotificationInterests():Vector.<String> {
 		return new <String>[
 			ScrollerNotifications.SETUP_SCROLLER,
+			ScrollerNotifications.SCROLL_TO_ITEM,
 			ScrollerNotifications.RESET_SCROLLER
 		];
 	}
@@ -32,6 +33,9 @@ public class ScrollerMediator extends Mediator implements IMediator
 				break;
 			case ScrollerNotifications.RESET_SCROLLER:
 				scroller.reset();
+				break;
+			case ScrollerNotifications.SCROLL_TO_ITEM:
+				scroller.scroll(int(note.getBody()));
 				break;
 		}
 	}

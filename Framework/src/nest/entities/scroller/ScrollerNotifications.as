@@ -10,6 +10,7 @@ public final class ScrollerNotifications
 	static public const
 		SETUP_SCROLLER : String = "nest_note_scroller_setup_horizontal"
 	,	RESET_SCROLLER : String = "nest_note_scroller_reset"
+	,	SCROLL_TO_ITEM : String = "nest_note_scroll_to_item"
 	;
 }
 }

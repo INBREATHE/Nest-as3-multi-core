@@ -11,6 +11,7 @@ public final class AssetTypes
 		BUTTON		:int = 1 // "button"
 	,	MOVIECLIP	:int = 2 // "movieclip"
 	,	GRAPHIC		:int = 3 // "graphic"
+	,	BITMAP		:int = 4 // "images"
 	;
 }
 }

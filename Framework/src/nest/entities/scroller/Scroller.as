@@ -423,7 +423,7 @@ public class Scroller
 		var result:uint = 0;
 		if(_posX < __limitXMin) { // Только если мы двигаем скроллер влево
 			if(_posX > __limitXMax) // Только если у нас не последний элемент
-			result = Math.round(Math.abs(_posX - __limitXMin) / __itemSize)
+			result = Math.round(Math.abs(_posX - __limitXMin) / __itemSize);
 			else result = __childNum - 2;
 		}
 		return result;
@@ -438,6 +438,14 @@ public class Scroller
 			if (_needTouchPoint) _touchEndCallback(_currentTargetIndex, new Point(_touch.globalX, _touch.globalY));
 			else _touchEndCallback(_currentTargetIndex);
 		}
+	}
+
+	public function scroll( itemIndex:int ):void {
+		_posX = -(itemIndex * __itemSize - __limitXMin);
+		_currentTargetIndex = itemIndex;
+		_container.x = _posX;
+		_isTapPossible = false;
+		MoveComplete();
 	}
 }
 }
