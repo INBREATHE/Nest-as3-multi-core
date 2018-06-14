@@ -9,7 +9,9 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.StageQuality;
+import flash.filters.ColorMatrixFilter;
 import flash.geom.Matrix;
+import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.AntiAliasType;
 import flash.text.GridFitType;
@@ -158,6 +160,21 @@ public class DisplayUtils
 		bmd = new BitmapData(rect ? rect.width : displayObject.width, rect ? rect.height : displayObject.height, true, 0x00000000);
 		bmd.draw(displayObject, mtr, null, null, rect);
 		return Texture.fromBitmapData(bmd, false, false);
+	}
+
+	public static function convertToGrayScale( obj:BitmapData ) : void
+	{
+		var rLum : Number = 0.2225;
+		var gLum : Number = 0.7169;
+		var bLum : Number = 0.0606;
+
+		var matrix:Array = [ rLum, gLum, bLum, 0, 0,
+			rLum, gLum, bLum, 0, 0,
+			rLum, gLum, bLum, 0, 0,
+			0,    0,    0,    1, 0 ];
+
+		var filter:ColorMatrixFilter = new ColorMatrixFilter( matrix );
+		obj.applyFilter( obj, new Rectangle( 0,0,obj.width,obj.height ), new Point(0,0), filter );
 	}
 }
 }

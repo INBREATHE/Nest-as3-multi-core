@@ -184,7 +184,10 @@ public class Scroller
 			_container.addEventListener(TouchEvent.TOUCH, Handle_TouchOnly)
 		}
 
-		MoveUpdate();
+		if(_container.itemid > 0)
+			scroll(_container.itemid);
+		else
+			MoveUpdate();
 	}
 
 	private function Handle_TouchOnly(e:TouchEvent):void
