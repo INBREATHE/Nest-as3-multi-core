@@ -23,7 +23,8 @@ public final class WorkerTask
 	,	REQUEST 		: int = 13
 	,	PROGRESS 		: int = 14
 	,	COMPLETE 		: int = 15
-	,	TERMINATE 		: int = 16
+	,	TERMINATE 	: int = 16
+	,	CONFIRM    	: int = 17
 	;
 
 	private var _id:int;

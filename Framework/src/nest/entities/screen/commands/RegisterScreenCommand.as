@@ -17,7 +17,7 @@ public final class RegisterScreenCommand extends SimpleCommand implements IComma
 
 	override public function execute( screen:Object, mediatorName:String ):void
 	{
-		trace(" > Nest -> RegisterScreenCommand > execute: mediatorName =", mediatorName, screen);
+		trace("> Nest -> RegisterScreenCommand > execute: mediatorName =", mediatorName, screen);
 		const screenCache:ScreenCache = new ScreenCache(Screen(screen), mediatorName);
 		screensProxy.cacheScreenByName(Screen(screen).name, screenCache);
 	}

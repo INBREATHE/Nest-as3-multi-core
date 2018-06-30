@@ -64,7 +64,9 @@ public final class WorkerJunction extends Junction
 				const toWorkerPipeListener:PipeListener = new PipeListener(workerModule, function ( message:IPipeMessage ):void {
 					trace("\n> Nest -> WorkerJunction : MASTER > Output PipeListener"); 
 					trace("\t : isBusy = " + this.isBusy);
-					trace("\t : Send =", message);
+					trace("\t : Send message =", message);
+					trace("\t : Send message header =", message.getHeader());
+					trace("\t : Send message body =", message.getBody());
 					this.send( new WorkerTask( WorkerTask.MESSAGE, message ));
 				});
 				inputPipe.connect(toWorkerPipeListener);
@@ -77,7 +79,8 @@ public final class WorkerJunction extends Junction
 					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener"); 
 					trace("\t : isWorkerRequestMessage =", isWorkerRequestMessage);
 					trace("\t : isBusy = " + this.isBusy);
-					trace("\t : Send =", message);
+					trace("\t : Send message header =", message.getHeader());
+					trace("\t : Send message body =", message.getBody());
 					this.send( new WorkerTask(WorkerTask.MESSAGE, message) );
 				});
 				trace("> Nest -> WorkerJunction : SLAVE - READY!");
@@ -87,16 +90,19 @@ public final class WorkerJunction extends Junction
 			{
 				const __isMaster	: Boolean 	= workerModule.isMaster;
 				const __getData		: Function 	= workerModule.getSharedData;
-				const __ready		: Function 	= workerModule.ready;
-				const __complete	: Function 	= workerModule.completeTask;
-				const __send		: Function 	= workerModule.send;
+				const __ready		  : Function 	= workerModule.ready;
+
+				const __unBusyAndSendNextTask	          : Function 	= workerModule.completeTask;
+				const __isTasksQueueEmpty	              : Function 	= workerModule.isTasksQueueEmpty;
+				const __sendToWorkerTaskComplete	      : Function 	= workerModule.sendComplete;
+				const __sendToMasterTaskCompleteConfirm	: Function 	= workerModule.sendConfirm;
+
+				const __isBusy		: Function 	= workerModule.checkIsBusy;
 				const __terminate	: Function 	= workerModule.terminate;
-				const __channel		: String 	= __isMaster ? WorkerModule.WRK_OUT : WorkerModule.WRK_IN;
+				const __channel		: String 	  = __isMaster ? WorkerModule.WRK_OUT : WorkerModule.WRK_IN;
 				const __getPipe		: Function 	= junction.retrievePipe;
 				const __transfer	: Function 	= __isMaster ? junction.sendMessage : junction.acceptMessage;
 
-				const __sendComplete: Function = function():void {__send(new WorkerTask(WorkerTask.COMPLETE)); }
-				
 //				const __dbConnect	: SQLConnection = _dbService.sqlConnection;
 //				const syncDB:Function = function(message:WorkerDBSyncMessage):void {
 //					__dbConnect.dispatchEvent( new SQLUpdateEvent(
@@ -108,38 +114,40 @@ public final class WorkerJunction extends Junction
 				{
 					const taskType 	: * = (e.currentTarget as MessageChannel).receive(true);
 					const message 	: IPipeMessage = __getData() as IPipeMessage;
-					const pipe		: IPipeFitting = __getPipe(__channel);
-//					trace("\n> Nest -> WorkerJunction > CHANNEL_MESSAGE on", __isMaster ? "MASTER" : "SLAVE");
-//					trace("> Nest -> WorkerJunction > channel = " + __channel, pipe, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
-//					if(message) 
-//					{
-//						trace("> Nest -> WorkerJunction > message", message);
-//						trace("> Nest -> WorkerJunction > message : pipeID = " + message.getPipeID());
-//						trace("> Nest -> WorkerJunction > message : messageID = " + message.getMessageID());
-//					}
-						if (taskType is int) {
-							switch(taskType)
-							{
-								case /* 15 */ WorkerTask.COMPLETE: __complete(); return;
-	//							case /* 10 */ WorkerTask.SYNC_DB: syncDB(WorkerDBSyncMessage(message)); completeTask(); break;
-								case /* 16 */ WorkerTask.TERMINATE: __terminate(); break;
-								case /*  0 */ WorkerTask.READY: __ready(); __sendComplete(); __complete(); break; // Comming only to Master after worker initialized
-								case /* 12 */ WorkerTask.MESSAGE: {
-									// Because pipe.write(...) has check for channel
-									__isMaster && message.setPipeID(message.getResponsePipeID())
-//									trace("> Nest -> WorkerJunction > transfer message to channel =", __channel);
-									__transfer(__channel, message);
-									
-									// Every worker task must be completed to be able for worker to send next task
-									// Means that Master ready to accept next message from worker
-									__isMaster 	&& __send(new WorkerTask(WorkerTask.COMPLETE)) 
-												// If Master receive final WorkerResponseMessage Master sends next message to worker
-												&& (message is WorkerResponseMessage) && __complete();
-								}
-								break;
+					const pipe		  : IPipeFitting = __getPipe(__channel);
+					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "Event.CHANNEL_MESSAGE >>>> message =", message);
+					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "channel = " + __channel, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
+					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "isBusy = " + __isBusy());
+					if(message)
+					{
+						trace("> Nest -> WorkerJunction > message : pipeID = " + message.getPipeID());
+						trace("> Nest -> WorkerJunction > message : messageID = " + message.getMessageID());
+					}
+					if (taskType is int) {
+						switch(taskType)
+						{
+							// Only WORKER can receive this message
+							case /* 15 */ WorkerTask.COMPLETE:
+								__unBusyAndSendNextTask();
+								__isTasksQueueEmpty() && __sendToMasterTaskCompleteConfirm();
+							break;
+							case /* 16 */ WorkerTask.TERMINATE: __terminate(); break;
+							case /* 17 */ WorkerTask.CONFIRM: __unBusyAndSendNextTask(); break; // Only on Master when worker has no tasks
+							case /*  0 */ WorkerTask.READY: __sendToWorkerTaskComplete(); __ready(); break; // Only on Master after worker initialized
+							case /* 12 */ WorkerTask.MESSAGE: {
+								// Because pipe.write(...) has check for channel
+								__isMaster && message.setPipeID( message.getResponsePipeID() );
+
+								__transfer( __channel, message ); // __transfer = __isMaster ? junction.sendMessage : junction.acceptMessage
+
+								// Every worker task must be completed to be able for worker to send next task
+								// It means that Master ready to accept next message from worker
+								__isMaster && __sendToWorkerTaskComplete();
 							}
-	//						trace("> Nest -> WorkerJunction > COMPLETE TASK:", __isMaster ? "MASTER" : "SLAVE", taskType);
+							break;
 						}
+						trace("> Nest -> WorkerJunction >", __isMaster ? "MASTER" : "WORKER", "COMPLETE TASK:", taskType);
+					}
 				}
 			}(this));
 

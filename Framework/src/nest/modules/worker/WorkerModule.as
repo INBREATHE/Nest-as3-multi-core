@@ -115,7 +115,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 				// Because we cant run task before worker is being ready
 				// So we mark "task execution" as Busy to store all WorkerTasks in a Queue for later execution
-				isBusy = true;
+				isBusy = false;
 				isInited = true;
 
 				trace("> Nest -> WorkerModule -> MASTER launching worker!");
@@ -158,18 +158,45 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	//==================================================================================================
 	public function send(task:WorkerTask):Boolean {
 	//==================================================================================================
-		if(isBusy && task.id != WorkerTask.COMPLETE) {
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: isBusy =", isBusy);
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task id =", task.id, task.id == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : (task.id == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : (task.id == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : "WorkerTask.READY")));
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task data =", JSON.stringify(task.data));
+		if(isBusy) {
 			_tasksQueue.push(task);
 		} else {
 			isBusy = true;
-			_shareable.clear();
+			ClearSharedData();
 			if(task.hasData()) _shareable.writeObject(task.data);
+			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> write to outputChannel task id =", task.id);
 			outputChannel.send(task.id, 0);
 		}
 		return true;
 	}
 
 	//==================================================================================================
+	public function sendReady():void {
+	//==================================================================================================
+		ClearSharedData();
+		outputChannel.send( WorkerTask.READY );
+	}
+
+	//==================================================================================================
+	public function sendConfirm():void {
+	//==================================================================================================
+		ClearSharedData();
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.CONFIRM");
+		outputChannel.send( WorkerTask.CONFIRM );
+	}
+
+	//==================================================================================================
+	public function sendComplete():void {
+	//==================================================================================================
+		ClearSharedData();
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.COMPLETE");
+		outputChannel.send( WorkerTask.COMPLETE );
+	}
+
+		//==================================================================================================
 	public function getSharedProperty(id:String):* {
 	//==================================================================================================
 		return _worker.getSharedProperty(id);
@@ -188,22 +215,22 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function completeTask():void {
 	//==================================================================================================
 		isBusy = false;
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", isMaster ? "MASTER" : "SLAVE", "length =",_tasksQueue.length);
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", "length =", _tasksQueue.length);
 		if(_tasksQueue.length) {
 			const task:WorkerTask = _tasksQueue.shift();
-			trace("\t : SEND NEXT TASK:", task.id);
-			this.send(task);
+			trace("\t ", isMaster ? "MASTER" : "WORKER", ": SEND NEXT TASK:", task.id);
+			this.send( task );
 		}
 	}
 
 	//==================================================================================================
-	public function setSharedProperty(id:String, obj:*):void {
+	public function setSharedProperty( id:String, obj:* ):void {
 	//==================================================================================================
-		_worker.setSharedProperty(id, obj);
+		_worker.setSharedProperty( id, obj );
 	}
 
 	//==================================================================================================
-	public function setSharedData(data:*):void {
+	public function setSharedData( data:* ):void {
 	//==================================================================================================
 		
 	}
@@ -214,7 +241,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 		_shareable.position = 0;
 		if(_shareable.bytesAvailable) {
 			const obj:* = _shareable.readObject();
-			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "SLAVE","getSharedData:", JSON.stringify(obj));
+			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","getSharedData:", JSON.stringify(obj));
 			return obj;
 		}
 		return null;
@@ -232,6 +259,10 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	//==================================================================================================
 		trace("> Nest -> WorkerModule -> Starting: M =", isMaster);
 		throw new Error("Method start in class that extend WorkerModule must be overwritten");
+	}
+
+	private function ClearSharedData():void {
+		_shareable.length && _shareable.clear();
 	}
 
 	//==================================================================================================
@@ -252,6 +283,11 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 		send( new WorkerTask(WorkerTask.TERMINATE) );
 	}
 
+	public function checkIsBusy():Boolean { return isBusy; }
+	public function isTasksQueueEmpty():Boolean {
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER", "-> isTasksQueueEmpty =", _tasksQueue.length == 0, JSON.stringify(_tasksQueue));
+		return _tasksQueue.length == 0;
+	}
 	public function getID():String { return moduleID; }
 	public static function getNextID():String { return NAME + "." + serial++; }
 

@@ -85,10 +85,10 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_ShowPopupByName(popupData:PopupData, name:String):void {
 	//==================================================================================================
-		const popup:Popup = _popupsStorage[name];
+		var popup:Popup = GetPopupByName(name);
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage:", GetPopupByName(name));
-		if (GetPopupByName(name) != null) 
+		if (popup != null)
 			popup.hide(function():void {
 				trace("> Nest -> PopupsMediator > Hide Popup:", name);
 				RemovePopupFromStage(name, true);
@@ -97,8 +97,11 @@ public final class PopupsMediator extends Mediator implements IMediator
 			});
 		else {
 //			SetupListeners(popup);
-			popup.setup(popupData);
-			AddPopup(popup);
+			popup = _popupsStorage[name];
+			if(popup) {
+				popup.setup(popupData);
+				AddPopup(popup);
+			} else throw new Error("POPUP " + name + " NOT REGISTERED");
 		}
 	}
 	
