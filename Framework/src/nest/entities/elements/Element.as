@@ -17,12 +17,12 @@ public class Element extends Sprite implements IElement {
 		Layout(_env);
 	}
 	
-	protected /* abstract */ function Layout(env:Environment):void { }
+	protected /* abstract */ function Layout( env:Environment ):void { }
 	
   private var _order:int = 0;
 
   private var _env:Environment;
-  public function set order(value:int):void { _order = value; }
+  public function set order( value:int ):void { _order = value; }
   public function get order():int { return _order; }
 	public function get env():Environment { return _env; }
 }
