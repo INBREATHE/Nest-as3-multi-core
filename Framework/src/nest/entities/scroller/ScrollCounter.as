@@ -40,6 +40,11 @@ public final class ScrollCounter extends Canvas
 		this.y = (ENV.isPhone ? 88 : 72) * ENV.scaleFactor.y;
 	}
 
+	public function setType( value:int ):void {
+		_type = value;
+		setActiveIndex(currentIndex);
+	}
+
 	public function reset():void {
 		currentIndex = -1;
 		numChildrens = 0;
@@ -49,6 +54,10 @@ public final class ScrollCounter extends Canvas
 	public function setColors( passiveColor:uint, activeColor:uint ):void {
 		_color = passiveColor;
 		_colorActive = activeColor;
+	}
+
+	override public function get height():Number {
+		return COUNTER_SIZE;
 	}
 
 	override public function get width():Number {
