@@ -12,14 +12,14 @@ import nest.interfaces.IScrollItem;
 public class ScrollScreen extends Screen
 {
 	protected var
-		_scrollContainer		: ScrollContainer
-	,	_scrollCounter			: ScrollCounter
+		_scrollContainer	: ScrollContainer
+	,	_scrollCounter		: ScrollCounter
 	;
 
 	private var _isScrollAvailable:Boolean = false;
 	public function get isScrollAvailable():Boolean { return _isScrollAvailable; }
 
-	public function ScrollScreen(screenName:String) {
+	public function ScrollScreen( screenName:String ) {
 		super(screenName);
 	}
 
@@ -34,8 +34,8 @@ public class ScrollScreen extends Screen
 	//==================================================================================================
 	override public function clear():void {
 	//==================================================================================================
-		if(_scrollContainer) _scrollContainer.clear();
-		if(_scrollCounter) _scrollCounter.reset();
+		if( _scrollContainer ) _scrollContainer.clear();
+		if( _scrollCounter ) _scrollCounter.reset();
 	}
 
 	//==================================================================================================

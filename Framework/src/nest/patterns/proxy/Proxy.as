@@ -15,13 +15,13 @@ public class Proxy extends Notifier implements IProxy
 	protected var proxyName:String;
 	protected var data:Object;
 
-	public function Proxy(data:Object = null) {
-		proxyName = getQualifiedClassName(this);
-		if (data != null) setData(data);
+	public function Proxy( data:Object = null ) {
+		proxyName = getQualifiedClassName( this );
+		if ( data != null ) setData( data );
 	}
 
 	public function getProxyName():String { return proxyName; }
-	public function setData(data:Object):void { this.data = data; }
+	public function setData( data:Object ):void { this.data = data; }
 	public function getData():Object { return data; }
 
 	public function onRegister():void {}

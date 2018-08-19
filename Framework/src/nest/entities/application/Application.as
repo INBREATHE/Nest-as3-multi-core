@@ -56,12 +56,10 @@ public class Application extends Sprite
 	}
 	
 	static public var
-			IS_PHONE			: Boolean
-		, EVENT_READY   : String = "application_event_ready"
-	
-		, SCALEFACTOR		: Number = 1
-		, SCREEN_WIDTH	: uint = Capabilities.screenResolutionX
-		, SCREEN_HEIGHT	: uint = Capabilities.screenResolutionY
+	  EVENT_READY   : String = "application_event_ready"
+	, SCALEFACTOR		: Number = 1
+	, SCREEN_WIDTH	: uint = Capabilities.screenResolutionX
+	, SCREEN_HEIGHT	: uint = Capabilities.screenResolutionY
 	;
 
 	static public const ENVIRONMENT  : Environment = new Environment();

@@ -111,7 +111,7 @@ public class Facade implements IFacade
 	//========================================================================================================================================
 	public function sendNotification 	( notification:INotification )	: void 		{ view.notifyObservers( notification ); }
 	public function executeCommand 		( notification:INotification )	: void 		{ controller.executeCommand( notification ); }
-	public function runProcess 			( notification:INotification )	: void 		{  }
+	public function runProcess 			  ( notification:INotification )	: void 		{  }
 	//========================================================================================================================================
 }
 }

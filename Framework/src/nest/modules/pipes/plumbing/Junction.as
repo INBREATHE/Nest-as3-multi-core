@@ -208,10 +208,10 @@ package nest.modules.pipes.plumbing
 		{
 			var success:Boolean = false;
 			const checkInputPipe:Boolean = hasInputPipe(inputPipeName);
-//			trace(">\tJunction.sendMessage: hasInputPipe =", checkInputPipe );
-//			trace(">\tJunction.sendMessage: inputPipeName =", inputPipeName );
-//			trace(">\tJunction.sendMessage: message =", message );
-			if ( checkInputPipe )
+			trace(">\tJunction.sendMessage: hasInputPipe =", checkInputPipe );
+			trace(">\tJunction.sendMessage: inputPipeName =", inputPipeName );
+			trace(">\tJunction.sendMessage: message =", message );
+			if ( checkInputPipe && message )
 			{
 				const pipe:IPipeFitting = pipesMap[inputPipeName] as IPipeFitting;
 				if(individual && !message.getPipeID()) message.setPipeID(pipe.channelID);

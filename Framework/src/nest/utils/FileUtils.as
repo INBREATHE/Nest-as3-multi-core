@@ -26,19 +26,19 @@ public final class FileUtils
 		return result;
 	}
 
-	static public function readBytesFromFile(path:String, uncompressed:Boolean = false):ByteArray {
-		const file			  : File 			  = File.applicationDirectory.resolvePath(path);
+	static public function readBytesFromFile( path:String, uncompressed:Boolean = false ):ByteArray {
+		const file			  : File 			  = File.applicationDirectory.resolvePath( path );
 		const fileStream	: FileStream 	= new FileStream();
 		const byteArray	: ByteArray 	= new ByteArray();
 
 //		trace("> FileUtils > readBytesFromFile:", file.exists, path);
-		if(!file.exists) return byteArray;
+		if( !file.exists ) return byteArray;
 
-		fileStream.open(file, FileMode.READ);
-		fileStream.readBytes(byteArray);
+		fileStream.open( file, FileMode.READ );
+		fileStream.readBytes( byteArray );
 		if(uncompressed)
-		try { byteArray.uncompress(CompressionAlgorithm.LZMA); }
-		catch ( e:Error ) { trace( "The ByteArray uncompress problem!" ); }
+		try { byteArray.uncompress( CompressionAlgorithm.LZMA ); }
+		catch ( e:Error ) { trace( "> FileUtils -> readBytesFromFile: The ByteArray uncompress problem!" ); }
 		fileStream.close();
 
 		return byteArray;

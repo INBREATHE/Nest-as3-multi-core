@@ -103,7 +103,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 	override public function handleNotification(notification:INotification):void {
 	//==================================================================================================
-		trace("> Nest -> ScreenMediator > " + this.getMediatorName() + " > handleNotification:", notification.getName());
+//		trace("> Nest -> ScreenMediator > " + this.getMediatorName() + " > handleNotification:", notification.getName());
 		const body:Object = notification.getBody();
 		const name:String = notification.getName();
 		if(name == _dataNotification) { 
