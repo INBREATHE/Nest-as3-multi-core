@@ -72,11 +72,11 @@ public final class DatabaseQuery
 			classVariables	: Array = ["( "],
 			primaryKeyExist	: Boolean = false,
 			primaryKeyFound	: Boolean = false,
-			variableMeta	: XMLList,
-			variableMeta1	: XML,
-			variableName	: String = "",
-			variableType	: String = "",
-			variableDB		: Array = ["name", "type", ", "];
+			variableMeta	  : XMLList,
+			variableMeta1	  : XML,
+			variableName	  : String = "",
+			variableType	  : String = "",
+			variableDB		  : Array = ["name", "type", ", "];
 		
 //		Capabilities.isDebugger && Application.log( "CreateTableFromClass variables count = " + variablesList.length());
 		for (var i:int = 0, j:uint = variablesList.length()-1; i <= j; i++)

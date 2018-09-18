@@ -6,7 +6,6 @@
 package nest.patterns.command
 {
 import nest.interfaces.IAsyncCommand;
-import nest.patterns.command.SimpleCommand;
 
 public class AsyncCommand extends SimpleCommand	implements IAsyncCommand
 {

@@ -10,13 +10,13 @@ import nest.interfaces.IAsyncCommand;
 import nest.interfaces.ICommand;
 import nest.patterns.observer.Notifier;
 
-public class AsyncMacroCommand extends Notifier	implements IAsyncCommand
+public class AsyncMacroCommand extends Notifier implements IAsyncCommand
 {
 	private var _onComplete		:	Function;
 	private var _subCommands	:	Vector.<Class>;
-	private var _body			:	Object;
-	private var _type			:	String;
-	private var _counter		: 	int = 0;
+	private var _body			    :	Object;
+	private var _type			    :	String;
+	private var _counter		  : int = 0;
 
 	public function AsyncMacroCommand() {
 		_subCommands = new Vector.<Class>();

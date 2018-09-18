@@ -36,9 +36,9 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 
 	private var
 		_sqlConnection	: SQLConnection
-	,	_sqlStatement	: SQLStatement
-	,	_dbExist		: Boolean = false
-	,	_events			: Dictionary = new Dictionary()
+	,	_sqlStatement	  : SQLStatement
+	,	_dbExist		    : Boolean = false
+	,	_events			    : Dictionary = new Dictionary()
 	;
 	
 	public function get dbExist():Boolean { return _dbExist; }
