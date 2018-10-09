@@ -8,6 +8,7 @@ package nest.utils
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
 import flash.display.StageQuality;
 import flash.filters.ColorMatrixFilter;
 import flash.geom.Matrix;
@@ -146,10 +147,17 @@ public class DisplayUtils
 		const buttonDownTexture:Texture = Texture.fromBitmapData(displayObjectToBitmapData(buttonGraphics.downState, sf));
 		return new Button(buttonUpTexture, "", buttonDownTexture);
 	}
+
 	//==================================================================================================
 	public static function textureFromClass(classRef:Class, sf:Number, rect:Rectangle = null):Texture {
 	//==================================================================================================
 		const displayObject:DisplayObject = new classRef() as DisplayObject;
+		return textureFromDisplayObject(displayObject, sf, rect);
+	}
+
+	//==================================================================================================
+	public static function textureFromDisplayObject(displayObject:DisplayObject, sf:Number, rect:Rectangle = null):Texture {
+	//==================================================================================================
 		mtr = displayObject.transform.matrix;
 		displayObject.scaleX = displayObject.scaleY = sf;
 		if(rect) {
@@ -175,6 +183,29 @@ public class DisplayUtils
 
 		var filter:ColorMatrixFilter = new ColorMatrixFilter( matrix );
 		obj.applyFilter( obj, new Rectangle( 0,0,obj.width,obj.height ), new Point(0,0), filter );
+	}
+
+	static public function fitAssetToFrame( asset:DisplayObjectContainer, frame:Point ):DisplayObjectContainer {
+		const region:DisplayObject = asset.getChildAt( 0 );
+		const regionWidth:uint = region.width;
+		const regionHeight:uint = region.height;
+		const frameWidth:uint = frame.x;
+		const frameHeight:uint = frame.y;
+		const scaleFactor:Number = frameWidth / regionWidth;
+		trace("> DisplayUtils -> fitAssetToFrame: sf =", scaleFactor, "| region W:H =", regionWidth, regionHeight, "| frame W:H =", frameWidth, frameHeight);
+		asset.scaleX = scaleFactor;
+		asset.scaleY *= scaleFactor;
+		asset.transform.matrix.scale( scaleFactor,scaleFactor );
+		asset.y = ( regionHeight - frameHeight) * 0.5;
+		return asset;
+	}
+
+	static public function createTextureFromAssetWithinFrame( asset:DisplayObjectContainer, frame:Point, desaturate:Boolean ):Texture {
+//		const bmd:BitmapData = new BitmapData( frame.x, frame.y );
+		const bmd:BitmapData = displayObjectToBitmapData( asset );
+//		bmd.draw( asset, asset.transform.matrix );
+		if ( desaturate ) convertToGrayScale( bmd );
+		return Texture.fromBitmapData( bmd );
 	}
 }
 }

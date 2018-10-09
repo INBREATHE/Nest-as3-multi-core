@@ -24,20 +24,20 @@ public class ChangeScreenCommand extends SimpleCommand implements ICommand
 	{
 		const currentScreen 	  : ScreenCache 		= screensProxy.currentScreen;
 		const currentScreenName	: String 			    = currentScreen ? currentScreen.name : null;
-		const goPrevious		    : Boolean			    = nextScreenName == Screen.PREVIOUS || (currentScreen && currentScreen.prevScreenCache && currentScreen.prevScreenCache.name == nextScreenName);
+		const goPrevious		    : Boolean			    = nextScreenName == Screen.PREVIOUS || ( currentScreen && currentScreen.prevScreenCache && currentScreen.prevScreenCache.name == nextScreenName );
 		const targetScreen		  : ScreenCache 		= (goPrevious ? currentScreen.prevScreenCache : screensProxy.getCacheByScreenName(nextScreenName)) || screensProxy.getFirstCachedScreen();
-		const screenMediator	  : ScreenMediator 	= facade.getMediator(targetScreen.mediatorName) as ScreenMediator;
+		const screenMediator	  : ScreenMediator 	= facade.getMediator( targetScreen.mediatorName ) as ScreenMediator;
 
-		if(currentScreen) {
-			if(!goPrevious && targetScreen.prevScreenCache == null)	targetScreen.prevScreenCache = currentScreen;
+		if ( currentScreen ) {
+			if ( !goPrevious && targetScreen.prevScreenCache == null )	targetScreen.prevScreenCache = currentScreen;
 			else currentScreen.prevScreenCache = null;
 
-			ScreenMediator(facade.getMediator(currentScreen.mediatorName)).onLeave();
+			ScreenMediator( facade.getMediator( currentScreen.mediatorName )).onLeave();
 
 			this.send( ApplicationNotification.HIDE_SCREEN, currentScreen.screen, nextScreenName );
 		}
 
-		const screenData:ScreenData = (body != null && body is ScreenData) ? ScreenData(body) : new ScreenData();
+		const screenData:ScreenData = ( body != null && body is ScreenData ) ? ScreenData( body ) : new ScreenData();
 
 		screensProxy.currentScreen = targetScreen;
 		screenData.previous = goPrevious;
@@ -48,8 +48,8 @@ public class ChangeScreenCommand extends SimpleCommand implements ICommand
 		trace("> Nest -> ChangeScreenCommand goPrevious:", goPrevious);
 		trace("> Nest -> ChangeScreenCommand screenData:", JSON.stringify(screenData));
 
-		if(currentScreen && currentScreen.screen)
-			currentScreen.screen.addEventListener( Event.REMOVED_FROM_STAGE, function fname():void
+		if ( currentScreen && currentScreen.screen )
+			currentScreen.screen.addEventListener( Event.REMOVED_FROM_STAGE, function ():void
 			{
 				currentScreen.screen.removeEventListeners( Event.REMOVED_FROM_STAGE );
 				send( PopupNotification.HIDE_ALL_POPUPS );

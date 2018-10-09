@@ -5,13 +5,13 @@ package nest.utils
 		static public function shuffle( arr:Array ):void 
 		{ // fisherYates
 			var count:uint = arr.length,
-				randomnumber:uint,
+				random:uint,
 				temp:*;
-			while( count ){
-				randomnumber = Math.random() * count-- | 0;
-				temp = arr[count];
-				arr[count] = arr[randomnumber];
-				arr[randomnumber] = temp
+			while( count ) {
+				random = Math.random() * count-- | 0;
+				temp = arr[ count ];
+				arr[ count ] = arr[ random ];
+				arr[ random ] = temp;
 			}
 		}
 	}

@@ -15,7 +15,7 @@ package nest.entities.screen
 		,	_data		: Object
 		;
 		
-		public function ScreenData(data:Object = null)
+		public function ScreenData( data:Object = null )
 		{
 			_data = data;
 		}

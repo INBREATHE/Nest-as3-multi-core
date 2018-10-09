@@ -38,7 +38,7 @@ public final class FileUtils
 		fileStream.readBytes( byteArray );
 		if(uncompressed)
 		try { byteArray.uncompress( CompressionAlgorithm.LZMA ); }
-		catch ( e:Error ) { trace( "> FileUtils -> readBytesFromFile: The ByteArray uncompress problem!" ); }
+		catch ( e:Error ) { trace( ">\t FileUtils -> readBytesFromFile: The ByteArray uncompress problem!" ); }
 		fileStream.close();
 
 		return byteArray;

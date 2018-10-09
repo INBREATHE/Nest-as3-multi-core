@@ -25,9 +25,9 @@ public class ScreenMediator extends Mediator implements IMediator
 	public var isBackPossible:Boolean = false;
 
 	public function ScreenMediator(
-		viewComponent		: Object,
+		viewComponent		  : Object,
 		dataNotification	: String,
-		dataCommand			: String = null
+		dataCommand			  : String = null
 	) {
 		this._dataRequest = dataCommand;
 		this._dataNotification = dataNotification;
@@ -150,7 +150,7 @@ public class ScreenMediator extends Mediator implements IMediator
 		_dataForScreen = screenData;
 		if( screen.rebuildable ) {
 			_isReady = false;
-			const getDataMethod:Function = facade.hasCommand(_dataRequest) ? this.exec : this.send; 
+			const getDataMethod:Function = facade.hasCommand( _dataRequest ) ? this.exec : this.send;
 			getDataMethod( _dataRequest, _dataForScreen.data, _dataNotification );
 		} else {
 			ContentReady();

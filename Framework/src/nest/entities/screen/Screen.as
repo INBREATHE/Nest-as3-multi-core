@@ -13,14 +13,10 @@ import nest.interfaces.IScreen;
 public class Screen extends Element implements IScreen
 {
 	public static const PREVIOUS:String = "nest_screen_mark_previous";
-	
-	public static var
-		sf					: Number	= 0
-	;
 
-	protected var _locale:XMLList;
+	protected var _locale:XMLList = new XMLList();
 
-	public var isShown		: Boolean = false;
+	public var isShown		  : Boolean = false;
 	public var rebuildable	: Boolean = false;
 
 	public function Screen(name:String) {
