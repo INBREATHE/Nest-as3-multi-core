@@ -152,22 +152,28 @@ public class DisplayUtils
 	public static function textureFromClass(classRef:Class, sf:Number, rect:Rectangle = null):Texture {
 	//==================================================================================================
 		const displayObject:DisplayObject = new classRef() as DisplayObject;
-		return textureFromDisplayObject(displayObject, sf, rect);
+		return textureFromDisplayObject( displayObject, sf, rect );
 	}
 
 	//==================================================================================================
-	public static function textureFromDisplayObject(displayObject:DisplayObject, sf:Number, rect:Rectangle = null):Texture {
+	public static function bitmapDataFromDisplayObject( displayObject:DisplayObject, sf:Number, rect:Rectangle = null ):BitmapData {
 	//==================================================================================================
 		mtr = displayObject.transform.matrix;
 		displayObject.scaleX = displayObject.scaleY = sf;
-		if(rect) {
+		if ( rect ) {
 			rect.width *= sf;
 			rect.height *= sf;
 		}
 		mtr.scale(sf, sf);
-		bmd = new BitmapData(rect ? rect.width : displayObject.width, rect ? rect.height : displayObject.height, true, 0x00000000);
-		bmd.draw(displayObject, mtr, null, null, rect);
-		return Texture.fromBitmapData(bmd, false, false);
+		bmd = new BitmapData( rect ? rect.width : displayObject.width, rect ? rect.height : displayObject.height, true, 0x00000000 );
+		bmd.draw( displayObject, mtr, null, null, rect );
+		return bmd;
+	}
+
+	//==================================================================================================
+	public static function textureFromDisplayObject( displayObject:DisplayObject, sf:Number, rect:Rectangle = null ):Texture {
+	//==================================================================================================
+		return Texture.fromBitmapData( bitmapDataFromDisplayObject( displayObject, sf, rect ), false, false );
 	}
 
 	public static function convertToGrayScale( obj:BitmapData ) : void
