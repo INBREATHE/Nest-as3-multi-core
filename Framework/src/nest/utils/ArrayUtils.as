@@ -2,7 +2,7 @@ package nest.utils
 {
 	public final class ArrayUtils
 	{
-		static public function shuffle( arr:Array ):void 
+		static public function shuffle( arr:Object ):void
 		{ // fisherYates
 			var count:uint = arr.length,
 				random:uint,
