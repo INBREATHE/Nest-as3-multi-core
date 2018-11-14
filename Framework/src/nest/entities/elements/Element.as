@@ -11,10 +11,10 @@ import starling.display.Sprite;
 
 public class Element extends Sprite implements IElement {
   /* INTERFACE nest.interfaces.IElement */
-	public function Element(env:Environment = null)
+	public function Element( env:Environment = null )
 	{
 		_env = env;
-		Layout(_env);
+		Layout( _env );
 	}
 	
 	protected /* abstract */ function Layout( env:Environment ):void { }

@@ -12,7 +12,7 @@ import nest.services.localization.LanguageDependentProxy;
 
 /**
  * C:\Users\DQvsRA\AppData\Roaming\[App Identifier]\Local Store\
- * @author Vladimir Minkin
+ * @author Vladimir Cores
  */
 
 /*

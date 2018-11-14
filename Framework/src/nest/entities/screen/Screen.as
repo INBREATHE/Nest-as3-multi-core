@@ -19,11 +19,11 @@ public class Screen extends Element implements IScreen
 	public var isShown		  : Boolean = false;
 	public var rebuildable	: Boolean = false;
 
-	public function Screen(name:String) {
+	public function Screen( name:String ) {
 		this.order = -1;
 		this.name = name;
 		this.touchable = false;
-		super(Application.ENVIRONMENT);
+		super( Application.ENVIRONMENT );
 	}
 
 	//==================================================================================================

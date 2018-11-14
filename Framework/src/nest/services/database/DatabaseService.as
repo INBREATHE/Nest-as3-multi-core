@@ -27,7 +27,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 {
 	private static const ERROR_NOT_INITALIZED:String = "DatabaseService is not initialized, try to initialize it first!";
 
-	public static const EVENT_EXECUTE_COMPLETE:String = "event_execute_complite";
+	public static const EVENT_EXECUTE_COMPLETE:String = "event_execute_complete";
 	
 	public static const TYPE_OBJECT:String = "object";
 	public static const TYPE_STRING:String = "string";
@@ -57,15 +57,15 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		
 		_dbExist = file.exists;
 		_sqlConnection = new SQLConnection();
-		_sqlConnection.addEventListener(SQLEvent.OPEN, Handler_DatabaseOpenned);
+		_sqlConnection.addEventListener(SQLEvent.OPEN, Handler_DatabaseOpened);
 		Capabilities.isDebugger && Application.log("> Nest -> \t> DatabaseService \t-> init: DB exist: " + _dbExist + " at path: " + file.nativePath);
 		_sqlConnection.open(file, _dbExist ? SQLMode.UPDATE : SQLMode.CREATE);
 	}
 	
 	//==================================================================================================
-	private function Handler_DatabaseOpenned(e:SQLEvent):void {
+	private function Handler_DatabaseOpened(e:SQLEvent):void {
 	//==================================================================================================
-		_sqlConnection.removeEventListener(SQLEvent.OPEN, Handler_DatabaseOpenned);
+		_sqlConnection.removeEventListener(SQLEvent.OPEN, Handler_DatabaseOpened);
 		this.dispatchEvent(e);
 	}
 

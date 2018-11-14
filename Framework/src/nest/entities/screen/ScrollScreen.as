@@ -20,7 +20,7 @@ public class ScrollScreen extends Screen
 	public function get isScrollAvailable():Boolean { return _isScrollAvailable; }
 
 	public function ScrollScreen( screenName:String ) {
-		super(screenName);
+		super( screenName );
 	}
 
 	//==================================================================================================

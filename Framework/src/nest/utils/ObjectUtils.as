@@ -5,6 +5,8 @@
 */
 package nest.utils
 {
+
+import flash.utils.ByteArray;
 import flash.utils.describeType;
 
 public class ObjectUtils
@@ -53,6 +55,14 @@ public class ObjectUtils
 		}
 
 		return A;
+	}
+
+	public static function clone(source:Object):*
+	{
+		var myBA:ByteArray = new ByteArray();
+		myBA.writeObject(source);
+		myBA.position = 0;
+		return(myBA.readObject());
 	}
 }
 }
