@@ -117,35 +117,35 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function store(table:String, data:Object):void {
+	public function store( table:String, data:Object ):void {
 	//==================================================================================================
 		const dataType:String = typeof data;
 //			trace("> Nest -> STORE:", dataType, data);
-		if(dataType == TYPE_STRING) ExecuteStatement(DatabaseQuery.InsertDataStringToTable(String(data), table), false);
-		else if(dataType == TYPE_OBJECT) ExecuteInsertStatementWithParams(data, table);
+		if( dataType == TYPE_STRING ) ExecuteStatement( DatabaseQuery.InsertDataStringToTable(String( data ), table ), false );
+		else if( dataType == TYPE_OBJECT ) ExecuteInsertStatementWithParams( data, table );
 	}
 
 	//==================================================================================================
-	public function update(table:String, criteria:String, data:Object, languageDependent:Boolean = true):void {
+	public function update( table:String, criteria:String, data:Object, languageDependent:Boolean = true):void {
 	//==================================================================================================
-		if(languageDependent) criteria = DatabaseQuery.QueryWithLanguage(criteria);
-		ExecuteUpdateStatementWithParams(data, table, criteria);
+		if ( languageDependent ) criteria = DatabaseQuery.QueryWithLanguage( criteria );
+		ExecuteUpdateStatementWithParams( data, table, criteria );
 	}
 
 	//==================================================================================================
-	public function remove(table:String, criteria:String, languageDependent:Boolean = true):void {
+	public function remove( table:String, criteria:String, languageDependent:Boolean = true ):void {
 	//==================================================================================================
-		ExecuteStatement(DatabaseQuery.DeleteFromTableWhere(table, criteria), languageDependent);
+		ExecuteStatement( DatabaseQuery.DeleteFromTableWhere( table, criteria ), languageDependent );
 	}
 
 	//==================================================================================================
-	public function listen(eventType:String, table:String, classRef:Class, callback:Function, retranslate:Boolean = false):void {
+	public function listen( eventType:String, table:String, classRef:Class, callback:Function, retranslate:Boolean = false ):void {
 	//==================================================================================================
-		if(_sqlConnection == null) throw new Error(ERROR_NOT_INITALIZED);
-		if(_sqlConnection.hasEventListener(eventType) == false) {
-			_sqlConnection.addEventListener(eventType, HandleDatabaseEvent);
+		if ( _sqlConnection == null ) throw new Error( ERROR_NOT_INITALIZED );
+		if ( _sqlConnection.hasEventListener( eventType ) == false ) {
+			_sqlConnection.addEventListener( eventType, HandleDatabaseEvent );
 		}
-		if(_events[eventType] == null) _events[eventType] = new Vector.<DatabaseListener>();
+		if(_events[eventType] == null) _events[ eventType ] = new Vector.<DatabaseListener>();
 		Vector.<DatabaseListener>(_events[eventType]).push(new DatabaseListener(table, classRef, callback, retranslate));
 	}
 

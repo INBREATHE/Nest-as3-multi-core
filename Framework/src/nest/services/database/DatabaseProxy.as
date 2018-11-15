@@ -65,27 +65,27 @@ public class DatabaseProxy extends LanguageDependentProxy
 	}
 
 	//==================================================================================================
-	public function count(table:String, critiria:String, languageDependent:Boolean = true):uint {
+	public function count( table:String, critiria:String, languageDependent:Boolean = true ):uint {
 	//==================================================================================================
-		return _dbService.count(table, critiria, languageDependent);
+		return _dbService.count( table, critiria, languageDependent );
 	}
 
 	//==================================================================================================
-	public function store(table:String, data:Object):void {
+	public function store( table:String, data:Object ):void {
 	//==================================================================================================
-		_dbService.store(table, data);
+		_dbService.store( table, data );
 	}
 
 	//==================================================================================================
-	public function update(table:String, criteria:String, data:Object, languageDependent:Boolean = true):void {
+	public function update( table:String, criteria:String, data:Object, languageDependent:Boolean = true ):void {
 	//==================================================================================================
-		_dbService.update(table, criteria, data, languageDependent);
+		_dbService.update( table, criteria, data, languageDependent );
 	}
 
 	//==================================================================================================
-	public function remove(table:String, criteria:String, languageDependent:Boolean = true):void {
+	public function remove( table:String, criteria:String, languageDependent:Boolean = true ):void {
 	//==================================================================================================
-		_dbService.remove(table, criteria, languageDependent);
+		_dbService.remove( table, criteria, languageDependent );
 	}
 
 	//==================================================================================================
