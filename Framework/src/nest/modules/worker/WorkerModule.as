@@ -158,9 +158,9 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	//==================================================================================================
 	public function send(task:WorkerTask):Boolean {
 	//==================================================================================================
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: isBusy =", isBusy);
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task id =", task.id, task.id == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : (task.id == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : (task.id == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : "WorkerTask.READY")));
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task data =", JSON.stringify(task.data));
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: isBusy =", isBusy);
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task id =", task.id, task.id == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : (task.id == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : (task.id == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : "WorkerTask.READY")));
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task data =", JSON.stringify(task.data));
 		if(isBusy) {
 			_tasksQueue.push(task);
 		} else {
@@ -241,7 +241,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 		_shareable.position = 0;
 		if(_shareable.bytesAvailable) {
 			const obj:* = _shareable.readObject();
-			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","getSharedData:", JSON.stringify(obj));
+//			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","getSharedData:", JSON.stringify(obj));
 			return obj;
 		}
 		return null;
@@ -285,7 +285,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 	public function checkIsBusy():Boolean { return isBusy; }
 	public function isTasksQueueEmpty():Boolean {
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER", "-> isTasksQueueEmpty =", _tasksQueue.length == 0, JSON.stringify(_tasksQueue));
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER", "-> isTasksQueueEmpty =", _tasksQueue.length == 0, JSON.stringify(_tasksQueue));
 		return _tasksQueue.length == 0;
 	}
 	public function getID():String { return moduleID; }

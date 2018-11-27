@@ -133,7 +133,6 @@ public class DisplayUtils
 			displayObject.scaleX *= scaleFactor;
 			displayObject.scaleY *= scaleFactor;
 		}
-		const bound:Rectangle = displayObject.transform.pixelBounds;
 		bmd	= new BitmapData(displayObject.width, displayObject.height, true, 0x00000000);
 		bmd	.draw(displayObject, null, null, null, null, smooth);
 		return bmd;
@@ -159,7 +158,8 @@ public class DisplayUtils
 	public static function bitmapDataFromDisplayObject( displayObject:DisplayObject, sf:Number, rect:Rectangle = null ):BitmapData {
 	//==================================================================================================
 		mtr = displayObject.transform.matrix;
-		displayObject.scaleX = displayObject.scaleY = sf;
+		displayObject.width *= sf;
+		displayObject.height *= sf;
 		if ( rect ) {
 			rect.width *= sf;
 			rect.height *= sf;

@@ -10,9 +10,10 @@ package nest
 		
 		public var isPhone			: Boolean;
 		
-		public var scaleFactor	: Point;
-		public var viewportSize	: Point;
-		
+		public var scaleFactor	    : Point;
+		public var viewportSize	    : Point;
+		public var textureSizeLimit	: uint;
+
 		public function Environment()
 		{
 			
