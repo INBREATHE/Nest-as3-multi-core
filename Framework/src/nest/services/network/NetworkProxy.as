@@ -14,12 +14,12 @@ public class NetworkProxy extends Proxy
 	,	_networkDisabledCommand		: String
 	;
 
-	public function set networkEnabledCommand	(value:String):void { _networkEnabledCommand = value; }
-	public function set networkDisabledCommand	(value:String):void { _networkDisabledCommand = value; }
+	public function set networkEnabledCommand	( value:String ):void { _networkEnabledCommand = value; }
+	public function set networkDisabledCommand	( value:String ):void { _networkDisabledCommand = value; }
 
 	public function NetworkProxy() {
 		super(NetworkService.getInstance());
-		network.addEventListener(NetworkService.NETWORK_CHANGED, HandleNetworkChange);
+		network.addEventListener( NetworkService.NETWORK_CHANGED, HandleNetworkChange );
 	}
 	
 	//==================================================================================================
@@ -29,14 +29,14 @@ public class NetworkProxy extends Proxy
 	public function get isNetworkAvailable():Boolean { return network.isNetworkAvailable; }
 
 	//==================================================================================================
-	private function HandleNetworkChange(event:NetworkStatusEvent):void {
+	private function HandleNetworkChange( event:NetworkStatusEvent ):void {
 	//==================================================================================================
 		trace("> Nest -> HandleNetworkChange :", event);
 		var command:String = _networkDisabledCommand;
-		if(event.available) command = _networkEnabledCommand;
-		if(command != null) this.exec( command );
+		if ( event.available ) command = _networkEnabledCommand;
+		if ( command != null ) this.exec( command );
 	}
 
-	private function get network():NetworkService { return NetworkService(data); }
+	private function get network():NetworkService { return NetworkService( data ); }
 }
 }

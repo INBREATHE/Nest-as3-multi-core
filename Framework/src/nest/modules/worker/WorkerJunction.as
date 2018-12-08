@@ -62,7 +62,7 @@ public final class WorkerJunction extends Junction
 			if (isMaster)
 			{
 				const toWorkerPipeListener:PipeListener = new PipeListener(workerModule, function ( message:IPipeMessage ):void {
-					trace("\n> Nest -> WorkerJunction : MASTER > Output PipeListener"); 
+					trace("\n> Nest -> WorkerJunction : MASTER > Output PipeListener");
 					trace("\t : isBusy = " + this.isBusy);
 					trace("\t : Send message =", message);
 					trace("\t : Send message header =", message.getHeader());
@@ -70,13 +70,13 @@ public final class WorkerJunction extends Junction
 					this.send( new WorkerTask( WorkerTask.MESSAGE, message ));
 				});
 				inputPipe.connect(toWorkerPipeListener);
-				trace("> Nest -> WorkerJunction : MASTER - READY!"); 
+				trace("> Nest -> WorkerJunction : MASTER - READY!");
 			}
 			else // WORKER
 			{
 				outputPipe = new PipeListener(workerModule, function ( message:IPipeMessage ):void {
 					const isWorkerRequestMessage:Boolean = message is WorkerRequestMessage;
-					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener"); 
+					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener");
 					trace("\t : isWorkerRequestMessage =", isWorkerRequestMessage);
 					trace("\t : isBusy = " + this.isBusy);
 					trace("\t : Send message header =", message.getHeader());

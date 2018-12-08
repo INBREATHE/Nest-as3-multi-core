@@ -499,7 +499,7 @@ public class RasterizerService extends EventDispatcher
 		{
 			packedItemsCount = packedRect + rectInPack;
 			rasterItem = _itemsToRaster[i];
-			//trace(i, rectInPack, packedRect + rectInPack,rasterItem.id, rasterItem.name);
+			////trace(i, rectInPack, packedRect + rectInPack,rasterItem.id, rasterItem.name);
 
 			if(rasterItem.width > _maxAtlasSize) {
 				rasterItem.resizeToFitWidth(_maxAtlasSize);

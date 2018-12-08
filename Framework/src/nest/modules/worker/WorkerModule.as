@@ -84,11 +84,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 	public function initialize(bytes:ByteArray, enabled:Boolean = true):void
 	{
-		trace("\n> Nest -> WorkerModule START:", 
-			isMaster ? "MASTER" : "SLAVE", "enabled =", 
-			enabled + "; is supported =", 
-			Worker.isSupported + "; facade =", facade.key
-		);
+		trace("\n> Nest -> WorkerModule START:", isMaster ? "MASTER" : "SLAVE", "enabled =", enabled + "; is supported =", Worker.isSupported + "; facade =", facade.key);
 
 		if (isSupported && enabled)
 		{

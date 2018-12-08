@@ -34,7 +34,11 @@ import starling.events.Event;
 public class Application extends Sprite
 {
 	static private var console:TextField;
-	public static function log(...message):void { if(console) console.text = "\n> " + message + console.text; else trace(message); }
+	public static function log(...message):void { if(console) console.text = "\n> " + message + console.text;
+		else {
+		trace(message);
+		}
+	}
 	//==================================================================================================
 	public static function setupConsole(stage:DisplayObjectContainer, fontSize:uint = 15, fontColor:uint = 0xff0000):void {
 	//==================================================================================================

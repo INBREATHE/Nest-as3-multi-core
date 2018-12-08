@@ -19,6 +19,7 @@ import flash.system.Capabilities;
 import flash.utils.Dictionary;
 import flash.utils.describeType;
 import flash.utils.getQualifiedClassName;
+import flash.utils.setTimeout;
 
 import nest.entities.application.Application;
 import nest.interfaces.IServiceLocale;
@@ -216,9 +217,9 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 //            trace("> Nest -> DatabaseService: Execute QUERY: " + _sqlStatement.text);
 //    		Capabilities.isDebugger && Application.log("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
 			stmt.execute();
-		} catch (e:SQLError) {
-			if(e.errorID == 3119) { // Error #3119: Database file is currently locked.
-				Execute(stmt);
+		} catch ( e:SQLError ) {
+			if( e.errorID == 3119 ) { // Error #3119: Database file is currently locked.
+			  setTimeout( function ():void { Execute( stmt ); }, 100 );
 			} else {
         trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
 				if(_sqlConnection != null && _sqlConnection.inTransaction) {

@@ -11,12 +11,17 @@ public class CacheProxy extends LanguageDependentProxy
 {
 	public function CacheProxy() { super(CacheService.getInstance()); }
 
-	override public function languageChanged():void { _cacheService.language = this.facade.currentLanguage; trace(">\t CacheProxy: languageChanged"); }
+	override public function languageChanged():void {
+		_cacheService.language = this.facade.currentLanguage;
+		trace(">\t CacheProxy: languageChanged");
+	}
 
 	//==================================================================================================
-	override public function onRegister():void { trace(">\t CacheProxy: Registered"); }
+	override public function onRegister():void {
 	//==================================================================================================
-	
+		trace(">\t CacheProxy: Registered");
+	}
+
 	public function store		(key:String, value:String):void { _cacheService.store(key, value); } 
 	public function remove		(key:String):void { _cacheService.remove(key); }
 	public function retrieve	(key:String):String { return _cacheService.retrieve(key); }

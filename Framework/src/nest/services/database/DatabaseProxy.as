@@ -28,9 +28,10 @@ public class DatabaseProxy extends LanguageDependentProxy
 	public function DatabaseProxy() { super( DatabaseService.getInstance() ); }
 	
 	//==================================================================================================
-	override public function onRegister():void { trace(">\t DatabaseProxy: Registered"); }
+	override public function onRegister():void { trace(">\t DatabaseProxy: Registered");
 	//==================================================================================================
-	
+	}
+
 	public function get dbExist():Boolean { return _dbService.dbExist; }
 
 	//==================================================================================================

@@ -153,7 +153,7 @@ public class PageScroller
 			_timeDelta = _timeEnd - _timeStart;
 
 			_speed = _posDeltaAbs / _timeDelta;
-			//trace("SPEED = " + _speed);
+			////trace("SPEED = " + _speed);
 
 			if (_position > _offset) {
 				_position = _offset;

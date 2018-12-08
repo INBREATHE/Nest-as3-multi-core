@@ -40,7 +40,7 @@ public final class ReportProxy extends LanguageDependentProxy
 	override public function languageChanged():void {
 	//==================================================================================================
 		_report.language = this.facade.currentLanguage; 
-		trace(">\t ReportProxy: languageChanged"); 
+		trace(">\t ReportProxy: languageChanged");
 	}
 	
 	private function get _report():ReportService { return ReportService(data); }
