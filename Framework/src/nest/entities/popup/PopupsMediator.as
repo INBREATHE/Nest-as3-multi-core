@@ -127,12 +127,12 @@ public final class PopupsMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	private function Notification_HidePopup(popupName:String, force:Boolean):void {
+	private function Notification_HidePopup( popupName:String, force:Boolean ):void {
 	//==================================================================================================
-		const popup:Popup = this.GetPopupByName(popupName);
-		if (popup) {
-			if(force) RemovePopupFromStage(popup.name, true);
-			else RemovePopup(popup);
+		const popup:Popup = this.GetPopupByName( popupName );
+		if ( popup ) {
+			if ( force ) RemovePopupFromStage( popup.name, true );
+			else RemovePopup( popup );
 		}
 	}
 
@@ -152,12 +152,12 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function RemovePopupFromStage(name:String, clear:Boolean = false):void {
 	//==================================================================================================
 		const popup:Popup = this.GetPopupByName(name);
-		if(popup == null) return;
-		if(clear) popup.clear();
+		if (popup == null) return;
+		if (clear) popup.clear();
 
 		RemoveListeners(popup);
-		Starling.juggler.removeTweens(popup);
-		this.RemovePopupByName(name);
+		Starling.juggler.removeTweens( popup );
+		this.RemovePopupByName( name );
 
 		this.send( ApplicationNotification.REMOVE_ELEMENT, popup );
 		this.send( ApplicationNotification.POPUP_REMOVED, _popupsCount, name );
@@ -266,7 +266,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function RemovePopupByName(name:String):void {
 	//==================================================================================================
 		const popup:Popup = Dictionary(viewComponent)[name];
-		_popupsQueue.removeAt(popup.localIndex);
+		_popupsQueue.removeAt( popup.localIndex );
 		Dictionary(viewComponent)[name] = null;
 		delete Dictionary(viewComponent)[name];
 		popup.localIndex = 0;
