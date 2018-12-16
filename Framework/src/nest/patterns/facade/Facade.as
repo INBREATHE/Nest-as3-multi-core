@@ -29,8 +29,8 @@ public class Facade implements IFacade
 
 	protected var
 		controller 	: IController
-	,	model		: IModel
-	,	view		: IView
+	,	model		    : IModel
+	,	view		    : IView
 	;
 
 	protected var multitonKey : String;
@@ -38,12 +38,12 @@ public class Facade implements IFacade
 
 	public static function getInstance( key:String ):IFacade {
 		instance = instanceMap[ key ];
-		if (instance == null ) instance = new Facade( key );
+		if ( instance == null ) instance = new Facade( key );
 		return instance;
 	}
 
 	public function Facade( key:String ) {
-		if (instanceMap[ key ] != null) throw Error(MULTITON_MSG);
+		if ( instanceMap[ key ] != null ) throw Error( MULTITON_MSG );
 		multitonKey = key;
 		instanceMap[ multitonKey ] = this;
 		initializeFacade();
@@ -62,49 +62,49 @@ public class Facade implements IFacade
 	public function get currentLanguage() : String { return _language; }
 	public function set currentLanguage( value : String ):void {
 		_language = value;
-		(model as ILanguageDependent).languageChanged();
+		( model as ILanguageDependent ).languageChanged();
 	}
 	//========================================================================================================================================
 
 	// INITIALIZE
 	//========================================================================================================================================
-	protected function initializeController()	:void { if ( controller == null ) controller = Controller.getInstance( multitonKey ); }
-	protected function initializeModel()		:void { if ( model == null ) model = Model.getInstance( multitonKey ); }
-	protected function initializeView()			:void { if ( view == null ) view = View.getInstance( multitonKey ); }
+	protected function initializeController()	: void { if ( controller == null ) controller = Controller.getInstance( multitonKey ); }
+	protected function initializeModel()		  : void { if ( model == null ) model = Model.getInstance( multitonKey ); }
+	protected function initializeView()			  : void { if ( view == null ) view = View.getInstance( multitonKey ); }
 	//========================================================================================================================================
 
 	// REGISTER
 	//========================================================================================================================================
-	public function registerProxy 			( proxyClass : Class )			: void 		{ model.registerProxy ( proxyClass ); 			}
-	public function registerProcess			( process : Class )				: void 		{ }
-	public function registerCommand			( name : String, clss : Class )	: void 		{ controller.registerCommand( name, clss );  	}
+	public function registerProxy 			  ( proxyClass : Class )			    : void 		{ model.registerProxy ( proxyClass ); 			}
+	public function registerProcess			  ( process : Class )				      : void 		{ }
+	public function registerCommand			  ( name : String, clss : Class )	: void 		{ controller.registerCommand( name, clss );  	}
 	public function registerPoolCommand		( name : String, clss : Class )	: void 		{ controller.registerPoolCommand( name, clss );  	}
 
 	public function registerCountCommand	( name : String, clss : Class, count : int ) : void { controller.registerCountCommand( name, clss, count );  	}
 
-	public function registerMediator		( name:String, mediator : IMediator )		: void 		{ view.registerMediator( name, mediator ); 			}
+	public function registerMediator		  ( name:String, mediator : IMediator )		: void 		{ view.registerMediator( name, mediator ); 			}
 	//========================================================================================================================================
 
 	// HAS
 	//========================================================================================================================================
-	public function hasProxy			( proxyClass : Class ) 			: Boolean 	{ return model.hasProxy( proxyClass ); }
+	public function hasProxy			  ( proxyClass : Class ) 		: Boolean 	{ return model.hasProxy( proxyClass ); }
 	public function hasProcess			( process : Class ) 			: Boolean 	{ return false; }
-	public function hasCommand			( commandName : String ) 		: Boolean 	{ return controller.hasCommand( commandName ); }
-	public function hasMediator			( mediatorName : String ) 		: Boolean 	{ return view.hasMediator( mediatorName ); }
+	public function hasCommand			( commandName : String ) 	: Boolean 	{ return controller.hasCommand( commandName ); }
+	public function hasMediator			( mediatorName : String ) : Boolean 	{ return view.hasMediator( mediatorName ); }
 	//========================================================================================================================================
 
 	// RETRIEVE
 	//========================================================================================================================================
 	public function getProxy 			( proxyClass : Class )			: IProxy 	{ return model.retrieveProxy ( proxyClass ); }
-	public function getMediator			( mediatorName : String )		: IMediator { return view.retrieveMediator( mediatorName ) as IMediator; }
+	public function getMediator		( mediatorName : String )		: IMediator { return view.retrieveMediator( mediatorName ) as IMediator; }
 	//========================================================================================================================================
 
 	// REMOVE
 	//========================================================================================================================================
 	public function removeProxy 		( proxyClass : Class )			: IProxy 	{ return model.removeProxy ( proxyClass ); }
-	public function removeProcess 		( processName : Class )			: void	 	{ }
+	public function removeProcess 	( processName : Class )			: void	 	{ }
 	public function removeCommand		( commandName : String )		: void 		{ controller.removeCommand( commandName ); }
-	public function removeMediator		( mediatorName : String ) 		: IMediator { return view.removeMediator( mediatorName ); }
+	public function removeMediator	( mediatorName : String ) 	: IMediator { return view.removeMediator( mediatorName ); }
 	//========================================================================================================================================
 
 	// IFacade

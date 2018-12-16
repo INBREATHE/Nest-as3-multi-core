@@ -7,7 +7,10 @@ package nest.entities.popup
 {
 import flash.utils.Dictionary;
 
+import nest.entities.application.ApplicationCommand;
+
 import nest.entities.application.ApplicationNotification;
+import nest.interfaces.IEntity;
 import nest.interfaces.IMediator;
 import nest.interfaces.INotification;
 import nest.interfaces.IPopup;
@@ -62,6 +65,16 @@ public final class PopupsMediator extends Mediator implements IMediator
 			case PopupNotification.UNLOCK_POPUP: Notification_UnlockPopup(String(note.getBody())); break;
 			case PopupNotification.UPDATE_POPUP: Notification_UpdatePopup(note.getBody(), String(note.getType())); break;
 			case ApplicationNotification.ANDROID_BACK_BUTTON: Notification_AndroidBackButton(); break;
+			case ApplicationNotification.LANGUAGE_CHANGED: Notification_LanguageChanged(); break;
+		}
+	}
+
+	//==================================================================================================
+	private function Notification_LanguageChanged():void {
+	//==================================================================================================
+		trace("> Nest -> PopupsMediator > Notification_LanguageChanged:");
+		for each ( var popup:IEntity in _popupsStorage ) {
+			exec( ApplicationCommand.LOCALIZE_ELEMENT, popup );
 		}
 	}
 	
@@ -69,8 +82,8 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function Notification_UpdatePopup(popupData:Object, popupName:String):void {
 	//==================================================================================================
 		trace("> Nest -> PopupsMediator > Notification_UpdatePopup:", popupName, popupData);
-		if(popupName == null) return;
-		const popup:Popup = _popupsStorage[popupName];
+		if ( popupName == null ) return;
+		const popup:Popup = _popupsStorage[ popupName ];
 		popup.prepare(popupData);
 	}
 	
@@ -82,8 +95,9 @@ public final class PopupsMediator extends Mediator implements IMediator
 		const popup:Popup = _popupsStorage[popupName];
 		popup.touchable = true;
 	}
+
 	//==================================================================================================
-	private function Notification_ShowPopupByName(popupData:PopupData, name:String):void {
+	private function Notification_ShowPopupByName( popupData:PopupData, name:String ):void {
 	//==================================================================================================
 		var popup:Popup = GetPopupByName(name);
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
@@ -91,38 +105,38 @@ public final class PopupsMediator extends Mediator implements IMediator
 		if (popup != null)
 			popup.hide(function():void {
 				trace("> Nest -> PopupsMediator > Hide Popup:", name);
-				RemovePopupFromStage(name, true);
-				popup.setup(popupData);
-				AddPopup(popup);
+				RemovePopupFromStage( name, true );
+				popup.setup( popupData );
+				AddPopup( popup );
 			});
 		else {
 //			SetupListeners(popup);
 			popup = _popupsStorage[name];
-			if(popup) {
-				popup.setup(popupData);
+			if( popup ) {
+				popup.setup( popupData );
 				AddPopup(popup);
 			} else throw new Error("POPUP " + name + " NOT REGISTERED");
 		}
 	}
 	
 	//==================================================================================================
-	private function Notification_RegisterPopup(popup:Popup):void {
+	private function Notification_RegisterPopup( popup:Popup ):void {
 	//==================================================================================================
-		_popupsStorage[popup.name] = popup;
+		_popupsStorage[ popup.name ] = popup;
 	}
 
 	//==================================================================================================
-	private function Notification_ShowPopup(popup:Popup):void {
+	private function Notification_ShowPopup( popup:Popup ):void {
 	//==================================================================================================
-		if (GetPopupByName(popup.name) != null) RemovePopupFromStage(popup.name);
-		this.AddPopup(popup);
+		if (GetPopupByName( popup.name ) != null ) RemovePopupFromStage( popup.name );
+		this.AddPopup( popup );
 	}
 
 	//==================================================================================================
-	private function Notification_HideAllPopups(force:Boolean = true):void {
+	private function Notification_HideAllPopups( force:Boolean = true ):void {
 	//==================================================================================================
-		if(_popupsCount > 0) for (var name:String in Dictionary(viewComponent)) {
-			Notification_HidePopup(name, force);
+		if ( _popupsCount > 0 ) for ( var name:String in Dictionary( viewComponent )) {
+			Notification_HidePopup( name, force );
 		}
 	}
 
@@ -139,23 +153,23 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_AndroidBackButton():void {
 	//==================================================================================================
-		if(_popupsCount > 0) {
-			const popup:Popup = _popupsQueue[_popupsCount-1];
-			if (popup && popup.parent && popup.backRemovable) {
+		if ( _popupsCount > 0 ) {
+			const popup:Popup = _popupsQueue[ _popupsCount - 1 ];
+			if ( popup && popup.parent && popup.backRemovable ) {
 				popup.androidBackButtonPressed();
-				RemovePopup(popup);
+				RemovePopup( popup );
 			}
 		}
 	}
 
 	//==================================================================================================
-	private function RemovePopupFromStage(name:String, clear:Boolean = false):void {
+	private function RemovePopupFromStage( name:String, clear:Boolean = false ):void {
 	//==================================================================================================
-		const popup:Popup = this.GetPopupByName(name);
-		if (popup == null) return;
-		if (clear) popup.clear();
+		const popup:Popup = this.GetPopupByName( name );
+		if ( popup == null ) return;
+		if ( clear ) popup.clear();
 
-		RemoveListeners(popup);
+		RemoveListeners( popup );
 		Starling.juggler.removeTweens( popup );
 		this.RemovePopupByName( name );
 
@@ -168,7 +182,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 		trace("> Nest -> PopupMediator > AddPopupToStageAndShow");
 		
-		SetupListeners(value);
+		SetupListeners( value );
 		value.touchable = false;
 		this.send( ApplicationNotification.ADD_ELEMENT, value );
 		this.send( ApplicationNotification.POPUP_ADDED, _popupsCount, Popup(value).name );

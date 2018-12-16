@@ -4,6 +4,8 @@
  */
 package nest.entities.screen.commands
 {
+import flash.utils.setTimeout;
+
 import nest.entities.application.ApplicationNotification;
 import nest.entities.popup.PopupNotification;
 import nest.entities.screen.Screen;
@@ -53,7 +55,9 @@ public class ChangeScreenCommand extends SimpleCommand implements ICommand
 			{
 				currentScreen.screen.removeEventListeners( Event.REMOVED_FROM_STAGE );
 				send( PopupNotification.HIDE_ALL_POPUPS );
-				screenMediator.prepareDataForScreen( screenData );
+				setTimeout(function ():void {
+					screenMediator.prepareDataForScreen( screenData );
+				}, 10);
 			});
 		else screenMediator.prepareDataForScreen( screenData );
 	}

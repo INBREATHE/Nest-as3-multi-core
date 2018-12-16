@@ -9,14 +9,13 @@ package nest.entities.screen
 		private var 
 			_contentReadyCallback:Function
 			
-		,	_previous	: Boolean
+		,	_previous	  : Boolean
 		,	_fromScreen	: String
-		,	_toScreen	: String
-		,	_data		: Object
+		,	_toScreen	  : String
+		,	_data		    : Object
 		;
 		
-		public function ScreenData( data:Object = null )
-		{
+		public function ScreenData( data:Object = null ) {
 			_data = data;
 		}
 
@@ -28,26 +27,20 @@ package nest.entities.screen
 		public function get toScreen():String { return _toScreen; }
 		public function set toScreen(value:String):void { _toScreen = value; }
 
-		public function get fromScreen():String
-		{
+		public function get fromScreen():String {
 			return _fromScreen;
 		}
 
-		public function set fromScreen(value:String):void
-		{
+		public function set fromScreen(value:String):void {
 			_fromScreen = value;
 		}
 
-		public function get previous():Boolean
-		{
+		public function get previous():Boolean {
 			return _previous;
 		}
 
-		public function set previous(value:Boolean):void
-		{
+		public function set previous(value:Boolean):void {
 			_previous = value;
 		}
-
-
 	}
 }

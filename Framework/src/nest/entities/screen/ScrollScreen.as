@@ -26,7 +26,7 @@ public class ScrollScreen extends Screen
 	//==================================================================================================
 	public function initScrollContainer( type:int ):void {
 	//==================================================================================================
-		_scrollContainer 	= new ScrollContainer(type);
+		_scrollContainer 	= new ScrollContainer( type );
 		_scrollCounter 		= new ScrollCounter();
 		_isScrollAvailable 	= true;
 	}

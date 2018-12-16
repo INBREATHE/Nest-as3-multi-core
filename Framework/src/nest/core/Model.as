@@ -44,9 +44,9 @@ package nest.core
 		public function languageChanged() : void {
 		//==================================================================================================
 			var localizeProxy:Proxy;
-			for each(localizeProxy in proxyMap)
-				if(localizeProxy is LanguageDependentProxy)
-					LanguageDependentProxy(localizeProxy).languageChanged();
+			for each ( localizeProxy in proxyMap )
+				if ( localizeProxy is LanguageDependentProxy )
+					LanguageDependentProxy( localizeProxy ).languageChanged();
 		}
 	
 		//==================================================================================================

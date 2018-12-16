@@ -38,7 +38,7 @@ public class ApplicationFacade extends Facade implements IFacade
 		super.initializeView();
 		
 		trace("> Nest ->", multitonKey, "> ApplicationFacade > initializeView" );
-		registerMediator(ApplicationMediator.NAME, new ApplicationMediator(Starling.current.root));
+		registerMediator( ApplicationMediator.NAME, new ApplicationMediator( Starling.current.root ));
 	}
 
 	//==================================================================================================
@@ -58,7 +58,7 @@ public class ApplicationFacade extends Facade implements IFacade
 
 		trace("> Nest ->", multitonKey, "> ApplicationFacade > initializeController" );
 
-		registerPoolCommand( ScreenCommand.REGISTER, 	RegisterScreenCommand 	);
+		registerPoolCommand( ScreenCommand.REGISTER, 	RegisterScreenCommand );
 		registerPoolCommand( ScreenCommand.CHANGE, 		ChangeScreenCommand 	);
 		registerPoolCommand( ScreenCommand.REMOVE, 		RemoveScreenCommand 	); // not in use
 		

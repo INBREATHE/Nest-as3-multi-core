@@ -31,14 +31,14 @@ public class Navigator
 	public function showScreen( screen:Screen, isReturn:Boolean ):void {
 	//==================================================================================================
 		trace("> Nest -> Navigator : showScreen - _transition.isShowPossible =", _transition.isShowPossible)
-		if(_transition.isShowPossible) {
-			_container.addChild(screen);
+		if(_transition.isShowPossible ) {
+			_container.addChild( screen );
 			screen.show();
 		} else {
 			setTimeout(function():void { 
-				_transition.show(screen, isReturn);
-			}, 20);
-			System.gc;
+				_transition.show( screen, isReturn );
+			}, 10);
+			System.gc();
 			System.pauseForGCIfCollectionImminent();
 		}
 	}
@@ -48,11 +48,11 @@ public class Navigator
 	//==================================================================================================
 		// From base class Transistion.as
 		// Default:  _transition.isHidePossible == false
-		if(_transition.isHidePossible) {
-			_transition.hide(screen, isReturn);
+		if( _transition.isHidePossible ) {
+			_transition.hide( screen, isReturn );
 		} else {
 			screen.hide(function():void {
-				_transition.hide(screen, isReturn);
+				_transition.hide( screen, isReturn );
 			});
 		}
 	}

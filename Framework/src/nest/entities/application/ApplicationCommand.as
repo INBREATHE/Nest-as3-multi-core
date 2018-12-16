@@ -14,6 +14,7 @@ public class ApplicationCommand
 	,	SERVER_RESPONSE			: String = "nest_commands_application_server_responce"
 	
 	,	CHANGE_LANGUAGE			: String = "nest_commands_application_change_language"
+	,	LOCALIZE_ELEMENT		: String = "nest_commands_application_localize_element"
 
 	,	CACHE_STORE_REPORT		: String = "nest_command_cache_report"
 	,	CACHE_STORE_REQUEST		: String = "nest_command_cache_request"

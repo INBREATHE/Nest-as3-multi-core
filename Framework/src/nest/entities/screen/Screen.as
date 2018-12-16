@@ -57,7 +57,7 @@ public class Screen extends Element implements IScreen
 	 * with parameter: body = language
 	 * Initial command SetupLanguageMiscCommand
 	 */
-	public function localize(localeData:XMLList):void {
+	public function localize( localeData:XMLList ):void {
 		_locale = localeData;
 	}
 	

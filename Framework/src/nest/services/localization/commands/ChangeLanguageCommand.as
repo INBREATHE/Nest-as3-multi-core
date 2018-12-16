@@ -7,8 +7,8 @@ package nest.services.localization.commands
 	{
 		override public function execute( body:Object, type:String ):void
 		{
-			trace("\n> Nest -> ChangeLanguageCommand:", body);
-			this.facade.currentLanguage = String(body);
+			trace("\n> Nest ->", this.facade.key, "-> ChangeLanguageCommand:", body);
+			this.facade.currentLanguage = String( body );
 			this.send( ApplicationNotification.LANGUAGE_CHANGED );
 		}
 	}

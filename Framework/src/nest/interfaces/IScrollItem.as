@@ -11,5 +11,6 @@ public interface IScrollItem
 	function isLockedAt(index:uint):Boolean;
 	function show():void;
 	function hide():void;
+	function dispose():void;
 }
 }

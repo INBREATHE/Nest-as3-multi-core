@@ -12,7 +12,7 @@
           <sdk name="AIR" />
         </dependencies>
         <compiler-options>
-          <option name="additionalOptions" value="-keep-as3-metadata+=Inject" />
+          <option name="additionalOptions" value="-keep-as3-metadata+=Inject -omit-trace-statements=true -debug=false" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android />

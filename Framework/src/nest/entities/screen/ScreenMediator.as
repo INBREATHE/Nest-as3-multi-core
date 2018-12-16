@@ -5,6 +5,7 @@
 */
 package nest.entities.screen
 {
+import nest.entities.application.ApplicationCommand;
 import nest.entities.application.ApplicationNotification;
 import nest.entities.scroller.ScrollerNotifications;
 import nest.interfaces.IMediator;
@@ -19,7 +20,7 @@ public class ScreenMediator extends Mediator implements IMediator
 		_dataRequest		  : String = ""
 	,	_dataNotification	: String = ""
 	,	_dataForScreen		: ScreenData
-	,	_isReady			    : Boolean
+	,	_isContentReady	  : Boolean
 	;
 
 	public var isBackPossible:Boolean = false;
@@ -35,10 +36,11 @@ public class ScreenMediator extends Mediator implements IMediator
 		super(viewComponent);
 
 		screen.rebuildable = true;
-		screen.addEventListener(Event.ADDED_TO_STAGE, Handle_AddComponentToStage);
+		screen.addEventListener( Event.ADDED_TO_STAGE, Handle_AddComponentToStage );
 	}
 
-	public function get isReady():Boolean { return _isReady; }
+	public function get isContentReady():Boolean { return _isContentReady; }
+	public function get dataForScreen():ScreenData { return _dataForScreen; }
 
 	/**
 	 * When screen mediators ready to use we first register him in ScreenProxy
@@ -64,7 +66,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	}
 
 	/**
-	 * Sent from PlaywordsLogic but only if isAndroid || Capabilities.isDebugger
+	 * Sent only if isAndroid || Capabilities.isDebugger
 	*/
 	//==================================================================================================
 	protected function Handle_Android_BackButton():void { }
@@ -75,9 +77,9 @@ public class ScreenMediator extends Mediator implements IMediator
 	 * from method RemovePopupFromStage.
 	 * */
 	//==================================================================================================
-	protected function Handle_PopupClosed(popupCount:uint, popupName:String):void {
+	protected function Handle_PopupClosed( popupCount:uint, popupName:String ):void {
 	//==================================================================================================
-		if(popupCount == 0 && screen.isShown) this.isBackPossible = true;
+		if ( popupCount == 0 && screen.isShown ) this.isBackPossible = true;
 	}
 
 	/**
@@ -85,7 +87,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	 * from method AddPopupToStageAndShow.
 	 * */
 	//==================================================================================================
-	protected function Handle_PopupOpened(popupCount:uint, popupName:String):void { this.isBackPossible = false; }
+	protected function Handle_PopupOpened( popupCount:uint, popupName:String ):void { this.isBackPossible = false; }
 	//==================================================================================================
 	
 	//==================================================================================================
@@ -106,18 +108,18 @@ public class ScreenMediator extends Mediator implements IMediator
 //		trace("> Nest -> ScreenMediator > " + this.getMediatorName() + " > handleNotification:", notification.getName());
 		const body:Object = notification.getBody();
 		const name:String = notification.getName();
-		if(name == _dataNotification) { 
+		if ( name == _dataNotification ) {
 			SetupScreenData( body );
 			ContentReady();
 		}
-		else if(name == ApplicationNotification.LANGUAGE_CHANGED) LocalizeScreen();
-		else if(name == ApplicationNotification.ANDROID_BACK_BUTTON && screen.isShown && isBackPossible) Handle_Android_BackButton();
-		else if(name == ApplicationNotification.POPUP_REMOVED) Handle_PopupClosed(uint(body), notification.getType())
-		else if(name == ApplicationNotification.POPUP_ADDED) Handle_PopupOpened(uint(body), notification.getType())
+		else if ( name == ApplicationNotification.LANGUAGE_CHANGED ) LocalizeScreen();
+		else if ( name == ApplicationNotification.ANDROID_BACK_BUTTON && screen.isShown && isBackPossible ) Handle_Android_BackButton();
+		else if ( name == ApplicationNotification.POPUP_REMOVED ) Handle_PopupClosed( uint(body), notification.getType() );
+		else if ( name == ApplicationNotification.POPUP_ADDED ) Handle_PopupOpened( uint(body), notification.getType() );
 	}
 	
 	//==================================================================================================
-	protected /*abstract*/ function LocalizeScreen():void { }
+	protected function LocalizeScreen():void { exec( ApplicationCommand.LOCALIZE_ELEMENT, screen ); }
 	protected /*abstract*/ function SetupScreenData(data:Object):void { }
 	protected /*abstract*/ function ComponentTrigger(e:Event):void { }
 	protected /*abstract*/ function SetupComponentListeners():void { }
@@ -128,16 +130,15 @@ public class ScreenMediator extends Mediator implements IMediator
 	protected function ContentReady():void { 
 	//==================================================================================================
 		trace("> Application -> ScreenMediator > ContentReady: screen is ScrollScreen = " + (screen is ScrollScreen));
-		if( screen is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable )
-			this.send( ScrollerNotifications.SETUP_SCROLLER, ScrollScreen(viewComponent).getScrollContainer() );
+		if ( screen is ScrollScreen && ScrollScreen( viewComponent ).isScrollAvailable )
+			this.send( ScrollerNotifications.SETUP_SCROLLER, ScrollScreen( viewComponent ).getScrollContainer() );
 
-		if(_dataForScreen && _dataForScreen.hasContentReadyCallback()) 
+		if ( _dataForScreen && _dataForScreen.hasContentReadyCallback() )
 			_dataForScreen.contentReadyCallback();
 		
-		this.send( ApplicationNotification.SHOW_SCREEN, this.screen, _dataForScreen.previous ? Screen.PREVIOUS : screen.name );
+		this.send( ApplicationNotification.SHOW_SCREEN, this.screen, _dataForScreen && _dataForScreen.previous ? Screen.PREVIOUS : screen.name );
 
-		_dataForScreen = null;
-		_isReady = true;
+		_isContentReady = true;
 	}
 
 	/**
@@ -148,10 +149,11 @@ public class ScreenMediator extends Mediator implements IMediator
 	public function prepareDataForScreen( screenData:ScreenData ):void {
 	//==================================================================================================
 		_dataForScreen = screenData;
-		if( screen.rebuildable ) {
-			_isReady = false;
-			const getDataMethod:Function = facade.hasCommand( _dataRequest ) ? this.exec : this.send;
-			getDataMethod( _dataRequest, _dataForScreen.data, _dataNotification );
+		if ( screen.rebuildable ) {
+			_isContentReady = false;
+			const hasCommand:Boolean = facade.hasCommand( _dataRequest );
+			const dataMethod:Function = hasCommand ? this.exec : this.send;
+			dataMethod( _dataRequest, _dataForScreen ? _dataForScreen.data : null, _dataNotification );
 		} else {
 			ContentReady();
 		}
@@ -167,10 +169,10 @@ public class ScreenMediator extends Mediator implements IMediator
 	//==================================================================================================
 		/** ANDROID - When we go to game we disable this for screen  */
 		this.isBackPossible = false;
-		if( viewComponent is ScrollScreen && ScrollScreen(viewComponent).isScrollAvailable ) 
+		if ( viewComponent is ScrollScreen && ScrollScreen( viewComponent ).isScrollAvailable )
 			this.send( ScrollerNotifications.RESET_SCROLLER );
 	}
 
-	protected function get screen():Screen { return Screen(viewComponent); }
+	protected function get screen():Screen { return Screen( viewComponent ); }
 }
 }

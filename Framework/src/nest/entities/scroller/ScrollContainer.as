@@ -5,6 +5,8 @@
 */
 package nest.entities.scroller
 {
+import nest.interfaces.IScrollItem;
+
 import starling.display.Quad;
 import starling.display.Sprite;
 
@@ -33,30 +35,30 @@ public final class ScrollContainer extends Sprite
 	private var _type:int;
 	public function get type():int { return _type; }
 
-	public function ScrollContainer(type:int) {
+	public function ScrollContainer( type:int ) {
 		this._type = type;
 	}
 
-	public function every(callback:Function):void {
+	public function every( callback:Function ):void {
 		var counter:uint = 1;
-		while(counter < numChildren) {
-			callback.call(null, this.getChildAt(counter++));
+		while ( counter < numChildren ) {
+			callback.call(null, this.getChildAt( counter++ ));
 		}
 	}
 
-	public function addBackground(w:uint, h:uint):void
-	{
-		var touchBackground:Quad = new Quad(w, h, 0xff00cc);
+	public function addBackground(w:uint, h:uint):void {
+		var touchBackground:Quad = new Quad( w, h, 0xff00cc );
 		touchBackground.x = -this.x;
 		touchBackground.touchable = true;
 		touchBackground.alpha = 0;
 		touchBackground.name = "touchback";
 
-		this.addChildAt(touchBackground, 0);
+		this.addChildAt( touchBackground, 0 );
 	}
 
 	public function clear():void {
-		while (this.numChildren) this.removeChildAt(0, true);
+		while ( this.numChildren )
+			this.removeChildAt(0, true );
 	}
 }
 }
