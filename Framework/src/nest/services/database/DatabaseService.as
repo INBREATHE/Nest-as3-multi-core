@@ -26,7 +26,7 @@ import nest.interfaces.IServiceLocale;
 
 public final class DatabaseService extends EventDispatcher implements IServiceLocale
 {
-	private static const ERROR_NOT_INITALIZED:String = "DatabaseService is not initialized, try to initialize it first!";
+	private static const ERROR_NOT_INITIALIZED:String = "DatabaseService is not initialized, try to initialize it first!";
 
 	public static const EVENT_EXECUTE_COMPLETE:String = "event_execute_complete";
 	
@@ -43,7 +43,6 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	;
 	
 	public function get dbExist():Boolean { return _dbExist; }
-	public function get sqlConnection():SQLConnection { return _sqlConnection; }
 
 	/**
 	 * Create new database file if not exist
@@ -76,16 +75,16 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		var dbName:String, dbClass:Class;
 		for (dbName in tables) {
 			dbClass = tables[dbName];
-			Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + dbName);
+//			Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + dbName);
 			ExecuteStatement(DatabaseQuery.CreateTableFromClass(dbName, dbClass), false);
 		}
 	}
 	
 	//==================================================================================================
-	public function createTable(tableName:String, tableClass:Class):void {
+	public function createTable( tableName:String, tableClass:Class ):void {
 	//==================================================================================================
-		Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + tableName, tableClass);
-		ExecuteStatement(DatabaseQuery.CreateTableFromClass(tableName, tableClass), false, null, true);
+//		Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + tableName, tableClass);
+		ExecuteStatement( DatabaseQuery.CreateTableFromClass( tableName, tableClass ), false, null, true);
 	}
 
 	//==================================================================================================
@@ -142,7 +141,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	//==================================================================================================
 	public function listen( eventType:String, table:String, classRef:Class, callback:Function, retranslate:Boolean = false ):void {
 	//==================================================================================================
-		if ( _sqlConnection == null ) throw new Error( ERROR_NOT_INITALIZED );
+		if ( _sqlConnection == null ) throw new Error( ERROR_NOT_INITIALIZED );
 		if ( _sqlConnection.hasEventListener( eventType ) == false ) {
 			_sqlConnection.addEventListener( eventType, HandleDatabaseEvent );
 		}
@@ -265,13 +264,13 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	//==================================================================================================
 	private function GetPropertyNames(instance:Object):Array {
 	//==================================================================================================
-		const typeDef		: XML = describeType(instance);
+		const typeDef		: XML = describeType( instance );
 		const props			: Array = [];
 		const variablesList	: XMLList = typeDef..variable;
 		var variableXML		: XML;
-		for (var i:int = 0, j:uint = variablesList.length()-1; i <= j; i++) {
+		for ( var i:int = 0, j:uint = variablesList.length()-1; i <= j; i++ ) {
 			variableXML = variablesList[i] as XML;
-			props.push(variableXML.@name);
+			props.push( variableXML.@name );
 		}
 		return props;
 	}

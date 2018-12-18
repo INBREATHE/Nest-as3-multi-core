@@ -38,11 +38,11 @@ public class DatabaseProxy extends LanguageDependentProxy
 	public function create(tables:Vector.<DatabaseTable>, callback:Function):void {
 	//==================================================================================================
 		const nextTable:Function = function(databaseTable:DatabaseTable):void {
-			_dbService.createTable(databaseTable.tableName, databaseTable.tableClass);
+			_dbService.createTable( databaseTable.tableName, databaseTable.tableClass );
 		};
 		const dbListener:Function = function(e:Event):void {
 //			Capabilities.isDebugger && Application.log("DatabaseService.EVENT_EXECUTE_COMPLETE");
-			if(tables.length == 0) {
+			if ( tables.length == 0 ) {
 				_dbService.removeEventListener( DatabaseService.EVENT_EXECUTE_COMPLETE, dbListener );
 				callback();
 			} else {
@@ -54,9 +54,9 @@ public class DatabaseProxy extends LanguageDependentProxy
 	}
 
 	//==================================================================================================
-	public function retrieve(query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true):Object {
+	public function retrieve( query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true ):Object {
 	//==================================================================================================
-		return _dbService.retrieve(query, classRef, all, languageDependent);
+		return _dbService.retrieve(query, classRef, all, languageDependent );
 	}
 
 	//==================================================================================================
