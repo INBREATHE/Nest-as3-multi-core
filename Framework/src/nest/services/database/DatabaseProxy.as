@@ -35,9 +35,9 @@ public class DatabaseProxy extends LanguageDependentProxy
 	public function get dbExist():Boolean { return _dbService.dbExist; }
 
 	//==================================================================================================
-	public function create(tables:Vector.<DatabaseTable>, callback:Function):void {
+	public function create( tables:Vector.<DatabaseTable>, callback:Function ):void {
 	//==================================================================================================
-		const nextTable:Function = function(databaseTable:DatabaseTable):void {
+		const nextTable:Function = function( databaseTable:DatabaseTable ):void {
 			_dbService.createTable( databaseTable.tableName, databaseTable.tableClass );
 		};
 		const dbListener:Function = function(e:Event):void {
@@ -46,11 +46,11 @@ public class DatabaseProxy extends LanguageDependentProxy
 				_dbService.removeEventListener( DatabaseService.EVENT_EXECUTE_COMPLETE, dbListener );
 				callback();
 			} else {
-				nextTable(tables.shift());
+				nextTable( tables.shift() );
 			}
 		};
 		_dbService.addEventListener( DatabaseService.EVENT_EXECUTE_COMPLETE, dbListener);
-		nextTable(tables.shift());
+		nextTable( tables.shift() );
 	}
 
 	//==================================================================================================
