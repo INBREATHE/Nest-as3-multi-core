@@ -47,7 +47,10 @@ public final class ScrollContainer extends Sprite
 	}
 
 	public function addBackground(w:uint, h:uint):void {
-		var touchBackground:Quad = new Quad( w, h, 0xff00cc );
+		var touchBackground:Quad = Quad( this.getChildByName( "touchback" ));
+		if ( !touchBackground )
+			touchBackground = new Quad( w, h, 0xff00cc );
+
 		touchBackground.x = -this.x;
 		touchBackground.touchable = true;
 		touchBackground.alpha = 0;

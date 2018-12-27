@@ -191,27 +191,29 @@ public class DisplayUtils
 		obj.applyFilter( obj, new Rectangle( 0,0,obj.width,obj.height ), new Point(0,0), filter );
 	}
 
+	static public function createTextureFromAssetWithinFrame( asset:DisplayObjectContainer, frame:Point, desaturate:Boolean ):Texture {
+		const bmd:BitmapData = new BitmapData( frame.x, frame.y );
+		bmd.draw( asset, asset.transform.matrix );
+		if ( desaturate ) DisplayUtils.convertToGrayScale(bmd);
+		return Texture.fromBitmapData(bmd);
+	}
+
 	static public function fitAssetToFrame( asset:DisplayObjectContainer, frame:Point ):DisplayObjectContainer {
 		const region:DisplayObject = asset.getChildAt( 0 );
 		const regionWidth:uint = region.width;
 		const regionHeight:uint = region.height;
 		const frameWidth:uint = frame.x;
 		const frameHeight:uint = frame.y;
-		const scaleFactor:Number = frameWidth / regionWidth;
-		trace("> DisplayUtils -> fitAssetToFrame: sf =", scaleFactor, "| region W:H =", regionWidth, regionHeight, "| frame W:H =", frameWidth, frameHeight);
-		asset.scaleX = scaleFactor;
-		asset.scaleY *= scaleFactor;
-		asset.transform.matrix.scale( scaleFactor,scaleFactor );
-		asset.y = ( regionHeight - frameHeight) * 0.5;
+		const scaleFactorW:Number = frameWidth / regionWidth;
+		const scaleFactorH:Number = frameHeight / regionHeight;
+		const scale:Number = scaleFactorH > scaleFactorW ? scaleFactorH : scaleFactorW;
+		asset.scaleX = scale;
+		asset.scaleY *= scale;
 		return asset;
 	}
 
-	static public function createTextureFromAssetWithinFrame( asset:DisplayObjectContainer, frame:Point, desaturate:Boolean ):Texture {
-//		const bmd:BitmapData = new BitmapData( frame.x, frame.y );
-		const bmd:BitmapData = displayObjectToBitmapData( asset );
-//		bmd.draw( asset, asset.transform.matrix );
-		if ( desaturate ) convertToGrayScale( bmd );
-		return Texture.fromBitmapData( bmd );
+	static public function getTextureFromAsset( assetClass:Class, texture:Texture, frame:Point, completed:Boolean ):Texture {
+		return createTextureFromAssetWithinFrame( fitAssetToFrame( new assetClass(), frame ), frame, !completed );
 	}
 }
 }

@@ -6,7 +6,7 @@ package nest.services.database
 			_tableName	: String
 		,	_tableClass	: Class;
 		
-		public function DatabaseTable(tableName:String, tableClass:Class)
+		public function DatabaseTable( tableName:String, tableClass:Class )
 		{
 			_tableName = tableName;
 			_tableClass = tableClass;

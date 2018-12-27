@@ -120,8 +120,8 @@ public class ScreenMediator extends Mediator implements IMediator
 	
 	//==================================================================================================
 	protected function LocalizeScreen():void { exec( ApplicationCommand.LOCALIZE_ELEMENT, screen ); }
-	protected /*abstract*/ function SetupScreenData(data:Object):void { }
-	protected /*abstract*/ function ComponentTrigger(e:Event):void { }
+	protected /*abstract*/ function SetupScreenData( data:Object ):void { }
+	protected /*abstract*/ function ComponentTrigger( e:Event ):void { }
 	protected /*abstract*/ function SetupComponentListeners():void { }
 	protected /*abstract*/ function RemoveComponentListeners():void { }
 	//==================================================================================================

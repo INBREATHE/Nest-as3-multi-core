@@ -110,23 +110,23 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function count(table:String, critiria:String, languageDependent:Boolean = true):uint {
+	public function count(table:String, critiria:String, languageDependent:Boolean ):uint {
 	//==================================================================================================
 		const data:Array = retrieve(DatabaseQuery.CountFromTable(table, critiria), null, true, languageDependent) as Array;
 		return data ? data[0][DatabaseQuery.COUNT] : 0;
 	}
 
 	//==================================================================================================
-	public function store( table:String, data:Object ):void {
+	public function store( table:String, data:Object, languageDependent:Boolean ):void {
 	//==================================================================================================
 		const dataType:String = typeof data;
 //			trace("> Nest -> STORE:", dataType, data);
-		if( dataType == TYPE_STRING ) ExecuteStatement( DatabaseQuery.InsertDataStringToTable(String( data ), table ), false );
-		else if( dataType == TYPE_OBJECT ) ExecuteInsertStatementWithParams( data, table );
+		if ( dataType == TYPE_STRING ) ExecuteStatement( DatabaseQuery.InsertDataStringToTable( String( data ), table ), languageDependent );
+		else if ( dataType == TYPE_OBJECT ) ExecuteInsertStatementWithParams( data, table );
 	}
 
 	//==================================================================================================
-	public function update( table:String, criteria:String, data:Object, languageDependent:Boolean = true):void {
+	public function update( table:String, criteria:String, data:Object, languageDependent:Boolean = true ):void {
 	//==================================================================================================
 		if ( languageDependent ) criteria = DatabaseQuery.QueryWithLanguage( criteria );
 		ExecuteUpdateStatementWithParams( data, table, criteria );
@@ -194,9 +194,9 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	//==================================================================================================
 		_sqlStatement = new SQLStatement();
 		_sqlStatement.sqlConnection = _sqlConnection;
-		_sqlStatement.text = DatabaseQuery.InsertDataObjectToTable(FillStatementParametersFromObject(_sqlStatement, data), table);
+		_sqlStatement.text = DatabaseQuery.InsertDataObjectToTable( FillStatementParametersFromObject( _sqlStatement, data ), table );
 //		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
-		Execute(_sqlStatement);
+		Execute( _sqlStatement );
 	}
 
 	//==================================================================================================

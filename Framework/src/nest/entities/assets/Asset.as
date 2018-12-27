@@ -18,7 +18,7 @@ public class Asset
 	public var scaleType:int;
 	public var obj:* = null;
 
-	public function Asset(type:int, classlink:Class, scale:int = AssetScales.HOR) {
+	public function Asset( type:int, classlink:Class, scale:int = AssetScales.HOR ) {
 		this.type = type;
 		this.classlink = classlink;
 		this.scaleType = scale;
@@ -30,15 +30,15 @@ public class Asset
 	 */
 	public function get texture():Texture {
 		var result:Texture;
-		if(obj is Image) result = Image(obj).texture;
-		else if(obj is Button) result = Button(obj).upState;
+		if ( obj is Image ) result = Image(obj).texture;
+		else if ( obj is Button ) result = Button(obj).upState;
 		return result;
 	}
 
 	public function get clone():* {
 		var result:DisplayObject;
-		if (obj is Button) result = new Button(Button(obj).upState, "", Button(obj).downState);
-		else if (obj is Image) result = new Image(Image(obj).texture);
+		if ( obj is Button ) result = new Button( Button(obj).upState, "", Button(obj).downState );
+		else if ( obj is Image ) result = new Image( Image(obj).texture );
 		return result;
 	}
 }

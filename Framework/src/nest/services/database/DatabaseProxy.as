@@ -72,9 +72,9 @@ public class DatabaseProxy extends LanguageDependentProxy
 	}
 
 	//==================================================================================================
-	public function store( table:String, data:Object ):void {
+	public function store( table:String, data:Object, languageDependent:Boolean = true ):void {
 	//==================================================================================================
-		_dbService.store( table, data );
+		_dbService.store( table, data, languageDependent );
 	}
 
 	//==================================================================================================
