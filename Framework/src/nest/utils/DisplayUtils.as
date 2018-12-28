@@ -206,9 +206,11 @@ public class DisplayUtils
 		const frameHeight:uint = frame.y;
 		const scaleFactorW:Number = frameWidth / regionWidth;
 		const scaleFactorH:Number = frameHeight / regionHeight;
-		const scale:Number = scaleFactorH > scaleFactorW ? scaleFactorH : scaleFactorW;
+		const hw:Boolean = scaleFactorH > scaleFactorW;
+		const scale:Number = hw ? scaleFactorH : scaleFactorW;
 		asset.scaleX = scale;
 		asset.scaleY *= scale;
+		asset.y = ( frameHeight - regionHeight * scale ) * 0.5;
 		return asset;
 	}
 
