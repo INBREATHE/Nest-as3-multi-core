@@ -59,14 +59,14 @@ public final class DatabaseQuery
 		return ORDER_BY.join(""); 
 	}
 
-	public static function DeleteFromTableWhere(table:String, criteria:String):String {
+	public static function DeleteFromTableWhere( table:String, criteria:String ):String {
 		DELETE_FROM_TABLE_WHERE[1] = table;
 		DELETE_FROM_TABLE_WHERE[3] = criteria;
 		return DELETE_FROM_TABLE_WHERE.join("");
 	}
 
-	public static function CreateTableFromClass(tableName:String, classRef:Class):String {
-		const classXML		: XML = describeType(classRef);
+	public static function CreateTableFromClass( tableName:String, classRef:Class ):String {
+		const classXML		: XML = describeType( classRef );
 		const variablesList	: XMLList = classXML..variable;
 		var variableXML		: XML,
 			classVariables	: Array = ["( "],

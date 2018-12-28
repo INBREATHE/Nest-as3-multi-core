@@ -49,17 +49,17 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	 * param databaseVO - DatabaseVO(name)
 	 */
 	//==================================================================================================
-	public function init(databaseVO:Object):void {
+	public function init( databaseVO:Object ):void {
 	//==================================================================================================
 		const file:File = databaseVO.path != null ? 
-				new File(databaseVO.path + "/" + databaseVO.NAME) 
-			: 	File.applicationStorageDirectory.resolvePath(databaseVO.NAME);
+				new File( databaseVO.path + "/" + databaseVO.NAME )
+			: File.applicationStorageDirectory.resolvePath( databaseVO.NAME );
 		
 		_dbExist = file.exists;
 		_sqlConnection = new SQLConnection();
-		_sqlConnection.addEventListener(SQLEvent.OPEN, Handler_DatabaseOpened);
-		Capabilities.isDebugger && Application.log("> Nest -> \t> DatabaseService \t-> init: DB exist: " + _dbExist + " at path: " + file.nativePath);
-		_sqlConnection.open(file, _dbExist ? SQLMode.UPDATE : SQLMode.CREATE);
+		_sqlConnection.addEventListener( SQLEvent.OPEN, Handler_DatabaseOpened );
+//		Capabilities.isDebugger && Application.log("> Nest -> \t> DatabaseService \t-> init: DB exist: " + _dbExist + " at path: " + file.nativePath);
+		_sqlConnection.open( file, _dbExist ? SQLMode.UPDATE : SQLMode.CREATE );
 	}
 	
 	//==================================================================================================
@@ -70,13 +70,13 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function create(tables:Dictionary):void {
+	public function create( tables:Dictionary, addLanguage:Boolean ):void {
 	//==================================================================================================
 		var dbName:String, dbClass:Class;
-		for (dbName in tables) {
-			dbClass = tables[dbName];
+		for ( dbName in tables ) {
+			dbClass = tables[ dbName ];
 //			Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + dbName);
-			ExecuteStatement(DatabaseQuery.CreateTableFromClass(dbName, dbClass), false);
+			ExecuteStatement( DatabaseQuery.CreateTableFromClass( dbName, dbClass ), addLanguage );
 		}
 	}
 	
@@ -88,12 +88,12 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function retrieve(query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true):Object {
+	public function retrieve( query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true):Object {
 	//==================================================================================================
-		ExecuteStatement(query, languageDependent, classRef);
+		ExecuteStatement( query, languageDependent, classRef );
 		var result:Object = null;
 		const sqlResult:SQLResult = _sqlStatement.getResult();
-		if(sqlResult) {
+		if ( sqlResult ) {
 			const data:Array = sqlResult.data;
 //			trace("> Nest -> DatabaseService: retrieve sqlResult =", sqlResult, sqlResult.data);
 			result = data ? (all ? data : data[0]) : null;
@@ -104,16 +104,16 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function select(table:String, critiria:String, classRef:Class, all:Boolean = false, languageDependent:Boolean = true):Object {
+	public function select( table:String, critiria:String, classRef:Class, all:Boolean, languageDependent:Boolean ):Object {
 	//==================================================================================================
-		return retrieve(DatabaseQuery.SelectFromTable(table, critiria), classRef, all, languageDependent);
+		return retrieve( DatabaseQuery.SelectFromTable( table, critiria ), classRef, all, languageDependent );
 	}
 
 	//==================================================================================================
 	public function count(table:String, critiria:String, languageDependent:Boolean ):uint {
 	//==================================================================================================
-		const data:Array = retrieve(DatabaseQuery.CountFromTable(table, critiria), null, true, languageDependent) as Array;
-		return data ? data[0][DatabaseQuery.COUNT] : 0;
+		const data:Array = retrieve( DatabaseQuery.CountFromTable( table, critiria ), null, true, languageDependent ) as Array;
+		return data ? data[0][ DatabaseQuery.COUNT ] : 0;
 	}
 
 	//==================================================================================================
@@ -126,14 +126,14 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function update( table:String, criteria:String, data:Object, languageDependent:Boolean = true ):void {
+	public function update( table:String, criteria:String, data:Object, languageDependent:Boolean ):void {
 	//==================================================================================================
 		if ( languageDependent ) criteria = DatabaseQuery.QueryWithLanguage( criteria );
 		ExecuteUpdateStatementWithParams( data, table, criteria );
 	}
 
 	//==================================================================================================
-	public function remove( table:String, criteria:String, languageDependent:Boolean = true ):void {
+	public function remove( table:String, criteria:String, languageDependent:Boolean ):void {
 	//==================================================================================================
 		ExecuteStatement( DatabaseQuery.DeleteFromTableWhere( table, criteria ), languageDependent );
 	}
@@ -145,35 +145,35 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		if ( _sqlConnection.hasEventListener( eventType ) == false ) {
 			_sqlConnection.addEventListener( eventType, HandleDatabaseEvent );
 		}
-		if(_events[eventType] == null) _events[ eventType ] = new Vector.<DatabaseListener>();
-		Vector.<DatabaseListener>(_events[eventType]).push(new DatabaseListener(table, classRef, callback, retranslate));
+		if ( _events[eventType] == null ) _events[ eventType ] = new Vector.<DatabaseListener>();
+		Vector.<DatabaseListener>( _events[ eventType ]).push( new DatabaseListener( table, classRef, callback, retranslate ));
 	}
 
 	//==================================================================================================
-	private function HandleDatabaseEvent(event:SQLUpdateEvent):void {
+	private function HandleDatabaseEvent( event:SQLUpdateEvent ):void {
 	//==================================================================================================
 //		trace("> Nest -> HandleDatabaseEvent")
 		const eventType:String = event.type;
 		const eventTable:String = event.table;
-		const rowIDQuery:String = DatabaseQuery.RowID(event.rowID);
+		const rowIDQuery:String = DatabaseQuery.RowID( event.rowID );
 		const listeners:Vector.<DatabaseListener> = Vector.<DatabaseListener>(_events[eventType]);
-		if(listeners) {
+		if ( listeners ) {
 //			trace("> Nest -> UPDATED:", eventType, eventTable, event.rowID);
 			const classValues:Dictionary = new Dictionary(true);
 			var dbListener:DatabaseListener;
-			var listnerClass:Class;
+			var listenerClass:Class;
 			var eventValue:Object;
-			for each( dbListener in listeners ) {
+			for each ( dbListener in listeners ) {
 //				trace("\t> dbListener.retranslator =", dbListener.retranslator);
-				if(dbListener.retranslator && !event.cancelable) dbListener.callback(event);
-				else if(dbListener.table == eventTable) {
-					listnerClass = dbListener.classRef;
-					eventValue = classValues[listnerClass];
-					if(eventValue == null) {
-						eventValue = this.select(eventTable, rowIDQuery, listnerClass);
-						classValues[listnerClass] = eventValue;
+				if ( dbListener.retranslator && !event.cancelable ) dbListener.callback( event );
+				else if ( dbListener.table == eventTable) {
+					listenerClass = dbListener.classRef;
+					eventValue = classValues[ listenerClass ];
+					if ( eventValue == null ) {
+						eventValue = this.select( eventTable, rowIDQuery, listenerClass, false, false ); // TODO: Resolve language
+						classValues[ listenerClass ] = eventValue;
 					}
-					dbListener.callback(eventValue as listnerClass);
+					dbListener.callback( eventValue as listenerClass );
 				}
 			}
 		}
@@ -200,14 +200,14 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	private function ExecuteStatement(query:String, addLanguage:Boolean = true, classRef:Class = null, withCallback:Boolean = false):void {
+	private function ExecuteStatement( query:String, addLanguage:Boolean = true, classRef:Class = null, withCallback:Boolean = false ):void {
 	//==================================================================================================
 		_sqlStatement = new SQLStatement();
 		_sqlStatement.sqlConnection = _sqlConnection;
-		if(addLanguage) query = DatabaseQuery.QueryWithLanguage(query);
+		if ( addLanguage ) query = DatabaseQuery.QueryWithLanguage( query );
 		_sqlStatement.text = query;
-		if(classRef != null) _sqlStatement.itemClass = classRef;
-		if(withCallback) _sqlStatement.addEventListener( SQLEvent.RESULT, Handler_SQLStatement_Result );
+		if ( classRef != null ) _sqlStatement.itemClass = classRef;
+		if ( withCallback ) _sqlStatement.addEventListener( SQLEvent.RESULT, Handler_SQLStatement_Result );
 		Execute(_sqlStatement);
 	}
 
