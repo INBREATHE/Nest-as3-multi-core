@@ -113,7 +113,7 @@ public class Application extends Sprite
 
 	/**
 	 * This is the first method that called when framework start
-	 * Sent from PrepareBegin command
+	 * Sent from PrepareBegin name
 	 * */
 	//==================================================================================================
 	public function prepare():void { }

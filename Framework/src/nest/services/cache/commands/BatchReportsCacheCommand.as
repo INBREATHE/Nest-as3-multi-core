@@ -33,7 +33,7 @@ public final class BatchReportsCacheCommand extends SimpleCommand
 			cache = reports[length];
 			trace(" \t\t * CacheReport:", cache.name);
 			// isbatch == true - collect all messages (second parameter is true),
-			// and then all batch send to server from command ReportService.batch()
+			// and then all batch send to server from name ReportService.batch()
 			reportService.report(cache, true);
 		}
 		reportService.batch();

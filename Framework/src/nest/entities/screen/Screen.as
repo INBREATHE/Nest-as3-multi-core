@@ -55,7 +55,7 @@ public class Screen extends Element implements IScreen
 	/**
 	 * First application send notification ScreenCommand.LOCALIZE
 	 * with parameter: body = language
-	 * Initial command SetupLanguageMiscCommand
+	 * Initial name SetupLanguageMiscCommand
 	 */
 	public function localize( localeData:XMLList ):void {
 		_locale = localeData;

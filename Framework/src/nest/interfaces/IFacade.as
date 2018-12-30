@@ -12,18 +12,18 @@ public interface IFacade
 	function get currentLanguage():String;
 	function set currentLanguage(value:String):void;
 
-	function registerProxy		( proxyClass : Class ) : void;
+	function registerProxy	( proxyClass : Class ) : IProxy;
 	function removeProxy		( proxyClass : Class ) : IProxy;
-	function hasProxy			( proxyClass : Class ) : Boolean;
-	function getProxy			( proxyClass : Class ) : IProxy;
+	function hasProxy			  ( proxyClass : Class ) : Boolean;
+	function getProxy			  ( proxyClass : Class ) : IProxy;
 
 	function registerCommand	( commandName : String, commandClassRef : Class ) : void;
 	function removeCommand		( commandName : String ) : void; 
-	function hasCommand			( commandName : String ) : Boolean;
+	function hasCommand			  ( commandName : String ) : Boolean;
 
 	function registerProcess	( processClassRef : Class ) : void;
 	function removeProcess		( processClassRef : Class ) : void;
-	function hasProcess			( processClassRef : Class ) : Boolean;
+	function hasProcess			  ( processClassRef : Class ) : Boolean;
 
 	function registerPoolCommand		( commandName : String, commandClassRef : Class ) : void;
 	function registerCountCommand		( commandName : String, commandClassRef : Class, count:int ) : void;

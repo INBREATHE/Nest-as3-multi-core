@@ -50,7 +50,7 @@ package nest.core
 		}
 	
 		//==================================================================================================
-		public function registerProxy( proxyClass:Class ) : void {
+		public function registerProxy( proxyClass:Class ) : IProxy {
 		//==================================================================================================
 			const proxy		: IProxy = new proxyClass();
 			const proxyName	: String = proxy.getProxyName(); // getQualifiedClassName inside Proxy constructor
@@ -59,6 +59,7 @@ package nest.core
 			Injector.mapSource( proxyName, proxy );
 			proxyMap[ proxyName ] = proxy;
 			proxy.onRegister();
+			return proxy;
 		}
 	
 		public function retrieveProxy( proxyClass:Class ) : IProxy { return proxyMap[ getQualifiedClassName(proxyClass) ]; }

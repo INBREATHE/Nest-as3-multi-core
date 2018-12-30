@@ -5,6 +5,7 @@
 */
 package nest.entities.popup
 {
+import flash.utils.Dictionary;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
@@ -19,15 +20,14 @@ import starling.events.Event;
 public class Popup extends Element implements IPopup
 {
 	protected var 
-		_actionID	: uint
-	,	_actions	: Array
-	,	_locale		: XMLList
+		_actions	  : Dictionary = new Dictionary()
+	,	_locale		  : XMLList
 
-	,	_onAdded	: Function
-	,	_onShown	: Function
+	,	_onAdded	  : Function
+	,	_onShown	  : Function
 	,	_onRemoved	: Function
 	;
-	
+
 	/**
 	 * This is a number in popupsArray
 	 * It's used for removing popups from screen
@@ -41,7 +41,7 @@ public class Popup extends Element implements IPopup
 
 	public function Popup( name : String ) {
 		this.name = name;
-		super(Application.ENVIRONMENT);
+		super( Application.ENVIRONMENT );
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE );
 	}
 	
@@ -76,18 +76,11 @@ public class Popup extends Element implements IPopup
 		this.removeEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.addEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		
-		if(_onAdded){
+		if ( _onAdded ) {
 			const onAdded:Function = _onAdded;
 			_onAdded = null;
 			onAdded();
 		}
-	}
-
-	//==================================================================================================
-	protected function dispatchToExecuteAction(actionID:uint, data:PopupEventData = null):void {
-	//==================================================================================================
-		_actionID = actionID;
-		this.dispatchEventWith(PopupEvents.ACTION_FROM_POPUP, false, data);
 	}
 
 	//==================================================================================================
@@ -101,7 +94,7 @@ public class Popup extends Element implements IPopup
 		trace("> Nest -> Popup > setup: _onShown", _onShown != null);
 		trace("> Nest -> Popup > setup: _onAdded", _onAdded != null);
 		
-		prepare(popupData.data);
+		prepare( popupData.data );
 	}
 
 	public function localize( data:XMLList ):void { _locale = data; }
@@ -116,9 +109,29 @@ public class Popup extends Element implements IPopup
 	public function androidBackButtonPressed ( ):void { }
 
 	public function show():void { }
-	public function hide(next:Function):void { next.apply(null, [this.name]); }
-	public function get command():String { return _actions[_actionID]; }
-	public function set actions(value:Array):void { _actions = value; }
+	public function hide( next:Function ):void { next.apply(null, [this.name]); }
+	public function addAction( action:PopupAction ):void {
+		_actions[ action.id ] = action;
+	}
+
+	public function addActions( input:Array ):void {
+		input.forEach(function (action:PopupAction, index:int, s:Array):void {
+			addAction( action );
+		});
+	}
+
+	public function getAction( actionID:String ):PopupAction {
+		return _actions[ actionID ];
+	}
+
+	protected function dispatchAction( action:PopupAction ):void {
+		dispatchEventWith( PopupEvents.ACTION_FROM_POPUP, false, action );
+	}
+
+	protected function dispatchActions( input:Array ):void {
+		for each ( var action:PopupAction in input )
+			dispatchAction( action );
+	}
 	//==================================================================================================
 }
 }

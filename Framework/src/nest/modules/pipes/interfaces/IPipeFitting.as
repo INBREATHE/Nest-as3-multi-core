@@ -54,7 +54,7 @@ package nest.modules.pipes.interfaces
 	 	 * <P>
 	 	 * If any fitting in the chain returns false 
 	 	 * from this method, then the client who originally 
-	 	 * wrote into the pipe can take action, such as 
+	 	 * wrote into the pipe can take name, such as
 	 	 * rolling back changes.</P>
 	 	 */
 		function write( message:IPipeMessage ):Boolean;

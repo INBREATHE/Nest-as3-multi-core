@@ -415,7 +415,7 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 //					break;
 //					
 //				default : 
-//					error("invalid command:", messageID);
+//					error("invalid name:", messageID);
 		}
 	}
 

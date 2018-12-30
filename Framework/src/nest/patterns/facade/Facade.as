@@ -75,9 +75,9 @@ public class Facade implements IFacade
 
 	// REGISTER
 	//========================================================================================================================================
-	public function registerProxy 			  ( proxyClass : Class )			    : void 		{ model.registerProxy ( proxyClass ); 			}
+	public function registerProxy 			  ( proxyClass : Class )			    : IProxy	{ return model.registerProxy ( proxyClass ); 			}
 	public function registerProcess			  ( process : Class )				      : void 		{ }
-	public function registerCommand			  ( name : String, clss : Class )	: void 		{ controller.registerCommand( name, clss );  	}
+	public function registerCommand			  ( name : String, clss : Class )	: void 		{ controller.registerCommand( name, clss );  	    }
 	public function registerPoolCommand		( name : String, clss : Class )	: void 		{ controller.registerPoolCommand( name, clss );  	}
 
 	public function registerCountCommand	( name : String, clss : Class, count : int ) : void { controller.registerCountCommand( name, clss, count );  	}

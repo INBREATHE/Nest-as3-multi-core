@@ -7,9 +7,9 @@ package nest.interfaces
 {
 public interface IModel extends ILanguageDependent
 {
-	function registerProxy		( proxyClass:Class ) 	: void;
+	function registerProxy		( proxyClass:Class ) 	: IProxy;
 	function retrieveProxy		( proxyClass:Class ) 	: IProxy;
-	function removeProxy		( proxyClass:Class ) 	: IProxy;
-	function hasProxy			( proxyClass:Class ) 	: Boolean;
+	function removeProxy		  ( proxyClass:Class ) 	: IProxy;
+	function hasProxy			    ( proxyClass:Class ) 	: Boolean;
 }
 }

@@ -18,8 +18,8 @@ public final class ServerRequestCommand extends SimpleCommand
 	[Inject] public var networkProxy	: NetworkProxy;
 
 	/**
-	 * In compare to ProcessEventCommand this command does not save processed objects - ServerProcess
-	 * you should do this manually in callback ( which might be function or command )
+	 * In compare to ProcessEventCommand this name does not save processed objects - ServerProcess
+	 * you should do this manually in callback ( which might be function or name )
 	 */
 	//==================================================================================================
 	override public function execute( body:Object, type:String ) : void {
@@ -27,7 +27,7 @@ public final class ServerRequestCommand extends SimpleCommand
 		trace("> Nest -> ServerRequestCommand: type = " + type, "path = " + ServerProcess(body).path + " isNetworkAvailable = " + networkProxy.isNetworkAvailable);
 		if(networkProxy.isNetworkAvailable) {
 			// After response will be received
-			// serverProxy will start command: ApplicationCommand.SERVER_RESPONSE
+			// serverProxy will start name: ApplicationCommand.SERVER_RESPONSE
 			// with callback as notification type and result as a body
 			serverProxy.serverProcess(type, ServerProcess(body));
 		}

@@ -6,7 +6,7 @@
 package nest.interfaces
 {
 	/**
-	 * To changed language execute command: 
+	 * To changed language execute name:
 	 */
 	public interface ILanguageDependent
 	{

@@ -10,6 +10,7 @@ import flash.utils.Dictionary;
 import nest.entities.application.ApplicationCommand;
 
 import nest.entities.application.ApplicationNotification;
+import nest.entities.popup.PopupAction;
 import nest.interfaces.IEntity;
 import nest.interfaces.IMediator;
 import nest.interfaces.INotification;
@@ -54,16 +55,16 @@ public final class PopupsMediator extends Mediator implements IMediator
 			case PopupNotification.SHOW_POPUP_BY_NAME: Notification_ShowPopupByName(PopupData(note.getBody()), note.getType()); break;
 			case PopupNotification.SHOW_POPUP: Notification_ShowPopup(Popup(note.getBody())); break;
 			case PopupNotification.HIDE_POPUP:
-				if(_popupsCount > 0)
+				if ( _popupsCount > 0 )
 					/**
 					 * note.getType() - The name of popup
 					 * note.getBody() - force delete (without popup.hide)
 					 */
-					Notification_HidePopup(	String(note.getType()), Boolean(note.getBody()) || false );
+					Notification_HidePopup(	String( note.getType() ), Boolean( note.getBody() ) || false );
 				break;
 			case PopupNotification.HIDE_ALL_POPUPS: Notification_HideAllPopups(); break;
-			case PopupNotification.UNLOCK_POPUP: Notification_UnlockPopup(String(note.getBody())); break;
-			case PopupNotification.UPDATE_POPUP: Notification_UpdatePopup(note.getBody(), String(note.getType())); break;
+			case PopupNotification.UNLOCK_POPUP: Notification_UnlockPopup( String( note.getBody() )); break;
+			case PopupNotification.UPDATE_POPUP: Notification_UpdatePopup( note.getBody(), String( note.getType() )); break;
 			case ApplicationNotification.ANDROID_BACK_BUTTON: Notification_AndroidBackButton(); break;
 			case ApplicationNotification.LANGUAGE_CHANGED: Notification_LanguageChanged(); break;
 		}
@@ -92,7 +93,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 		trace("> Nest -> PopupsMediator > Notification_UnlockPopup:", popupName);
 		if(popupName == null) return;
-		const popup:Popup = _popupsStorage[popupName];
+		const popup:Popup = _popupsStorage[ popupName ];
 		popup.touchable = true;
 	}
 
@@ -102,7 +103,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		var popup:Popup = GetPopupByName(name);
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage:", GetPopupByName(name));
-		if (popup != null)
+		if ( popup != null )
 			popup.hide(function():void {
 				trace("> Nest -> PopupsMediator > Hide Popup:", name);
 				RemovePopupFromStage( name, true );
@@ -114,7 +115,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 			popup = _popupsStorage[name];
 			if( popup ) {
 				popup.setup( popupData );
-				AddPopup(popup);
+				AddPopup( popup );
 			} else throw new Error("POPUP " + name + " NOT REGISTERED");
 		}
 	}
@@ -128,7 +129,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_ShowPopup( popup:Popup ):void {
 	//==================================================================================================
-		if (GetPopupByName( popup.name ) != null ) RemovePopupFromStage( popup.name );
+		if ( GetPopupByName( popup.name ) != null ) RemovePopupFromStage( popup.name );
 		this.AddPopup( popup );
 	}
 
@@ -190,70 +191,72 @@ public final class PopupsMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	private function Handle_ClosePopup(e:Event):void {
+	private function Handle_ClosePopup( e:Event ):void {
 	//==================================================================================================
-		RemovePopup(Popup(e.currentTarget));
+		const popup:Popup = Popup( e.currentTarget );
+		const onCloseCommonAction:PopupAction = popup.getAction( PopupAction.COMMON_ACTION_ON_CLOSE );
+		if ( onCloseCommonAction ) Handle_ActionFromPopup( null, onCloseCommonAction );
+		RemovePopup( popup );
 	}
 
 	//==================================================================================================
-	private function Handle_ActionFromPopup(e:Event, data:Object):void {
+	private function Handle_ActionFromPopup( e:Event, action:PopupAction ):void {
 	//==================================================================================================
-		const popup		: Popup = Popup(e.currentTarget);
-		const command	: String = IPopup(popup).command;
-		trace("> Nest -> PopupsMediator > Handle_CommandFromPopup:", popup.name, "command = ", command);
-		if(command) {
-			if( data is Array ) (facade.hasCommand(command) ? exec : send)( command, data[0], data[1] );
-			else (facade.hasCommand(command) ? exec : send)( command, data );
-		}
+		const name : String = action.name;
+		const data : PopupActionData = action.data;
+		const method : Function = facade.hasCommand( name ) ? exec : send;
+		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, "data = ", data);
+		if ( data ) method( name, data.body, data.type );
+		else method( name );
 	}
 
 	//==================================================================================================
-	private function SetupListeners(popup:DisplayObject):void {
+	private function SetupListeners( popup:DisplayObject ):void {
 	//==================================================================================================
 		trace("> Nest -> PopupsMediator > SetupListeners");
-		popup.addEventListener(PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup);
+		popup.addEventListener( PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup );
 
-		popup.addEventListener(PopupEvents.POPUP_SHOWN, 		    Handle_PopupShown);
-		popup.addEventListener(PopupEvents.TAP_HAPPEND_OK, 		  Handle_ClosePopup);
-		popup.addEventListener(PopupEvents.TAP_HAPPEND_CLOSE, 	Handle_ClosePopup);
+		popup.addEventListener( PopupEvents.POPUP_SHOWN, 		    Handle_PopupShown );
+		popup.addEventListener( PopupEvents.TAP_HAPPEND_OK, 		Handle_ClosePopup );
+		popup.addEventListener( PopupEvents.TAP_HAPPEND_CLOSE, 	Handle_ClosePopup );
 	}
 
 	//==================================================================================================
-	private function RemoveListeners(popup:DisplayObject):void {
+	private function RemoveListeners( popup:DisplayObject ):void {
 	//==================================================================================================
-		if(!popup.hasEventListener(PopupEvents.ACTION_FROM_POPUP)) return;
+		if(!popup.hasEventListener( PopupEvents.ACTION_FROM_POPUP )) return;
 		trace("> Nest -> PopupsMediator > RemoveListeners");
-		popup.removeEventListener(PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup);
+		popup.removeEventListener( PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup );
 
-		popup.removeEventListener(PopupEvents.TAP_HAPPEND_OK, 	Handle_ClosePopup);
-		popup.removeEventListener(PopupEvents.TAP_HAPPEND_CLOSE, Handle_ClosePopup);
+		popup.removeEventListener( PopupEvents.TAP_HAPPEND_OK, 	Handle_ClosePopup );
+		popup.removeEventListener( PopupEvents.TAP_HAPPEND_CLOSE, Handle_ClosePopup );
 	}
 
 	//==================================================================================================
-	private function Handle_PopupShown(e:Event):void {
+	private function Handle_PopupShown( e:Event ):void {
 	//==================================================================================================
-		const popup:Popup = Popup(e.currentTarget);
-		popup.removeEventListener(PopupEvents.POPUP_SHOWN, 	Handle_PopupShown);
+		const popup:Popup = Popup( e.currentTarget );
+		popup.removeEventListener( PopupEvents.POPUP_SHOWN, 	Handle_PopupShown );
 		trace("> Nest -> PopupsMediator > Handle_PopupShown");
 		popup.touchable = true;
 	}
 	
 	//==================================================================================================
-	private function GetPopupByName(name:String):Popup {
+	private function GetPopupByName( name:String ):Popup {
 	//==================================================================================================
-		if(name == null) name = _popupsQueue[_popupsCount-1].name;
-		return Dictionary(viewComponent)[name];
+		if ( name == null ) name = _popupsQueue[ _popupsCount - 1 ].name;
+		return Dictionary( viewComponent )[ name ];
 	}
 
 	//==================================================================================================
-	private function AddPopup(value:Popup):void {
+	private function AddPopup( value:Popup ):void {
 	//==================================================================================================
 		var counter:uint = _popupsCount;
 		var tempPopup:Popup;
 		trace("> Nest -> PopupMediator > AddPopup : _popupsCount =", _popupsCount);
-		while(counter--) {
+		while ( counter-- ) {
 			tempPopup = _popupsQueue[counter];
-			if(value.order >= tempPopup.order){
+			if ( value.order >= tempPopup.order ) {
 				value.localIndex = counter + 1;
 				break;
 			}
@@ -262,27 +265,29 @@ public final class PopupsMediator extends Mediator implements IMediator
 		trace("> Nest -> PopupMediator > AddPopup : localIndex =", value.localIndex);
 		trace("> Nest -> PopupMediator > AddPopup : parent ", value.parent);
 		
-		_popupsQueue.insertAt(value.localIndex, value);
+		_popupsQueue.insertAt( value.localIndex, value );
 		_popupsCount++;
 
-		Dictionary(viewComponent)[value.name] = value;
-		if(value.parent == null) AddPopupToStageAndShow(value);
-		else IPopup(value).show();
+		Dictionary( viewComponent )[ value.name ] = value;
+		if ( value.parent == null ) AddPopupToStageAndShow( value );
+		else IPopup( value ).show();
 	}
 
 	//==================================================================================================
 	private function RemovePopup( popup:Popup ):void {
 	//==================================================================================================
-		popup.hide(function(popupName:String):Function{ return function():void{ RemovePopupFromStage(popupName)} }(popup.name));
+		popup.hide( function( popupName:String ):Function{ return function():void {
+			RemovePopupFromStage( popupName )}
+		}( popup.name ));
 	}
 
 	//==================================================================================================
-	private function RemovePopupByName(name:String):void {
+	private function RemovePopupByName( name:String ):void {
 	//==================================================================================================
-		const popup:Popup = Dictionary(viewComponent)[name];
+		const popup:Popup = Dictionary( viewComponent )[ name ];
 		_popupsQueue.removeAt( popup.localIndex );
-		Dictionary(viewComponent)[name] = null;
-		delete Dictionary(viewComponent)[name];
+		Dictionary( viewComponent )[ name ] = null;
+		delete Dictionary( viewComponent )[ name ];
 		popup.localIndex = 0;
 		_popupsCount--;
 	}
