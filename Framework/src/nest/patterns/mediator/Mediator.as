@@ -30,7 +30,7 @@ public class Mediator extends Notifier implements IMediator
 	public function getMediatorName()							        : String 	{ throw new Error("NO MEDIATOR NAME"); return ""; }
 	public function setViewComponent(value:Object)				: void 		{ this.viewComponent = value; }
 	public function getViewComponent()							      : Object 	{ return viewComponent; }
-	public function handleNotification(note:INotification)	: void 		{ }
+	public function handleNotification(note:INotification): void 		{ }
 	public function onRegister()								          : void 		{ }
 	public function onRemove()									          : void 		{
 		while(_listNFunctions.length) _listNFunctions.shift().clear(); 
@@ -40,7 +40,7 @@ public class Mediator extends Notifier implements IMediator
 	public function get listNotifications()					: Vector.<String> 		{ return _listNotifications; }
 	public function get listNFunctions()						: Vector.<NFunction> 	{ return _listNFunctions; }
 
-	protected function listNotificationInterests()		: Vector.<String> 		{ return new Vector.<String>(); }
+	protected function listNotificationInterests()	: Vector.<String> 		{ return new Vector.<String>(); }
 	protected function listNotificationsFunctions()	: Vector.<NFunction> 	{ return new Vector.<NFunction>(); }
 
 	protected function applyViewComponentMethod(name:String, body:Object):void {
