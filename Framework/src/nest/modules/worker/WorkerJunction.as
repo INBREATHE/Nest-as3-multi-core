@@ -24,7 +24,7 @@ import nest.services.worker.process.WorkerTask;
 public final class WorkerJunction extends Junction
 {
 	static public const FILTER_FOR_DISCONNECT_MODULE	: String = "pipeFilterDisconnectMessage";
-	static public const FILTER_FOR_KEEP_PIPE_ID			: String = "pipeFilterKeepPipeID";
+	static public const FILTER_FOR_KEEP_PIPE_ID			  : String = "pipeFilterKeepPipeID";
 	static public const FILTER_FOR_RESTORE_PIPE_ID		: String = "pipeFilterRestorePipeID";
 
 	public var isSupported:Boolean = false;
@@ -62,28 +62,28 @@ public final class WorkerJunction extends Junction
 			if (isMaster)
 			{
 				const toWorkerPipeListener:PipeListener = new PipeListener(workerModule, function ( message:IPipeMessage ):void {
-					trace("\n> Nest -> WorkerJunction : MASTER > Output PipeListener");
-					trace("\t : isBusy = " + this.isBusy);
-					trace("\t : Send message =", message);
-					trace("\t : Send message header =", message.getHeader());
-					trace("\t : Send message body =", message.getBody());
+//					trace("\n> Nest -> WorkerJunction : MASTER > Output PipeListener");
+//					trace("\t : isBusy = " + this.isBusy);
+//					trace("\t : Send message =", message);
+//					trace("\t : Send message header =", message.getHeader());
+//					trace("\t : Send message body =", message.getBody());
 					this.send( new WorkerTask( WorkerTask.MESSAGE, message ));
 				});
 				inputPipe.connect(toWorkerPipeListener);
-				trace("> Nest -> WorkerJunction : MASTER - READY!");
+//				trace("> Nest -> WorkerJunction : MASTER - READY!");
 			}
 			else // WORKER
 			{
 				outputPipe = new PipeListener(workerModule, function ( message:IPipeMessage ):void {
-					const isWorkerRequestMessage:Boolean = message is WorkerRequestMessage;
-					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener");
-					trace("\t : isWorkerRequestMessage =", isWorkerRequestMessage);
-					trace("\t : isBusy = " + this.isBusy);
-					trace("\t : Send message header =", message.getHeader());
-					trace("\t : Send message body =", message.getBody());
+//					const isWorkerRequestMessage:Boolean = message is WorkerRequestMessage;
+//					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener");
+//					trace("\t : isWorkerRequestMessage =", isWorkerRequestMessage);
+//					trace("\t : isBusy = " + this.isBusy);
+//					trace("\t : Send message header =", message.getHeader());
+//					trace("\t : Send message body =", message.getBody());
 					this.send( new WorkerTask(WorkerTask.MESSAGE, message) );
 				});
-				trace("> Nest -> WorkerJunction : SLAVE - READY!");
+//				trace("> Nest -> WorkerJunction : SLAVE - READY!");
 			}
 
 			workerModule.inputChannel.addEventListener(Event.CHANNEL_MESSAGE, function(junction:Junction):Function
@@ -110,21 +110,21 @@ public final class WorkerJunction extends Junction
 //					));
 //				};
 
-				return function (e:Event):void
+				return function ( e:Event ):void
 				{
-					const taskType 	: * = (e.currentTarget as MessageChannel).receive(true);
+					const taskType 	: * = ( e.currentTarget as MessageChannel ).receive(true);
 					const message 	: IPipeMessage = __getData() as IPipeMessage;
 					const pipe		  : IPipeFitting = __getPipe(__channel);
 					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "Event.CHANNEL_MESSAGE >>>> message =", message);
 					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "channel = " + __channel, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
 					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "isBusy = " + __isBusy());
-					if(message)
+					if ( message )
 					{
 						trace("> Nest -> WorkerJunction > message : pipeID = " + message.getPipeID());
 						trace("> Nest -> WorkerJunction > message : messageID = " + message.getMessageID());
 					}
-					if (taskType is int) {
-						switch(taskType)
+					if ( taskType is int ) {
+						switch ( taskType )
 						{
 							// Only WORKER can receive this message
 							case /* 15 */ WorkerTask.COMPLETE:
@@ -149,7 +149,7 @@ public final class WorkerJunction extends Junction
 						trace("> Nest -> WorkerJunction >", __isMaster ? "MASTER" : "WORKER", "COMPLETE TASK:", taskType);
 					}
 				}
-			}(this));
+			}( this ));
 
 //			const RetranslateDatabaseEvent:Function = function():Function
 //			{
@@ -177,34 +177,34 @@ public final class WorkerJunction extends Junction
 		this.registerPipe( WorkerModule.WRK_OUT, Junction.OUTPUT, outputPipe );
 	}
 
-	public function filterDisconnectModule(message:WorkerRequestMessage, params:Object = null):IPipeMessage
+	public function filterDisconnectModule( message:WorkerRequestMessage, params:Object = null ):IPipeMessage
 	{
 		const request:String = message.getRequest();
 //		trace("\n> Nest ->  WorkerJunction > filterDisconnectModule", request);
 		var disconnected:IPipeFitting;
-		switch(request)
+		switch ( request )
 		{
 			case WorkerModule.DISCONNECT_INPUT_PIPE:
 			{
-				trace("> Nest -> filterDisconnectOutput, DISCONNECT_INPUT_PIPE");
+//				trace("> Nest -> filterDisconnectOutput, DISCONNECT_INPUT_PIPE");
 				disconnected = message.getBody() as IPipeFitting;
-				trace("\t\t: pipeName:", disconnected.pipeName);
-				trace("\t\t: channedID:", disconnected.channelID);
-				if(disconnected) disconnected.disconnect();
+//				trace("\t\t: pipeName:", disconnected.pipeName);
+//				trace("\t\t: channedID:", disconnected.channelID);
+				if ( disconnected ) disconnected.disconnect();
 				return null;
 			}
 
 			case WorkerModule.DISCONNECT_OUTPUT_PIPE:
 			{
-				trace("> Nest -> filterDisconnectOutput, DISCONNECT_OUTPUT_PIPE");
-				const teeSplit:SplitPipe = this.retrievePipe(WorkerModule.WRK_OUT) as SplitPipe;
-				if(teeSplit) {
+//				trace("> Nest -> filterDisconnectOutput, DISCONNECT_OUTPUT_PIPE");
+				const teeSplit:SplitPipe = this.retrievePipe( WorkerModule.WRK_OUT ) as SplitPipe;
+				if ( teeSplit ) {
 					disconnected = message.getBody() as IPipeFitting;
-					trace("\t\t: pipeName:", disconnected.pipeName);
-					trace("\t\t: channedID:", disconnected.channelID);
-					if(disconnected) disconnected.disconnect();
-					disconnected = teeSplit.disconnectFitting(disconnected);
-					if(disconnected) disconnected.disconnect();
+//					trace("\t\t: pipeName:", disconnected.pipeName);
+//					trace("\t\t: channedID:", disconnected.channelID);
+					if ( disconnected ) disconnected.disconnect();
+					disconnected = teeSplit.disconnectFitting( disconnected );
+					if ( disconnected ) disconnected.disconnect();
 				}
 				return null;
 			}
@@ -213,12 +213,12 @@ public final class WorkerJunction extends Junction
 	}
 
 	public function filterRestoreMessagePipeID(message:IPipeMessage, params:Object = null):IPipeMessage {
-		trace("> Nest -> filterApplyMessageResponce", (typeof message));
+//		trace("> Nest -> filterApplyMessageResponce", (typeof message));
 		return message;
 	}
 
 	public function filterKeepMessagePipeID(message:WorkerRequestMessage, params:Object = null):IPipeMessage {
-		trace("> Nest -> filterKeepMessageResponce", message);
+//		trace("> Nest -> filterKeepMessageResponce", message);
 		return message;
 	}
 }

@@ -36,7 +36,7 @@ public final class ReportService extends EventDispatcher implements IServiceLoca
 
 	private const
 		_batch		: Array 	= new Array()
-	,	_date		: Date 		= new Date()
+	,	_date		  : Date 		= new Date()
 	,	_params		: Object 	= {
 			data 		: {}
 		,	uuid		: ""
@@ -56,7 +56,7 @@ public final class ReportService extends EventDispatcher implements IServiceLoca
 	{
 		_header = new URLRequestHeader(serverVO.head, serverVO.key);
 		_url 	= serverVO.url;
-		_type 	= serverVO.type;
+		_type = serverVO.type;
 		trace("> Nest -> \t> ReportService \t-> init: _url =", _url, "_type =", _type);
 	}
 

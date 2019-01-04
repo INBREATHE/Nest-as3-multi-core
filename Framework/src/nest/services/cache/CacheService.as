@@ -39,7 +39,7 @@ public final class CacheService implements IServiceLocale
 	;
 
 	//==================================================================================================
-	public function init(path:Object):void {
+	public function init( path:Object ):void {
 	//==================================================================================================
 		trace("> Nest -> \t> CacheService  \t-> init: _isSupported =", _isSupported, path);
 		if(!_isSupported && path) {
@@ -47,9 +47,9 @@ public final class CacheService implements IServiceLocale
 			const fileCache:File = File.applicationDirectory.resolvePath(filePath); 
 			trace("> Nest -> \t> CacheService  \t-> file exist:", fileCache.exists);
 			_stream = new FileStream();
-			_stream.open(fileCache, FileMode.UPDATE);
+			_stream.open( fileCache, FileMode.UPDATE );
 			const dataString:String = _stream.bytesAvailable ? _stream.readUTF() : null;
-			_oData = dataString ? JSON.parse(dataString) : {};
+			_oData = dataString ? JSON.parse( dataString ) : {};
 			trace("> Nest -> \t> CacheService  \t-> init: EncryptedLocalStore not supported, use plane json file: " + filePath);
 			trace("> Nest -> \t> CacheService  \t-> init: _oData", JSON.stringify(_oData));
 			_stream.close();
@@ -57,29 +57,29 @@ public final class CacheService implements IServiceLocale
 		}
 
 		//http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
-		if(this.language == null) this.language = Capabilities.language;
+		if ( this.language == null ) this.language = Capabilities.language;
 
-		this.parse(REPORTS, function(item:Object, index:uint, arr:Array):void {
+		this.parse( REPORTS, function(item:Object, index:uint, arr:Array):void {
 			if(item) {
 //				trace("> Nest -> Cached REPORT:", item.name, item.time,  item.params);
-				_reports.push(new CacheReport(item.name, item.time,  item.params));
+				_reports.push( new CacheReport( item.name, item.time, item.params ));
 			}
 		});
 		
-		_reports.sort(function compare(x:CacheReport, y:CacheReport):Number {
+		_reports.sort( function compare(x:CacheReport, y:CacheReport):Number {
 			return x.time < y.time ? -1 : 1;
 		});
 
-		this.parse(REQUESTS, function(item:Object, index:uint, arr:Array):void {
+		this.parse( REQUESTS, function(item:Object, index:uint, arr:Array):void {
 			if(item) {
 //				trace("> Nest -> Cached REQUEST:", item.type, item.method, item.data);
-				_requests.push(new CacheRequest(item.type, item.method, item.data));
+				_requests.push( new CacheRequest(item.type, item.method, item.data));
 			}
 		});
 
 		trace("> Nest -> \t> CacheService  \t-> init: language = " +  this.language, "_reports = " + _reports.length, "_requests = " + _requests.length);
 
-		NativeApplication.nativeApplication.addEventListener(Event.EXITING, HandleExiting);
+		NativeApplication.nativeApplication.addEventListener( Event.EXITING, HandleExiting );
 	}
 
 	public function set language(value:String):void { this.store(LANGUAGE, value); }
@@ -142,19 +142,19 @@ public final class CacheService implements IServiceLocale
 	}
 
 	//==================================================================================================
-	private function HandleExiting(event:Event):void {
+	private function HandleExiting( event:Event ):void {
 	//==================================================================================================
 		trace("> Nest -> CacheService", Worker.current.isPrimordial ? "MASTER" : "SLAVE", "> HANDLE EXITING: events | request =",_reports.length, _requests.length);
-		if(_reports.length) 	this.store( REPORTS, 	JSON.stringify(_reports));  else this.remove(REPORTS);
-		if(_requests.length) 	this.store( REQUESTS, 	JSON.stringify(_requests)); else this.remove(REQUESTS);
+		if ( _reports.length ) 	this.store( REPORTS, 	JSON.stringify(_reports));  else this.remove(REPORTS);
+		if ( _requests.length ) 	this.store( REQUESTS, 	JSON.stringify(_requests)); else this.remove(REQUESTS);
 
 		trace("> \t\t", "_oData:", JSON.stringify(_oData));
-		if(_oData)
+		if ( _oData )
 		{
-			_stream.writeUTF(JSON.stringify(_oData));
+			_stream.writeUTF( JSON.stringify( _oData ));
 			_stream.close();
 		}
-		NativeApplication.nativeApplication.removeEventListener(Event.EXITING, HandleExiting);
+		NativeApplication.nativeApplication.removeEventListener( Event.EXITING, HandleExiting );
 	}
 
 	private static const _instance:CacheService = new CacheService();

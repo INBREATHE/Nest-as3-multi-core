@@ -305,8 +305,8 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 				break;
 			case WorkerState.TERMINATED:
 				Reset();
-				if (hasEventListener(WorkerEvent.TERMINATED))
-					dispatchEvent(new Event(WorkerEvent.TERMINATED));
+				if ( hasEventListener( WorkerEvent.TERMINATED ))
+					dispatchEvent( new Event( WorkerEvent.TERMINATED ));
 				break;
 		}
 		if (hasEventListener(Event.WORKER_STATE))

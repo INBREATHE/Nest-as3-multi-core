@@ -44,11 +44,11 @@ public class Mediator extends Notifier implements IMediator
 	protected function listNotificationsFunctions()	: Vector.<NFunction> 	{ return new Vector.<NFunction>(); }
 
 	protected function applyViewComponentMethod(name:String, body:Object):void {
-		const func:Function = viewComponent[name] as Function;
-		if(func != null) {
-			if(func.length == 1) func.apply(viewComponent, body);
-			else func.call(viewComponent);
-		} else throw new Error(ERROR_NO_CHILD);
+		const func:Function = viewComponent[ name ] as Function;
+		if (func != null) {
+			if (func.length == 1) func.apply( viewComponent, body );
+			else func.call( viewComponent );
+		} else throw new Error( ERROR_NO_CHILD );
 	}
 }
 }

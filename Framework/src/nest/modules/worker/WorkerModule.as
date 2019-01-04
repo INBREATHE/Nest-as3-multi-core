@@ -10,6 +10,7 @@ import flash.events.Event;
 import flash.filesystem.File;
 import flash.system.MessageChannel;
 import flash.system.Worker;
+import flash.system.Worker;
 import flash.system.WorkerDomain;
 import flash.system.WorkerState;
 import flash.utils.ByteArray;
@@ -74,7 +75,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	 */
 	public function WorkerModule(facade:IFacade)
   {
-    super(facade);
+    super( facade );
 		isSupported = Worker.isSupported;
 		isMaster = Worker.current.isPrimordial;
 		isInited = false;
@@ -84,57 +85,58 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 
 	public function initialize(bytes:ByteArray, enabled:Boolean = true):void
 	{
-		trace("\n> Nest -> WorkerModule START:", isMaster ? "MASTER" : "SLAVE", "enabled =", enabled + "; is supported =", Worker.isSupported + "; facade =", facade.key);
+//		trace("\n> Nest -> WorkerModule START:", isMaster ? "MASTER" : "SLAVE", "enabled =", enabled + "; is supported =", Worker.isSupported + "; facade =", facade.key);
 
-		if (isSupported && enabled)
+		if ( isSupported && enabled )
 		{
-			if (isMaster)
+			if ( isMaster )
 			{
-				_worker = WorkerDomain.current.createWorker(bytes, true);
-				_worker.addEventListener(Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true);
+				_worker = WorkerDomain.current.createWorker( bytes, true );
+				_worker.addEventListener( Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true );
 
-				NativeApplication.nativeApplication.addEventListener(Event.EXITING, MasterHandler_ApplicationTerminated);
+				NativeApplication.nativeApplication.addEventListener( Event.EXITING, MasterHandler_ApplicationTerminated );
 
-				incomingMessageChannel = Worker.current.createMessageChannel(_worker);
-				outgoingMessageChannel = _worker.createMessageChannel(Worker.current);
+				incomingMessageChannel = Worker.current.createMessageChannel( _worker );
+				outgoingMessageChannel = _worker.createMessageChannel( Worker.current );
 
-				setSharedProperty(INCOMING_MESSAGE_CHANNEL, incomingMessageChannel);
-				setSharedProperty(OUTGOING_MESSAGE_CHANNEL, outgoingMessageChannel);
+				setSharedProperty( INCOMING_MESSAGE_CHANNEL, incomingMessageChannel );
+				setSharedProperty( OUTGOING_MESSAGE_CHANNEL, outgoingMessageChannel );
 
 				_shareable = new ByteArray();
 				_shareable.shareable = true;
-				setSharedProperty(SHARE_DATA_PIPE, _shareable);
+				setSharedProperty( SHARE_DATA_PIPE, _shareable );
 
 				applicationStorageDirectory = File.applicationStorageDirectory.nativePath;
-
-				_shareable.writeObject(applicationStorageDirectory);
+//				trace("> Nest -> WorkerModule -> MASTER applicationStorageDirectory = " + applicationStorageDirectory);
+				_shareable.writeObject( applicationStorageDirectory );
 
 				// Because we cant run task before worker is being ready
 				// So we mark "task execution" as Busy to store all WorkerTasks in a Queue for later execution
 				isBusy = false;
 				isInited = true;
 
-				trace("> Nest -> WorkerModule -> MASTER launching worker!");
+//				trace("> Nest -> WorkerModule -> MASTER launching worker!");
 				_worker.start();
 			}
 			else // WORKER
 			{
 				_worker = Worker.current;
 
-				_worker.addEventListener(Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true);
+				_worker.addEventListener( Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true );
 
-				outgoingMessageChannel = getSharedProperty(OUTGOING_MESSAGE_CHANNEL);
-				incomingMessageChannel = getSharedProperty(INCOMING_MESSAGE_CHANNEL);
+				outgoingMessageChannel = getSharedProperty( OUTGOING_MESSAGE_CHANNEL );
+				incomingMessageChannel = getSharedProperty( INCOMING_MESSAGE_CHANNEL );
 
-				_shareable = getSharedProperty(SHARE_DATA_PIPE);
+				_shareable = getSharedProperty( SHARE_DATA_PIPE );
 				_shareable.shareable = true;
 
-				applicationStorageDirectory = String(getSharedData());
+//				trace("> Nest -> WorkerModule -> SLAVE applicationStorageDirectory = " + obj);
+				applicationStorageDirectory = String( getSharedData() );
 
 				isInited = true;
 				// Worker don't need to wait, it's start immediately
 				
-				trace("> Nest -> WorkerModule -> SLAVE starts immediately!");
+//				trace("> Nest -> WorkerModule -> SLAVE starts immediately!");
 				
 				start();
 			}
@@ -157,14 +159,14 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 //		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: isBusy =", isBusy);
 //		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task id =", task.id, task.id == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : (task.id == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : (task.id == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : "WorkerTask.READY")));
 //		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task data =", JSON.stringify(task.data));
-		if(isBusy) {
+		if ( isBusy ) {
 			_tasksQueue.push(task);
 		} else {
 			isBusy = true;
 			ClearSharedData();
-			if(task.hasData()) _shareable.writeObject(task.data);
-			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> write to outputChannel task id =", task.id);
-			outputChannel.send(task.id, 0);
+			if ( task.hasData() ) _shareable.writeObject( task.data );
+//			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> write to outputChannel task id =", task.id);
+			outputChannel.send( task.id, 0 );
 		}
 		return true;
 	}
@@ -180,7 +182,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function sendConfirm():void {
 	//==================================================================================================
 		ClearSharedData();
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.CONFIRM");
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.CONFIRM");
 		outputChannel.send( WorkerTask.CONFIRM );
 	}
 
@@ -188,12 +190,12 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function sendComplete():void {
 	//==================================================================================================
 		ClearSharedData();
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.COMPLETE");
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.COMPLETE");
 		outputChannel.send( WorkerTask.COMPLETE );
 	}
 
 		//==================================================================================================
-	public function getSharedProperty(id:String):* {
+	public function getSharedProperty( id:String ):* {
 	//==================================================================================================
 		return _worker.getSharedProperty(id);
 	}
@@ -211,10 +213,10 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function completeTask():void {
 	//==================================================================================================
 		isBusy = false;
-		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", "length =", _tasksQueue.length);
-		if(_tasksQueue.length) {
+//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", "length =", _tasksQueue.length);
+		if ( _tasksQueue.length ) {
 			const task:WorkerTask = _tasksQueue.shift();
-			trace("\t ", isMaster ? "MASTER" : "WORKER", ": SEND NEXT TASK:", task.id);
+//			trace("\t ", isMaster ? "MASTER" : "WORKER", ": SEND NEXT TASK:", task.id);
 			this.send( task );
 		}
 	}
@@ -235,7 +237,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function getSharedData():* {
 	//==================================================================================================
 		_shareable.position = 0;
-		if(_shareable.bytesAvailable) {
+		if ( _shareable.bytesAvailable ) {
 			const obj:* = _shareable.readObject();
 //			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","getSharedData:", JSON.stringify(obj));
 			return obj;
@@ -264,7 +266,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	//==================================================================================================
 	private function MasterHanlder_WorkerState(e:Event):void {
 	//==================================================================================================
-		trace("> Nest -> WorkerModule -> MasterHanlder_WorkerState:", e.currentTarget.state, isReady);
+//		trace("> Nest -> WorkerModule -> MasterHanlder_WorkerState:", e.currentTarget.state, isReady);
 		switch(e.currentTarget.state) {
 			case WorkerState.RUNNING: start(); break;
 			case WorkerState.NEW: break;
@@ -276,7 +278,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	private function MasterHandler_ApplicationTerminated(e:Event):void {
 	//==================================================================================================
 		trace("> Nest -> WorkerModule -> MasterHanlder_ApplicationTerminated:", e);
-		send( new WorkerTask(WorkerTask.TERMINATE) );
+		send( new WorkerTask( WorkerTask.TERMINATE ));
 	}
 
 	public function checkIsBusy():Boolean { return isBusy; }
