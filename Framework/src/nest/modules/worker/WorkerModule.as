@@ -154,18 +154,19 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function get inputChannel():MessageChannel { return isMaster ? outgoingMessageChannel : incomingMessageChannel; }
 
 	//==================================================================================================
-	public function send(task:WorkerTask):Boolean {
+	public function send( task:WorkerTask ):Boolean {
 	//==================================================================================================
-//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: isBusy =", isBusy);
-//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task id =", task.id, task.id == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : (task.id == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : (task.id == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : "WorkerTask.READY")));
-//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task data =", JSON.stringify(task.data));
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: isBusy =", isBusy);
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task id =", task.id, task.id == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : (task.id == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : (task.id == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : "WorkerTask.READY")));
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> send: task data =", JSON.stringify(task.data));
 		if ( isBusy ) {
-			_tasksQueue.push(task);
+			_tasksQueue.push( task );
 		} else {
-			isBusy = true;
+			if ( task.id != WorkerTask.REQUEST ) // REQUEST can be sent only from Worker and no need to have response
+				isBusy = true;
+
 			ClearSharedData();
 			if ( task.hasData() ) _shareable.writeObject( task.data );
-//			trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER","-> write to outputChannel task id =", task.id);
 			outputChannel.send( task.id, 0 );
 		}
 		return true;
@@ -182,7 +183,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function sendConfirm():void {
 	//==================================================================================================
 		ClearSharedData();
-//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.CONFIRM");
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.CONFIRM");
 		outputChannel.send( WorkerTask.CONFIRM );
 	}
 
@@ -190,20 +191,20 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function sendComplete():void {
 	//==================================================================================================
 		ClearSharedData();
-//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.COMPLETE");
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"-> send WorkerTask.COMPLETE");
 		outputChannel.send( WorkerTask.COMPLETE );
 	}
 
 		//==================================================================================================
 	public function getSharedProperty( id:String ):* {
 	//==================================================================================================
-		return _worker.getSharedProperty(id);
+		return _worker.getSharedProperty( id );
 	}
 
 	//==================================================================================================
 	public function terminate():void {
 	//==================================================================================================
-		if(!isMaster) {
+		if ( !isMaster ) {
 			NativeApplication.nativeApplication.dispatchEvent(new Event(Event.EXITING));
 		}
 		_worker.terminate();
@@ -213,10 +214,10 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	public function completeTask():void {
 	//==================================================================================================
 		isBusy = false;
-//		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", "length =", _tasksQueue.length);
+		trace("> Nest -> WorkerModule", isMaster ? "MASTER" : "WORKER" ,"> completeTask => TASK QUEUE:", "length =", JSON.stringify(_tasksQueue));
 		if ( _tasksQueue.length ) {
 			const task:WorkerTask = _tasksQueue.shift();
-//			trace("\t ", isMaster ? "MASTER" : "WORKER", ": SEND NEXT TASK:", task.id);
+			trace("\t ", isMaster ? "MASTER" : "WORKER", ": SEND NEXT TASK:", task.id);
 			this.send( task );
 		}
 	}

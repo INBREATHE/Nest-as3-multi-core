@@ -75,18 +75,18 @@ public final class WorkerJunction extends Junction
 			else // WORKER
 			{
 				outputPipe = new PipeListener(workerModule, function ( message:IPipeMessage ):void {
-//					const isWorkerRequestMessage:Boolean = message is WorkerRequestMessage;
-//					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener");
-//					trace("\t : isWorkerRequestMessage =", isWorkerRequestMessage);
-//					trace("\t : isBusy = " + this.isBusy);
-//					trace("\t : Send message header =", message.getHeader());
-//					trace("\t : Send message body =", message.getBody());
-					this.send( new WorkerTask(WorkerTask.MESSAGE, message) );
+					const isWorkerRequestMessage:Boolean = message is WorkerRequestMessage;
+					trace("\n> Nest -> WorkerJunction : WORKER > Output PipeListener");
+					trace("\t : isWorkerRequestMessage =", isWorkerRequestMessage);
+					trace("\t : isBusy = " + this.isBusy);
+					trace("\t : Send message header =", message.getHeader());
+					trace("\t : Send message body =", message.getBody());
+					this.send( new WorkerTask( isWorkerRequestMessage ? WorkerTask.REQUEST : WorkerTask.MESSAGE, message ));
 				});
 //				trace("> Nest -> WorkerJunction : SLAVE - READY!");
 			}
 
-			workerModule.inputChannel.addEventListener(Event.CHANNEL_MESSAGE, function(junction:Junction):Function
+			workerModule.inputChannel.addEventListener( Event.CHANNEL_MESSAGE, function( junction:Junction ):Function
 			{
 				const __isMaster	: Boolean 	= workerModule.isMaster;
 				const __getData		: Function 	= workerModule.getSharedData;
@@ -97,7 +97,6 @@ public final class WorkerJunction extends Junction
 				const __sendToWorkerTaskComplete	      : Function 	= workerModule.sendComplete;
 				const __sendToMasterTaskCompleteConfirm	: Function 	= workerModule.sendConfirm;
 
-				const __isBusy		: Function 	= workerModule.checkIsBusy;
 				const __terminate	: Function 	= workerModule.terminate;
 				const __channel		: String 	  = __isMaster ? WorkerModule.WRK_OUT : WorkerModule.WRK_IN;
 				const __getPipe		: Function 	= junction.retrievePipe;
@@ -116,12 +115,11 @@ public final class WorkerJunction extends Junction
 					const message 	: IPipeMessage = __getData() as IPipeMessage;
 					const pipe		  : IPipeFitting = __getPipe(__channel);
 					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "Event.CHANNEL_MESSAGE >>>> message =", message);
-					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "channel = " + __channel, "| pipeID = " + pipe.channelID, "| taskType = " + taskType);
-					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "isBusy = " + __isBusy());
+					trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "channel = " + __channel, "| pipe.channelID = " + pipe.channelID, "| taskType = " + (taskType == WorkerTask.COMPLETE ? "WorkerTask.COMPLETE" : taskType == WorkerTask.MESSAGE ? "WorkerTask.MESSAGE" : taskType == WorkerTask.CONFIRM ? "WorkerTask.CONFIRM" : taskType == WorkerTask.REQUEST ? "WorkerTask.REQUEST" : taskType ));
 					if ( message )
 					{
-						trace("> Nest -> WorkerJunction > message : pipeID = " + message.getPipeID());
-						trace("> Nest -> WorkerJunction > message : messageID = " + message.getMessageID());
+						trace("> Nest -> WorkerJunction \t> message : pipeID = " + message.getPipeID());
+						trace("> Nest -> WorkerJunction \t> message : messageID = " + message.getMessageID());
 					}
 					if ( taskType is int ) {
 						switch ( taskType )
@@ -134,10 +132,17 @@ public final class WorkerJunction extends Junction
 							case /* 16 */ WorkerTask.TERMINATE: __terminate(); break;
 							case /* 17 */ WorkerTask.CONFIRM: __unBusyAndSendNextTask(); break; // Only on Master when worker has no tasks
 							case /*  0 */ WorkerTask.READY: __sendToWorkerTaskComplete(); __ready(); break; // Only on Master after worker initialized
+							case /* 13 */ WorkerTask.REQUEST: { // REQUEST can be sent only from Worker and no need to have response
+								// REQUEST don't need to be completed from MASTER side
+								__isMaster && message.setPipeID( message.getResponsePipeID() );
+								__transfer( __channel, message );
+							}
+							break;
 							case /* 12 */ WorkerTask.MESSAGE: {
 								// Because pipe.write(...) has check for channel
 								__isMaster && message.setPipeID( message.getResponsePipeID() );
 
+								trace("> Nest -> WorkerJunction > ", __isMaster ? "MASTER" : "WORKER", "process WorkerTask.MESSAGE");
 								__transfer( __channel, message ); // __transfer = __isMaster ? junction.sendMessage : junction.acceptMessage
 
 								// Every worker task must be completed to be able for worker to send next task
@@ -146,7 +151,7 @@ public final class WorkerJunction extends Junction
 							}
 							break;
 						}
-						trace("> Nest -> WorkerJunction >", __isMaster ? "MASTER" : "WORKER", "COMPLETE TASK:", taskType);
+						trace("> Nest -> WorkerJunction >", __isMaster ? "MASTER" : "WORKER", ": >>>>>>>>>> COMPLETE TASK <<<<<<<<<<<<");
 					}
 				}
 			}( this ));

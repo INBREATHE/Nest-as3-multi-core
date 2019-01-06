@@ -185,13 +185,13 @@ package nest.modules.pipes.plumbing
 		{
 			var success:Boolean = false;
 			const outputPipeExist:Boolean = hasOutputPipe(outputPipeName);
-//			trace(">\tJunction.sendMessage: hasOutputPipe =", outputPipeExist );
-//			trace(">\tJunction.sendMessage: outputPipeName =", outputPipeName );
+			trace(">\tJunction.sendMessage: hasOutputPipe =", outputPipeExist );
+			trace(">\tJunction.sendMessage: outputPipeName =", outputPipeName );
 			if ( outputPipeExist )
 			{
 				const pipe:IPipeFitting = pipesMap[outputPipeName] as IPipeFitting;
 				if(individual && !message.getPipeID()) message.setPipeID(pipe.channelID);
-//				trace(">\tJunction.sendMessage: message responsePipeID = " + message.getResponsePipeID(), "| pipeID = " + message.getPipeID() );
+				trace(">\tJunction.sendMessage: message responsePipeID = " + message.getResponsePipeID(), "| pipeID = " + message.getPipeID() );
 				success = pipe.write(message);
 			}
 			return success;
@@ -207,15 +207,15 @@ package nest.modules.pipes.plumbing
 		public function acceptMessage( inputPipeName:String, message:IPipeMessage, individual:Boolean = true ):Boolean
 		{
 			var success:Boolean = false;
-			const checkInputPipe:Boolean = hasInputPipe(inputPipeName);
-			trace(">\tJunction.sendMessage: hasInputPipe =", checkInputPipe );
-			trace(">\tJunction.sendMessage: inputPipeName =", inputPipeName );
-			trace(">\tJunction.sendMessage: message =", message );
+			const checkInputPipe:Boolean = hasInputPipe( inputPipeName );
+//			trace(">\tJunction.sendMessage: hasInputPipe =", checkInputPipe );
+//			trace(">\tJunction.sendMessage: inputPipeName =", inputPipeName );
+//			trace(">\tJunction.sendMessage: message =", message );
 			if ( checkInputPipe && message )
 			{
-				const pipe:IPipeFitting = pipesMap[inputPipeName] as IPipeFitting;
-				if(individual && !message.getPipeID()) message.setPipeID(pipe.channelID);
-				success = pipe.write(message);
+				const pipe:IPipeFitting = pipesMap[ inputPipeName ] as IPipeFitting;
+				if ( individual && !message.getPipeID() ) message.setPipeID( pipe.channelID );
+				success = pipe.write( message );
 			}
 //			trace(">\tJunction.sendMessage: success =",success);
 			return success;

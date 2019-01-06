@@ -214,8 +214,6 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 		return false;
 	}
 
-
-
 	/**
 	 * Set the value of data on both side, so that data on both sides had the same value
 	 *
@@ -321,67 +319,68 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 		} else error("invalid message");
 	}
 
-	final private function send(workerTask:WorkerTask) : void {
-//			trace("> SEND MESSAGE:", __isPrimordial, msgID, data);
-
-		const 	msgID	:int 	= workerTask.id,
+	final private function send( workerTask:WorkerTask ) : void {
+		const
+				msgID	:int 	= workerTask.id,
 				data	:Object = workerTask.data;
 
-		if (!__worker || __singleThreadMode) {
-			SetSharedData(data);
-			ProcessMessage(msgID);
+		trace("> SEND MESSAGE:", __isPrimordial, msgID, data);
+
+		if ( !__worker || __singleThreadMode ) {
+			SetSharedData( data );
+			ProcessMessage( msgID );
 			return;
 		}
 
-		if (__isPrimordial)
+		if ( __isPrimordial )
 		{
 			// Send To Worker
-			if(__outgoingMessageChannel.messageAvailable) {
-				__tasklist.push(workerTask);
+			if ( __outgoingMessageChannel.messageAvailable ) {
+				__tasklist.push( workerTask );
 			} else {
-				SetSharedData(data);
-				__incomingMessageChannel.send(msgID, 0);
+				SetSharedData( data );
+				__incomingMessageChannel.send( msgID, 0 );
 			}
 		}
 		else
 		{
 			// Send to Main
-			if(__outgoingMessageChannel.messageAvailable) {
-				__tasklist.push(workerTask);
+			if ( __outgoingMessageChannel.messageAvailable ) {
+				__tasklist.push( workerTask );
 			} else {
-				SetSharedData(data);
-				__outgoingMessageChannel.send(msgID, 0);
+				SetSharedData( data );
+				__outgoingMessageChannel.send( msgID, 0 );
 			}
 
 		}
 	}
 
-	private function SetSharedData(data:*):void
+	private function SetSharedData( data:* ):void
 	{
 		__sharable.position = 0;
-		if(data) {
-			__sharable.writeObject(data);
+		if ( data ) {
+			__sharable.writeObject( data );
 		}
 	}
 
 	private function GetSharedData():*
 	{
 		__sharable.position = 0;
-		if(__sharable.bytesAvailable) {
+		if ( __sharable.bytesAvailable ) {
 			return __sharable.readObject();
 		}
 		return null;
 	}
 
-	private final function ProcessMessage(messageID:int) : void {
+	private final function ProcessMessage( messageID:int ) : void {
 
 		var data:Object = GetSharedData();
 
 //			trace("__processMessage", __isPrimordial, messageID, JSON.stringify(data));
 
-		if(!data) return;
+		if ( !data ) return;
 
-		switch(messageID) {
+		switch( messageID ) {
 //				case WorkerTask.READY : __isReady = true; if (hasEventListener(WorkerEvent.READY)) { dispatchEvent(new Event(WorkerEvent.READY)); } break;
 //				case WorkerTask.DEBUG : debug.apply(null, data); break;
 //				case WorkerTask.ERROR : error.apply(null, data); break;

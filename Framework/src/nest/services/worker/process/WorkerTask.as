@@ -9,7 +9,7 @@ import nest.modules.pipes.interfaces.IPipeMessage;
 
 public final class WorkerTask
 {
-	public function WorkerTask(id:int, data:IPipeMessage = null)
+	public function WorkerTask( id:int, data:IPipeMessage = null )
 	{
 		this._data = data;
 		this._id = id;
