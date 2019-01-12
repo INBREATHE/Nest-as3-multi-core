@@ -82,7 +82,7 @@ public final class CacheService implements IServiceLocale
 		NativeApplication.nativeApplication.addEventListener( Event.EXITING, HandleExiting );
 	}
 
-	public function set language(value:String):void { this.store(LANGUAGE, value); }
+	public function set language( value:String ):void { this.store( LANGUAGE, value ); }
 
 	public function cacheReport		(obj:CacheReport)	: void { _reports.push(obj); }
 	public function cacheRequest	(obj:CacheRequest)	: void { _requests.push(obj); }
@@ -90,54 +90,54 @@ public final class CacheService implements IServiceLocale
 	public function clearRequest	(obj:CacheRequest)	: void { const clearIndex:int = _requests.indexOf(obj); if(clearIndex >= 0) _requests.removeAt(clearIndex); }
 	public function get reports()		: Vector.<CacheReport> { return _reports; }
 	public function get requests()		: Vector.<CacheRequest> { return _requests; }
-	public function get language()		: String { return retrieve(LANGUAGE); }
+	public function get language()		: String { return retrieve( LANGUAGE ); }
 	public function get reportsCount()	: uint { return _reports.length; }
 	public function get requestsCount()	: uint { return _requests.length; }
 
 	//==================================================================================================
 	public function store(key:String, value:Object):void {
 	//==================================================================================================
-		if(_isSupported) {
+		if ( _isSupported ) {
 			const bytes:ByteArray = new ByteArray();
-			bytes.writeUTFBytes(String(value));
-			EncryptedLocalStore.setItem(key, bytes);
+			bytes.writeUTFBytes( String( value ));
+			EncryptedLocalStore.setItem( key, bytes );
 		} else {
-			_oData[key] = value;
+			_oData[ key ] = value;
 		}
 	}
 
 	//==================================================================================================
-	public function retrieve(key:String):String {
+	public function retrieve( key:String ):String {
 	//==================================================================================================
-		if(_isSupported) {
-			const ba:ByteArray = EncryptedLocalStore.getItem(key);
-			return (ba && ba.bytesAvailable) ? ba.toString() : null;
-		} else{
+		if ( _isSupported ) {
+			const ba:ByteArray = EncryptedLocalStore.getItem( key );
+			return ( ba && ba.bytesAvailable ) ? ba.toString() : null;
+		} else {
 			trace("> Nest -> CacheService > retrieve: key =", key);
 			trace("> Nest -> CacheService > retrieve: value =", _oData[key]);
-			return _oData[key];
+			return _oData[ key ];
 		}
 	}
 
 	//==================================================================================================
-	public function remove(key:String):void {
+	public function remove( key:String ):void {
 	//==================================================================================================
-		if(_isSupported)
-			EncryptedLocalStore.removeItem(key);
-		else delete _oData[key];
+		if ( _isSupported )
+			EncryptedLocalStore.removeItem( key );
+		else delete _oData[ key ];
 	}
 
 	//==================================================================================================
-	public function parse(key:String, parse:Function, keyWillBeRemoved:Boolean = false):void {
+	public function parse( key:String, parse:Function, keyWillBeRemoved:Boolean = false ):void {
 	//==================================================================================================
-		const value:String = retrieve(key);
-		if(value != null) {
-			const result:Object = JSON.parse(value);
-			if(result is Array && (result as Array).length > 0) (result as Array).forEach(parse);
-			else if(result is String || !isNaN(Number(result))) parse.call(null, result);
-			if(keyWillBeRemoved) remove(key);
+		const value:String = retrieve( key );
+		if ( value != null ) {
+			const result:Object = JSON.parse( value );
+			if ( result is Array && ( result as Array ).length > 0) ( result as Array ).forEach( parse );
+			else if ( result is String || !isNaN( Number( result ))) parse.call(null, result );
+			if ( keyWillBeRemoved ) remove( key );
 		} else {
-			parse.apply(null, new Array(parse.length));
+			parse.apply(null, new Array( parse.length ));
 		}
 	}
 
@@ -158,7 +158,7 @@ public final class CacheService implements IServiceLocale
 	}
 
 	private static const _instance:CacheService = new CacheService();
-	public function CacheService() { if(_instance != null) throw new Error("This is a singleton class, use .getInstance()"); }
+	public function CacheService() { if ( _instance != null ) throw new Error("This is a singleton class, use .getInstance()"); }
 	public static function getInstance():CacheService { return _instance; }
 }
 }
