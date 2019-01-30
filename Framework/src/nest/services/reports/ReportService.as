@@ -97,7 +97,8 @@ public final class ReportService extends EventDispatcher implements IServiceLoca
 			ldr.removeEventListener(Event.COMPLETE, completeHandler);
 			ldr.close();
 			ldr = null;
-		}
+		};
+
 		const completeHandler:Function = function (resp:Event):void {
 			trace("> Nest -> ReportService : completeHandler", ldr.data);
 			const data:Object = ldr.data is String ? { status: ServerStatus.ERROR } : JSON.parse(ldr.data) as Object;

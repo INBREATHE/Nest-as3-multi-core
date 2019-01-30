@@ -7,6 +7,6 @@ package nest.interfaces
 {
 public interface IService
 {
-	function init(data:Object):void;
+	function init( data:Object ):void;
 }
 }
