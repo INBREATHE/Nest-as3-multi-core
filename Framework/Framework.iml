@@ -8,6 +8,9 @@
             <entry library-id="ec6c14aa-a383-4991-bdff-45aeed3225c7">
               <dependency linkage="Merged" />
             </entry>
+            <entry library-name="Flox" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
           <sdk name="AIR" />
         </dependencies>
@@ -42,5 +45,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" exported="" name="framework" level="project" />
+    <orderEntry type="library" exported="" name="Flox" level="project" />
   </component>
 </module>
