@@ -33,7 +33,7 @@ public class ScreenMediator extends Mediator implements IMediator
 		this._dataRequest = dataCommand;
 		this._dataNotification = dataNotification;
 
-		super(viewComponent);
+		super( viewComponent );
 
 		screen.rebuildable = true;
 		screen.addEventListener( Event.ADDED_TO_STAGE, Handle_AddComponentToStage );
@@ -62,7 +62,7 @@ public class ScreenMediator extends Mediator implements IMediator
 		screen.addEventListener(	Event.ADDED_TO_STAGE, 		    Handle_AddComponentToStage);
 		screen.removeEventListener(	Event.REMOVED_FROM_STAGE, 	Handle_RemoveComponentFromStage);
 		screen.removeEventListener(	Event.TRIGGERED, 			      ComponentTrigger);
-		if(screen.rebuildable) screen.clear();
+		if ( screen.rebuildable ) screen.clear();
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ScreenMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	override public function handleNotification(notification:INotification):void {
+	override public function handleNotification( notification:INotification ):void {
 	//==================================================================================================
 //		trace("> Nest -> ScreenMediator > " + this.getMediatorName() + " > handleNotification:", notification.getName());
 		const body:Object = notification.getBody();
@@ -138,6 +138,7 @@ public class ScreenMediator extends Mediator implements IMediator
 		
 		this.send( ApplicationNotification.SHOW_SCREEN, this.screen, _dataForScreen && _dataForScreen.previous ? Screen.PREVIOUS : screen.name );
 
+		this.isBackPossible = true;
 		_isContentReady = true;
 	}
 

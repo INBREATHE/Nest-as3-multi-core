@@ -7,21 +7,22 @@ package nest.entities.application
 {
 public class ApplicationCommand
 {
+	static private const PREFIX:String = "nest_command_application_";
 	static public const
-		SINGLE_REPORT			: String = "nest_command_application_report_single"
+		SINGLE_REPORT			: String = "report_single"
 
-	,	SERVER_REQUEST			: String = "nest_commands_application_server_request"
-	,	SERVER_RESPONSE			: String = "nest_commands_application_server_responce"
+	,	SERVER_REQUEST			: String = PREFIX + "server_request"
+	,	SERVER_RESPONSE			: String = PREFIX + "server_responce"
 	
-	,	CHANGE_LANGUAGE			: String = "nest_commands_application_change_language"
-	,	LOCALIZE_ELEMENT		: String = "nest_commands_application_localize_element"
+	,	CHANGE_LANGUAGE			: String = PREFIX + "change_language"
+	,	LOCALIZE_ELEMENT		: String = PREFIX + "localize_element"
 
-	,	CACHE_STORE_REPORT		: String = "nest_command_cache_report"
-	,	CACHE_STORE_REQUEST		: String = "nest_command_cache_request"
-	,	CACHE_CLEAR_REPORT		: String = "nest_command_cache_clear_report"
-	,	CACHE_CLEAR_REQUEST		: String = "nest_command_cache_clear_request"
-	,	CACHE_BATCH_REPORT		: String = "nest_command_cache_batch_reports"
-	,	CACHE_BATCH_REQUESTS	: String = "nest_command_cache_batch_requests"
+	,	CACHE_STORE_REPORT		: String = PREFIX + "cache_report"
+	,	CACHE_STORE_REQUEST		: String = PREFIX + "cache_request"
+	,	CACHE_CLEAR_REPORT		: String = PREFIX + "cache_clear_report"
+	,	CACHE_CLEAR_REQUEST		: String = PREFIX + "cache_clear_request"
+	,	CACHE_BATCH_REPORT		: String = PREFIX + "cache_batch_reports"
+	,	CACHE_BATCH_REQUESTS	: String = PREFIX + "cache_batch_requests"
 	;
 }
 }
