@@ -205,7 +205,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		const name : String = action.name;
 		const data : PopupActionData = action.data;
 		const method : Function = facade.hasCommand( name ) ? exec : send;
-		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, "data = ", data);
+		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, "data =", JSON.stringify(data));
 		if ( data ) method( name, data.body, data.type );
 		else method( name );
 	}
