@@ -190,16 +190,16 @@ public final class Injector
 		return targets && !(targets[ classRef ] == null);
 	}
 
-    //==================================================================================================
+	//==================================================================================================
 	static public function injectTo( classRef:Class, object:INotifier ):void {
-    //==================================================================================================
-        const multitonKey   : String = object.getMultitonKey();
+	//==================================================================================================
+		const multitonKey   : String = object.getMultitonKey();
 		const targets       : Dictionary = _core_targets[ multitonKey ];
 //			trace(multitonKey, "> injectTo:", classRef, object);
 		if(targets != null)
 		{
 			const source : Dictionary = _core_source[ multitonKey ];
-			if(source != null)
+			if ( source != null )
 			{
 				const variables	: Vector.<InjectVar> = targets[ classRef ];
 				var counter 	: uint = variables.length;
@@ -215,7 +215,7 @@ public final class Injector
 					object[ varName ] = source[ varType ];
 				}
 			}
-			else throw new Error("No source to inject in this core:" + multitonKey);
+			else throw new Error("No source to inject in this core:" + multitonKey + " " + classRef.toString());
 		}
 		else throw new Error("No targets to inject in this core:" + multitonKey);
 	}

@@ -134,10 +134,14 @@ public class ScreenMediator extends Mediator implements IMediator
 			this.send( ScrollerNotifications.SETUP_SCROLLER, ScrollScreen( viewComponent ).getScrollContainer() );
 
 		if ( _dataForScreen && _dataForScreen.hasContentReadyCallback() )
+		{
 			_dataForScreen.contentReadyCallback();
+			_dataForScreen.onContentReady( null );
+		}
 		
 		this.send( ApplicationNotification.SHOW_SCREEN, this.screen, _dataForScreen && _dataForScreen.previous ? Screen.PREVIOUS : screen.name );
 
+		_dataForScreen = null;
 		this.isBackPossible = true;
 		_isContentReady = true;
 	}

@@ -60,13 +60,13 @@ public class Popup extends Element implements IPopup
 		this.removeEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ," > REMOVED_FROM_STAGE : _onRemoved", _onRemoved);
 		
-		if(_onRemoved){
+		if ( _onRemoved ) {
 			const onRemove:Function = _onRemoved;
 			clear();
-			const timeoutID:uint = setTimeout(function():void{
-				clearTimeout(timeoutID);
+			const timeoutID:uint = setTimeout(function():void {
+				clearTimeout( timeoutID );
 				onRemove(); 
-			}, 0);
+			}, 5);
 		}
 	}
 	

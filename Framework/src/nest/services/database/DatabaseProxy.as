@@ -56,13 +56,13 @@ public class DatabaseProxy extends LanguageDependentProxy
 	//==================================================================================================
 	public function retrieve( query:String, classRef:Class = null, all:Boolean = false, languageDependent:Boolean = true ):Object {
 	//==================================================================================================
-		return _dbService.retrieve(query, classRef, all, languageDependent );
+		return _dbService.retrieve( query, classRef, all, languageDependent );
 	}
 
 	//==================================================================================================
-	public function select(table:String, critiria:String, classRef:Class, all:Boolean = false, languageDependent:Boolean = true):Object {
+	public function select( table:String, critiria:String, classRef:Class, all:Boolean = false, languageDependent:Boolean = true ):Object {
 	//==================================================================================================
-		return _dbService.select(table, critiria, classRef, all, languageDependent);
+		return _dbService.select( table, critiria, classRef, all, languageDependent );
 	}
 
 	//==================================================================================================

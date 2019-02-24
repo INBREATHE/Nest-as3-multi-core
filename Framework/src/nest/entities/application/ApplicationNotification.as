@@ -15,11 +15,11 @@ public final class ApplicationNotification
 	,	SHOW_SCREEN				: String = PREFIX + "showscreen"
 	,	HIDE_SCREEN				: String = PREFIX + "hidescreen"
 	,	ADD_ELEMENT				: String = PREFIX + "addelement"
-	,	REMOVE_ELEMENT			: String = PREFIX + "removeelement"
-	,	LANGUAGE_CHANGED		: String = PREFIX + "language_changed"
+	,	REMOVE_ELEMENT		: String = PREFIX + "removeelement"
+	,	LANGUAGE_CHANGED	: String = PREFIX + "language_changed"
 
 	,	POPUP_REMOVED			: String = PREFIX + "popupclosed"
-	,	POPUP_ADDED			: String = PREFIX + "popupopened"
+	,	POPUP_ADDED			  : String = PREFIX + "popupopened"
 	,	ANDROID_BACK_BUTTON		: String = PREFIX + "androidbackbutton"
 	;
 }

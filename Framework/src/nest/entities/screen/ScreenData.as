@@ -19,7 +19,7 @@ package nest.entities.screen
 			_data = data;
 		}
 
-		public function onContentReady(callback:Function):ScreenData {
+		public function onContentReady( callback:Function ):ScreenData {
 			_contentReadyCallback = callback;
 			return this;
 		}

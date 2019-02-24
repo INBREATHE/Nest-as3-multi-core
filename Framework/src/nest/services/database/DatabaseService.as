@@ -63,10 +63,10 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 	
 	//==================================================================================================
-	private function Handler_DatabaseOpened(e:SQLEvent):void {
+	private function Handler_DatabaseOpened( e:SQLEvent ):void {
 	//==================================================================================================
-		_sqlConnection.removeEventListener(SQLEvent.OPEN, Handler_DatabaseOpened);
-		this.dispatchEvent(e);
+		_sqlConnection.removeEventListener( SQLEvent.OPEN, Handler_DatabaseOpened );
+		this.dispatchEvent( e );
 	}
 
 	//==================================================================================================

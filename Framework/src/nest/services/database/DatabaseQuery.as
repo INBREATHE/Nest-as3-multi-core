@@ -51,6 +51,7 @@ public final class DatabaseQuery
 	,	INSERT_DATA_TO_TABLE		: Array = [ INSERT_INTO, 	"1_TABLE_NAME", "(", "3_PARAMS", ") VALUES(", "5_VALUES", ");" ]
 	;
 
+	public static function SelectAll(table:String):String { return SELECT_FROM + table; }
 	public static function RowID(index:uint):String { ROWID[1] = String(index); return ROWID.join(""); }
 	public static function LimitBy(index:uint):String { return LIMIT + index; }
 	public static function OrderBy(value:String, type:String = null):String { 
