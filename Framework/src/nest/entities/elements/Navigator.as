@@ -31,7 +31,7 @@ public class Navigator
 	public function showScreen( screen:Screen, isReturn:Boolean ):void {
 	//==================================================================================================
 		trace("> Nest -> Navigator : showScreen - _transition.isShowPossible =", _transition.isShowPossible)
-		if(_transition.isShowPossible ) {
+		if ( _transition.isShowPossible ) {
 			_container.addChild( screen );
 			screen.show();
 		} else {
