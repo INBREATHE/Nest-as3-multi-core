@@ -96,7 +96,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		if ( sqlResult ) {
 			const data:Array = sqlResult.data;
 //			trace("> Nest -> DatabaseService: retrieve sqlResult =", sqlResult, sqlResult.data);
-			result = data ? (all ? data : data[0]) : null;
+			result = data ? ( all ? data : data[0] ) : ( all ? [] : null );
 		} else {
 //			trace("> Nest -> DatabaseService: ERROR retrieve:", query);
 		}
