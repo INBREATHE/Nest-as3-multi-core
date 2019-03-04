@@ -21,11 +21,11 @@ public final class NetworkService extends EventDispatcher implements IService
 
 	private var _isNetworkAvailable:Boolean = false;
 
-	public function init(app:Object):void
+	public function init( app:Object ):void
 	{
 		_isNetworkAvailable = CheckInternetConnection();
-		trace("> Nest -> \t> NetworkService \t-> init: isNetworkAvailable = " +  _isNetworkAvailable);
-		NativeApplication.nativeApplication.addEventListener(Event.NETWORK_CHANGE, HandleNetworkChange);
+		trace("> Nest -> \t> NetworkService \t-> init: isNetworkAvailableisNetworkAvailable = " +  _isNetworkAvailable);
+		NativeApplication.nativeApplication.addEventListener( Event.NETWORK_CHANGE, HandleNetworkChange );
 	}
 
 	//==================================================================================================
@@ -37,9 +37,9 @@ public final class NetworkService extends EventDispatcher implements IService
 	//==================================================================================================
 		var networkInterfaces:Object;
 
-		if (flash.net.NetworkInfo.isSupported) {
+		if ( flash.net.NetworkInfo.isSupported ) {
 			networkInterfaces = getDefinitionByName('flash.net.NetworkInfo')['networkInfo']['findInterfaces']();
-			for each (var ni:Object in networkInterfaces) if (ni.active) return true;
+			for each ( var ni:Object in networkInterfaces ) if ( ni.active ) return true;
 		}
 
 		return false;
@@ -51,7 +51,7 @@ public final class NetworkService extends EventDispatcher implements IService
 		const previousState:Boolean = _isNetworkAvailable;
 		_isNetworkAvailable = CheckInternetConnection();
 		const status:Boolean = (previousState == false) && (_isNetworkAvailable == true);
-		this.dispatchEvent( new NetworkStatusEvent(NETWORK_CHANGED, status));
+		this.dispatchEvent( new NetworkStatusEvent( NETWORK_CHANGED, status ));
 	}
 
 	private static const _instance:NetworkService = new NetworkService();

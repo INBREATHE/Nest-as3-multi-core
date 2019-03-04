@@ -5,6 +5,12 @@
 */
 package nest.services.network
 {
+import air.net.URLMonitor;
+
+import flash.events.StatusEvent;
+
+import flash.net.URLRequest;
+
 import nest.patterns.proxy.Proxy;
 
 public class NetworkProxy extends Proxy
@@ -18,7 +24,7 @@ public class NetworkProxy extends Proxy
 	public function set networkDisabledCommand	( value:String ):void { _networkDisabledCommand = value; }
 
 	public function NetworkProxy() {
-		super(NetworkService.getInstance());
+		super( NetworkService.getInstance() );
 		network.addEventListener( NetworkService.NETWORK_CHANGED, HandleNetworkChange );
 	}
 	
@@ -31,7 +37,7 @@ public class NetworkProxy extends Proxy
 	//==================================================================================================
 	private function HandleNetworkChange( event:NetworkStatusEvent ):void {
 	//==================================================================================================
-		trace("> Nest -> HandleNetworkChange :", event);
+		trace("> Application -> NetworkProxy: HandleNetworkChange: ", isNetworkAvailable);
 		var command:String = _networkDisabledCommand;
 		if ( event.available ) command = _networkEnabledCommand;
 		if ( command != null ) this.exec( command );

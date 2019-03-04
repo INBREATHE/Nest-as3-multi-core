@@ -9,8 +9,8 @@ public class NetworkStatusEvent extends Event
     private var _available:Boolean;
     public function get available():Boolean { return _available; }
 
-    public function NetworkStatusEvent(name:String, available:Boolean) {
-        super(name, false, true);
+    public function NetworkStatusEvent( name:String, available:Boolean ) {
+        super( name, false, true );
         _available = available;
     }
 }
