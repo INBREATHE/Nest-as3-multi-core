@@ -58,7 +58,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		_dbExist = file.exists;
 		_sqlConnection = new SQLConnection();
 		_sqlConnection.addEventListener( SQLEvent.OPEN, Handler_DatabaseOpened );
-//		Capabilities.isDebugger && Application.log("> Nest -> \t> DatabaseService \t-> init: DB exist: " + _dbExist + " at path: " + file.nativePath);
+		trace("> Nest -> \t> DatabaseService \t-> init: DB exist: " + _dbExist + " at path: " + file.nativePath);
 		_sqlConnection.open( file, _dbExist ? SQLMode.UPDATE : SQLMode.CREATE );
 	}
 	
@@ -75,7 +75,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		var dbName:String, dbClass:Class;
 		for ( dbName in tables ) {
 			dbClass = tables[ dbName ];
-//			Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + dbName);
+			trace("> Nest -> \tDatabaseService: create db " + dbName);
 			ExecuteStatement( DatabaseQuery.CreateTableFromClass( dbName, dbClass ), addLanguage );
 		}
 	}
@@ -83,7 +83,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	//==================================================================================================
 	public function createTable( tableName:String, tableClass:Class ):void {
 	//==================================================================================================
-//		Capabilities.isDebugger && Application.log("> Nest -> \tDatabaseService: create db " + tableName, tableClass);
+		trace("> Nest -> \tDatabaseService: create db " + tableName, tableClass);
 		ExecuteStatement( DatabaseQuery.CreateTableFromClass( tableName, tableClass ), false, null, true);
 	}
 
@@ -95,10 +95,10 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		const sqlResult:SQLResult = _sqlStatement.getResult();
 		if ( sqlResult ) {
 			const data:Array = sqlResult.data;
-//			trace("> Nest -> DatabaseService: retrieve sqlResult =", sqlResult, sqlResult.data);
+			trace("> Nest -> DatabaseService: retrieve sqlResult =", sqlResult, sqlResult.data);
 			result = data ? ( all ? data : data[0] ) : ( all ? [] : null );
 		} else {
-//			trace("> Nest -> DatabaseService: ERROR retrieve:", query);
+			trace("> Nest -> DatabaseService: ERROR retrieve:", query);
 		}
 		return result;
 	}
@@ -120,7 +120,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	public function store( table:String, data:Object, languageDependent:Boolean ):void {
 	//==================================================================================================
 		const dataType:String = typeof data;
-//			trace("> Nest -> STORE:", dataType, data);
+		trace("> Nest -> DatabaseService -> STORE:", dataType, data);
 		if ( dataType == TYPE_STRING ) ExecuteStatement( DatabaseQuery.InsertDataStringToTable( String( data ), table ), languageDependent );
 		else if ( dataType == TYPE_OBJECT ) ExecuteInsertStatementWithParams( data, table );
 	}
@@ -185,7 +185,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		_sqlStatement = new SQLStatement();
 		_sqlStatement.sqlConnection = _sqlConnection;
 		_sqlStatement.text = DatabaseQuery.UpdateTableParamsWhere(table, FillStatementParametersFromObject(_sqlStatement, data), criteria);
-//		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
+		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
 		Execute(_sqlStatement);
 	}
 
@@ -195,7 +195,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 		_sqlStatement = new SQLStatement();
 		_sqlStatement.sqlConnection = _sqlConnection;
 		_sqlStatement.text = DatabaseQuery.InsertDataObjectToTable( FillStatementParametersFromObject( _sqlStatement, data ), table );
-//		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
+		trace("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
 		Execute( _sqlStatement );
 	}
 
@@ -213,16 +213,15 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 
 	private function Execute(stmt:SQLStatement):void {
 		try {
-//            trace("> Nest -> DatabaseService: Execute QUERY: " + _sqlStatement.text);
-//    		Capabilities.isDebugger && Application.log("> Nest -> DatabaseService Execute QUERY: " + _sqlStatement.text);
+      trace("> Nest -> DatabaseService: Execute QUERY: " + _sqlStatement.text);
 			stmt.execute();
 		} catch ( e:SQLError ) {
 			if( e.errorID == 3119 ) { // Error #3119: Database file is currently locked.
 			  setTimeout( function ():void { Execute( stmt ); }, 100 );
 			} else {
         trace("> Nest > DatabaseService -> Execute SQLError:", e.details + ":" + e.getStackTrace());
-				if(_sqlConnection != null && _sqlConnection.inTransaction) {
-              _sqlConnection.rollback();
+				if ( _sqlConnection != null && _sqlConnection.inTransaction ) {
+          _sqlConnection.rollback();
 				}
 			}
 		}
