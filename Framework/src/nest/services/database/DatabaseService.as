@@ -120,7 +120,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	public function store( table:String, data:Object, languageDependent:Boolean ):void {
 	//==================================================================================================
 		const dataType:String = typeof data;
-		trace("> Nest -> DatabaseService -> STORE:", dataType, data);
+//		trace("> Nest -> DatabaseService -> STORE:", dataType, data);
 		if ( dataType == TYPE_STRING ) ExecuteStatement( DatabaseQuery.InsertDataStringToTable( String( data ), table ), languageDependent );
 		else if ( dataType == TYPE_OBJECT ) ExecuteInsertStatementWithParams( data, table );
 	}
@@ -213,7 +213,7 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 
 	private function Execute(stmt:SQLStatement):void {
 		try {
-      trace("> Nest -> DatabaseService: Execute QUERY: " + _sqlStatement.text);
+//      trace("> Nest -> DatabaseService: Execute QUERY: " + _sqlStatement.text);
 			stmt.execute();
 		} catch ( e:SQLError ) {
 			if( e.errorID == 3119 ) { // Error #3119: Database file is currently locked.
