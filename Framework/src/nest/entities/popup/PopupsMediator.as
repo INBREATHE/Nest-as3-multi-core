@@ -104,14 +104,13 @@ public final class PopupsMediator extends Mediator implements IMediator
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
 		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage:", GetPopupByName(name));
 		if ( popup != null )
-			popup.hide(function():void {
+			popup.hide( function():void {
 				trace("> Nest -> PopupsMediator > Hide Popup:", name);
 				RemovePopupFromStage( name, true );
 				popup.setup( popupData );
 				AddPopup( popup );
 			});
 		else {
-//			SetupListeners(popup);
 			popup = _popupsStorage[name];
 			if( popup ) {
 				popup.setup( popupData );
@@ -191,7 +190,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	private function Handle_ClosePopup( e:Event ):void {
+	private function Handle_ClosePopup( e:Event, data:Object = null ):void {
 	//==================================================================================================
 		const popup:Popup = Popup( e.currentTarget );
 		const onCloseCommonAction:PopupAction = popup.getAction( PopupAction.COMMON_ACTION_ON_CLOSE );

@@ -54,11 +54,11 @@ public class Popup extends Element implements IPopup
 	}
 	
 	//==================================================================================================
-	private function Handler_REMOVED_FROM_STAGE(e:Event):void {
+	private function Handler_REMOVED_FROM_STAGE( e:Event ):void {
 	//==================================================================================================
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.removeEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
-		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ," > REMOVED_FROM_STAGE : _onRemoved", _onRemoved);
+		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ,"> REMOVED_FROM_STAGE : _onRemoved", _onRemoved);
 		
 		if ( _onRemoved ) {
 			const onRemove:Function = _onRemoved;
@@ -71,8 +71,9 @@ public class Popup extends Element implements IPopup
 	}
 	
 	//==================================================================================================
-	private function Handler_ADDED_TO_STAGE(e:Event):void {
+	private function Handler_ADDED_TO_STAGE( e:Event ):void {
 	//==================================================================================================
+		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ,"> ADDED_TO_STAGE : _onAdded", _onAdded);
 		this.removeEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.addEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		
@@ -108,14 +109,14 @@ public class Popup extends Element implements IPopup
 	 */
 	public function androidBackButtonPressed ( ):void { }
 
-	public function show():void { }
-	public function hide( next:Function ):void { next.apply(null, [this.name]); }
+	public function show():void { this.dispatchEvent( new Event( PopupEvents.POPUP_SHOWN )); }
+	public function hide( next:Function ):void { next.apply( null, [ this.name ]); }
 	public function addAction( action:PopupAction ):void {
 		_actions[ action.id ] = action;
 	}
 
 	public function addActions( input:Array ):void {
-		input.forEach(function (action:PopupAction, index:int, s:Array):void {
+		input.forEach( function ( action:PopupAction, index:int, s:Array ):void {
 			addAction( action );
 		});
 	}
