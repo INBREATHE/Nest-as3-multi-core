@@ -16,6 +16,6 @@ public interface IPopup extends IEntity
 	function clear():void;
 	function hide( next:Function ):void;
 	function addAction( action:PopupAction ):void;
-	function getAction( actionID:String ):PopupAction;
+	function getAction( actionID:String ):Object;
 }
 }

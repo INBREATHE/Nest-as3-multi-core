@@ -111,22 +111,37 @@ public class Popup extends Element implements IPopup
 
 	public function show():void { this.dispatchEvent( new Event( PopupEvents.POPUP_SHOWN )); }
 	public function hide( next:Function ):void { next.apply( null, [ this.name ]); }
+
 	public function addAction( action:PopupAction ):void {
-		_actions[ action.id ] = action;
+		const id:String = action.id;
+		if ( _actions[ id ] != null ) {
+			if ( !( _actions[ id ] is Array ))
+				_actions[ id ] = [ _actions[ id ]];
+
+			_actions[ id ].push(action);
+		}
+		else _actions[ id ] = action;
 	}
 
 	public function addActions( input:Array ):void {
-		input.forEach( function ( action:PopupAction, index:int, s:Array ):void {
+		input.forEach( function ( action:PopupAction, i:int, s:Array ):void {
 			addAction( action );
 		});
 	}
 
-	public function getAction( actionID:String ):PopupAction {
+	public function getAction( actionID:String ):Object {
 		return _actions[ actionID ];
 	}
 
-	protected function dispatchAction( action:PopupAction ):void {
-		dispatchEventWith( PopupEvents.ACTION_FROM_POPUP, false, action );
+	public function hasAction( actionID:String ):Boolean {
+		return _actions[ actionID ] != null;
+	}
+
+	protected function dispatchAction( action:Object ):void {
+		if ( action is Array ) ( action as Array ).forEach( function ( a:PopupAction, i:int, s:Array ):void {
+			dispatchEventWith( PopupEvents.ACTION_FROM_POPUP, false, a );
+		});
+		else dispatchEventWith( PopupEvents.ACTION_FROM_POPUP, false, action );
 	}
 
 	protected function dispatchActions( input:Array ):void {

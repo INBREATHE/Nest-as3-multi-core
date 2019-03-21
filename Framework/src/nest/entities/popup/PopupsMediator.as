@@ -190,11 +190,16 @@ public final class PopupsMediator extends Mediator implements IMediator
 	}
 
 	//==================================================================================================
-	private function Handle_ClosePopup( e:Event, data:Object = null ):void {
+	private function Handle_ClosePopup( e:Event ):void {
 	//==================================================================================================
 		const popup:Popup = Popup( e.currentTarget );
-		const onCloseCommonAction:PopupAction = popup.getAction( PopupAction.COMMON_ACTION_ON_CLOSE );
-		if ( onCloseCommonAction ) Handle_ActionFromPopup( null, onCloseCommonAction );
+		if ( popup.hasAction( PopupAction.COMMON_ACTION_ON_CLOSE )) {
+			const action:Object = popup.getAction( PopupAction.COMMON_ACTION_ON_CLOSE );
+			if ( action is Array ) ( action as Array ).forEach( function ( a:PopupAction, i:int, s:Array ):void {
+					Handle_ActionFromPopup( null, PopupAction( a ));
+			});
+			else Handle_ActionFromPopup( null, PopupAction( action ));
+		}
 		RemovePopup( popup );
 	}
 
