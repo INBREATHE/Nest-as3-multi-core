@@ -169,6 +169,8 @@ public final class PopupsMediator extends Mediator implements IMediator
 		if ( popup == null ) return;
 		if ( clear ) popup.clear();
 
+		trace("> Nest -> PopupMediator > RemovePopupFromStage: name = " + popup.name, name);
+
 		RemoveListeners( popup );
 		Starling.juggler.removeTweens( popup );
 		this.RemovePopupByName( name );
@@ -209,7 +211,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		const name : String = action.name;
 		const data : PopupActionData = action.data;
 		const method : Function = facade.hasCommand( name ) ? exec : send;
-		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, "data =", JSON.stringify(data));
+		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, facade.hasCommand( name ), "| data =", JSON.stringify(data));
 		if ( data ) method( name, data.body, data.type );
 		else method( name );
 	}
@@ -259,7 +261,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		var tempPopup:Popup;
 		trace("> Nest -> PopupMediator > AddPopup : _popupsCount =", _popupsCount);
 		while ( counter-- ) {
-			tempPopup = _popupsQueue[counter];
+			tempPopup = _popupsQueue[ counter ];
 			if ( value.order >= tempPopup.order ) {
 				value.localIndex = counter + 1;
 				break;
@@ -289,7 +291,9 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function RemovePopupByName( name:String ):void {
 	//==================================================================================================
 		const popup:Popup = Dictionary( viewComponent )[ name ];
-		_popupsQueue.removeAt( popup.localIndex );
+		trace("> Nest -> PopupMediator > RemovePopupByName =", popup.name, popup.localIndex);
+		trace("> Nest -> PopupMediator > RemovePopupByName _popupsQueue:", _popupsQueue);
+		_popupsQueue.removeAt( _popupsQueue.indexOf( popup ));
 		Dictionary( viewComponent )[ name ] = null;
 		delete Dictionary( viewComponent )[ name ];
 		popup.localIndex = 0;

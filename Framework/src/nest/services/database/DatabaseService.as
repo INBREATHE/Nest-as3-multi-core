@@ -110,9 +110,9 @@ public final class DatabaseService extends EventDispatcher implements IServiceLo
 	}
 
 	//==================================================================================================
-	public function count(table:String, critiria:String, languageDependent:Boolean ):uint {
+	public function count(table:String, criteria:String, languageDependent:Boolean ):uint {
 	//==================================================================================================
-		const data:Array = retrieve( DatabaseQuery.CountFromTable( table, critiria ), null, true, languageDependent ) as Array;
+		const data:Array = retrieve( DatabaseQuery.CountFromTable( table, criteria ), null, true, languageDependent ) as Array;
 		return data ? data[0][ DatabaseQuery.COUNT ] : 0;
 	}
 

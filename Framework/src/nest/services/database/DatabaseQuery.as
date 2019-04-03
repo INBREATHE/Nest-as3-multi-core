@@ -130,9 +130,15 @@ public final class DatabaseQuery
 	}
 
 	public static function CountFromTable(table:String, criteria:String):String {
-		COUNT_FROM_TABLE_WHERE[1] = table;
-		COUNT_FROM_TABLE_WHERE[3] = criteria;
-		return COUNT_FROM_TABLE_WHERE.join("");
+		var template:Array = COUNT_FROM_TABLE_WHERE;
+		if (criteria == null || criteria.length == 0) {
+			template = template.slice(0, 2);
+			template[1] = table;
+		} else {
+			template[1] = table;
+			template[3] = criteria;
+		}
+		return template.join("");
 	}
 
 	public static function UpdateTableParamsWhere(table:String, params:Array, criteria:String):String {
