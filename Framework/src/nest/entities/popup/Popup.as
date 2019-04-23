@@ -91,6 +91,7 @@ public class Popup extends Element implements IPopup
 		_onShown 	= popupData.onShown;
 		_onRemoved 	= popupData.onRemoved;
 		
+		trace("> Nest -> Popup > setup: name =", this.name);
 		trace("> Nest -> Popup > setup: _onRemoved", _onRemoved != null);
 		trace("> Nest -> Popup > setup: _onShown", _onShown != null);
 		trace("> Nest -> Popup > setup: _onAdded", _onAdded != null);
