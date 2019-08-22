@@ -92,7 +92,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 			if ( isMaster )
 			{
 				_worker = WorkerDomain.current.createWorker( bytes, true );
-				_worker.addEventListener( Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true );
+				_worker.addEventListener( Event.WORKER_STATE, MasterHandler_WorkerState, false, 0, true );
 
 				NativeApplication.nativeApplication.addEventListener( Event.EXITING, MasterHandler_ApplicationTerminated );
 
@@ -122,7 +122,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 			{
 				_worker = Worker.current;
 
-				_worker.addEventListener( Event.WORKER_STATE, MasterHanlder_WorkerState, false, 0, true );
+				_worker.addEventListener( Event.WORKER_STATE, MasterHandler_WorkerState, false, 0, true );
 
 				outgoingMessageChannel = getSharedProperty( OUTGOING_MESSAGE_CHANNEL );
 				incomingMessageChannel = getSharedProperty( INCOMING_MESSAGE_CHANNEL );
@@ -265,7 +265,7 @@ public class WorkerModule extends PipeAwareModule implements IWorkerModule
 	}
 
 	//==================================================================================================
-	private function MasterHanlder_WorkerState(e:Event):void {
+	private function MasterHandler_WorkerState(e:Event):void {
 	//==================================================================================================
 //		trace("> Nest -> WorkerModule -> MasterHanlder_WorkerState:", e.currentTarget.state, isReady);
 		switch(e.currentTarget.state) {

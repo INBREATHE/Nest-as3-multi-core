@@ -191,11 +191,11 @@ public class DisplayUtils
 		obj.applyFilter( obj, new Rectangle( 0,0,obj.width,obj.height ), new Point(0,0), filter );
 	}
 
-	static public function createTextureFromAssetWithinFrame( asset:DisplayObjectContainer, frame:Point, desaturate:Boolean ):Texture {
-		const bmd:BitmapData = new BitmapData( frame.x, frame.y );
+	static public function createTextureFromAssetWithinFrame( asset:DisplayObjectContainer, frame:Point, desaturate:Boolean, transparent:Boolean ):Texture {
+		const bmd:BitmapData = new BitmapData( frame.x, frame.y, transparent, transparent ? 0x00000000 : NaN );
 		bmd.draw( asset, asset.transform.matrix );
-		if ( desaturate ) DisplayUtils.convertToGrayScale(bmd);
-		return Texture.fromBitmapData(bmd);
+		if ( desaturate ) DisplayUtils.convertToGrayScale( bmd );
+		return Texture.fromBitmapData( bmd );
 	}
 
 	static public function fitAssetToFrame( asset:DisplayObjectContainer, frame:Point ):DisplayObjectContainer {
@@ -214,8 +214,8 @@ public class DisplayUtils
 		return asset;
 	}
 
-	static public function getTextureFromAsset( assetClass:Class, texture:Texture, frame:Point, completed:Boolean ):Texture {
-		return createTextureFromAssetWithinFrame( fitAssetToFrame( new assetClass(), frame ), frame, !completed );
+	static public function getTextureFromAsset( assetClass:Class, texture:Texture, frame:Point, completed:Boolean, transparent:Boolean = false ):Texture {
+		return createTextureFromAssetWithinFrame( fitAssetToFrame( new assetClass(), frame ), frame, !completed, transparent );
 	}
 }
 }
