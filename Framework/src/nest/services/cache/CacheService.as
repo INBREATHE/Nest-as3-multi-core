@@ -43,17 +43,21 @@ public final class CacheService implements IServiceLocale
 	//==================================================================================================
 		trace("> Nest -> \t> CacheService  \t-> init: _isSupported =", _isSupported, path);
 		if(!_isSupported && path) {
-			const filePath:String = String(path) + FILE_NAME;
-			const fileCache:File = File.applicationDirectory.resolvePath(filePath); 
-			trace("> Nest -> \t> CacheService  \t-> file exist:", fileCache.exists);
-			_stream = new FileStream();
-			_stream.open( fileCache, FileMode.UPDATE );
-			const dataString:String = _stream.bytesAvailable ? _stream.readUTF() : null;
-			_oData = dataString ? JSON.parse( dataString ) : {};
-			trace("> Nest -> \t> CacheService  \t-> init: EncryptedLocalStore not supported, use plane json file: " + filePath);
-			trace("> Nest -> \t> CacheService  \t-> init: _oData", JSON.stringify(_oData));
-			_stream.close();
-			_stream.open(fileCache, FileMode.WRITE);
+			try {
+				const filePath:String = String(path) + FILE_NAME;
+				const fileCache:File = File.applicationDirectory.resolvePath(filePath);
+				trace("> Nest -> \t> CacheService  \t-> file exist:", fileCache.exists);
+				_stream = new FileStream();
+				_stream.open( fileCache, FileMode.UPDATE );
+				const dataString:String = _stream.bytesAvailable ? _stream.readUTF() : null;
+				_oData = dataString ? JSON.parse( dataString ) : {};
+				trace("> Nest -> \t> CacheService  \t-> init: EncryptedLocalStore not supported, use plane json file: " + filePath);
+				trace("> Nest -> \t> CacheService  \t-> init: _oData", JSON.stringify(_oData));
+				_stream.close();
+				_stream.open(fileCache, FileMode.WRITE);
+			} catch (e:Error) {
+				_oData = {};
+			}
 		}
 
 		//http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
@@ -65,7 +69,7 @@ public final class CacheService implements IServiceLocale
 				_reports.push( new CacheReport( item.name, item.time, item.params ));
 			}
 		});
-		
+
 		_reports.sort( function compare(x:CacheReport, y:CacheReport):Number {
 			return x.time < y.time ? -1 : 1;
 		});
@@ -110,13 +114,18 @@ public final class CacheService implements IServiceLocale
 	public function retrieve( key:String ):String {
 	//==================================================================================================
 		if ( _isSupported ) {
-			const ba:ByteArray = EncryptedLocalStore.getItem( key );
-			return ( ba && ba.bytesAvailable ) ? ba.toString() : null;
+			try {
+				const ba:ByteArray = EncryptedLocalStore.getItem( key );
+				return ( ba && ba.bytesAvailable ) ? ba.toString() : null;
+			} catch (e:Error) {
+
+			}
 		} else {
 			trace("> Nest -> CacheService > retrieve: key =", key);
 			trace("> Nest -> CacheService > retrieve: value =", _oData[key]);
 			return _oData[ key ];
 		}
+		return null;
 	}
 
 	//==================================================================================================

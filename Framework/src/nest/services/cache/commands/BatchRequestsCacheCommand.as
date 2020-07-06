@@ -27,7 +27,7 @@ public final class BatchRequestsCacheCommand extends ServerCommand
 		var length		: uint = requests.length;
 		var index		: uint = 0;
 
-		const sendCacheRequest:Function = function(cache:CacheRequest):Function {
+		const sendCacheRequest:Function = function(cache:CacheRequest):void {
 			trace("\t\tCacheRequest:", cache.method);
 
 			const callback:Function = function(result:Object):void {
@@ -36,7 +36,7 @@ public final class BatchRequestsCacheCommand extends ServerCommand
 						cacheService.clearRequest(cache);
 				}
 				// Поскольку мы удаляем удачные запросы из кэша, то мы пропускаем индекс неотправленных
-				// В случае удачных запросов ClearRequesтtWhenServerStatusOk удаляет текущий cache в текущем индексе
+				// В случае удачных запросов ClearRequestWhenServerStatusOk удаляет текущий cache в текущем индексе
 				// Поэтому мы не сдвигаем индекс а только корректируем длину массива запросов
 				if(length == requests.length) index++;
 				else length = requests.length;

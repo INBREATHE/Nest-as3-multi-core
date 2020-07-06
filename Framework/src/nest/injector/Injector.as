@@ -215,7 +215,7 @@ public final class Injector
 					object[ varName ] = source[ varType ];
 				}
 			}
-			else throw new Error("No source to inject in this core:" + multitonKey + " " + classRef.toString());
+			else throw new Error("No source to inject in this core:" + multitonKey + " " + classRef);
 		}
 		else throw new Error("No targets to inject in this core:" + multitonKey);
 	}

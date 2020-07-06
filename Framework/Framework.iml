@@ -8,11 +8,8 @@
             <entry library-id="ec6c14aa-a383-4991-bdff-45aeed3225c7">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-name="Flox" library-level="project">
-              <dependency linkage="Merged" />
-            </entry>
           </entries>
-          <sdk name="AIR" />
+          <sdk name="Flex" />
         </dependencies>
         <compiler-options>
           <option name="additionalOptions" value="-keep-as3-metadata+=Inject -omit-trace-statements=true -debug=false" />
@@ -31,7 +28,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.settings" />
       <excludeFolder url="file://$MODULE_DIR$/bin" />
     </content>
-    <orderEntry type="jdk" jdkName="AIR" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="Flex" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="_libs" level="project" />
     <orderEntry type="module-library" exported="">

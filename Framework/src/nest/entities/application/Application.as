@@ -35,9 +35,7 @@ public class Application extends Sprite
 {
 	static private var console:TextField;
 	public static function log(...message):void { if(console) console.text = "\n> " + message + console.text;
-		else {
-		trace(message);
-		}
+		else trace(message);
 	}
 	//==================================================================================================
 	public static function setupConsole(stage:DisplayObjectContainer, fontSize:uint = 15, fontColor:uint = 0xff0000):void {
@@ -46,7 +44,7 @@ public class Application extends Sprite
 		console.defaultTextFormat = new TextFormat(null, fontSize, fontColor);
 		console.width = Capabilities.screenResolutionX;
 		console.height = Capabilities.screenResolutionY;
-		
+
 		stage.addChild(console);
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e:KeyboardEvent):void
 		{
@@ -58,7 +56,7 @@ public class Application extends Sprite
 			}
 		});
 	}
-	
+
 	static public var
 	  EVENT_READY   : String = "application_event_ready"
 	, SCALEFACTOR		: Number = 1
@@ -67,13 +65,13 @@ public class Application extends Sprite
 	;
 
 	static public const ENVIRONMENT  : Environment = new Environment();
-	
+
 	private const _screensContainer : Element = new Element(ENVIRONMENT);
 	private const _navigator		    : Navigator = new Navigator(_screensContainer, new FadeTransition());
 
 	protected var _notifier	: INotifier;
 
-	public function Application() 
+	public function Application()
 	{
 		this.addElement(_screensContainer);
 
@@ -150,7 +148,7 @@ public class Application extends Sprite
 	//==================================================================================================
 		if( event.keyCode == Keyboard.BACK )
 		{
-			event.preventDefault(); 
+			event.preventDefault();
 			event.stopImmediatePropagation();
 			_notifier.send( ApplicationNotification.ANDROID_BACK_BUTTON );
 		}

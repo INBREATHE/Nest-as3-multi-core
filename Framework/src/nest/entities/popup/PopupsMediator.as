@@ -74,7 +74,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_LanguageChanged():void {
 	//==================================================================================================
-		trace("> Nest -> PopupsMediator > Notification_LanguageChanged:");
+//		trace("> Nest -> PopupsMediator > Notification_LanguageChanged:");
 		for each ( var popup:IEntity in _popupsStorage ) {
 			exec( ApplicationCommand.LOCALIZE_ELEMENT, popup );
 		}
@@ -83,7 +83,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_UpdatePopup( popupData:Object, popupName:String ):void {
 	//==================================================================================================
-		trace("> Nest -> PopupsMediator > Notification_UpdatePopup:", popupName, popupData);
+//		trace("> Nest -> PopupsMediator > Notification_UpdatePopup:", popupName, popupData);
 		if ( popupName == null ) return;
 		const popup:Popup = _popupsStorage[ popupName ];
 		popup.prepare(popupData);
@@ -92,7 +92,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function Notification_UnlockPopup( popupName:String ):void {
 	//==================================================================================================
-		trace("> Nest -> PopupsMediator > Notification_UnlockPopup:", popupName);
+//		trace("> Nest -> PopupsMediator > Notification_UnlockPopup:", popupName);
 		if ( popupName == null ) return;
 		const popup:Popup = _popupsStorage[ popupName ];
 		popup.touchable = true;
@@ -102,11 +102,11 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function Notification_ShowPopupByName( popupData:PopupData, name:String ):void {
 	//==================================================================================================
 		var popup:Popup = GetPopupByName( name );
-		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
-		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage with same name exists:", popup != null);
+//		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName:", name);
+//		trace("> Nest -> PopupsMediator > Notification_ShowPopupByName: popup on stage with same name exists:", popup != null);
 		if ( popup != null )
 			popup.hide( function():void {
-				trace("> Nest -> PopupsMediator > Hide Popup:", name);
+//				trace("> Nest -> PopupsMediator > Hide Popup:", name);
 				RemovePopupFromStage( name, false );
 				setTimeout( function ():void {
 					popup.setup( popupData );
@@ -172,7 +172,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		if ( popup == null ) return;
 		if ( clear ) popup.clear();
 
-		trace("> Nest -> PopupsMediator > RemovePopupFromStage: name = " + popup.name, name);
+//		trace("> Nest -> PopupsMediator > RemovePopupFromStage: name = " + popup.name, name);
 
 		RemoveListeners( popup );
 		Starling.juggler.removeTweens( popup );
@@ -215,7 +215,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 		const name : String = action.name;
 		const data : PopupActionData = action.data;
 		const method : Function = facade.hasCommand( name ) ? exec : send;
-		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, facade.hasCommand( name ), "| data =", JSON.stringify(data));
+//		trace("> Nest -> PopupsMediator > Handle_ActionFromPopup:", name, facade.hasCommand( name ), "| data =", JSON.stringify(data));
 		if ( data ) method( name, data.body, data.type );
 		else method( name );
 	}
@@ -223,7 +223,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 	private function SetupListeners( popup:DisplayObject ):void {
 	//==================================================================================================
-		trace("> Nest -> PopupsMediator > SetupListeners");
+//		trace("> Nest -> PopupsMediator > SetupListeners");
 		popup.addEventListener( PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup );
 
 		popup.addEventListener( PopupEvents.POPUP_SHOWN, 		    Handle_PopupShown );
@@ -235,7 +235,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	private function RemoveListeners( popup:DisplayObject ):void {
 	//==================================================================================================
 		if ( !popup.hasEventListener( PopupEvents.ACTION_FROM_POPUP )) return;
-		trace("> Nest -> PopupsMediator > RemoveListeners");
+//		trace("> Nest -> PopupsMediator > RemoveListeners");
 		popup.removeEventListener( PopupEvents.ACTION_FROM_POPUP, Handle_ActionFromPopup );
 
 		popup.removeEventListener( PopupEvents.TAP_HAPPEND_OK, 	Handle_ClosePopup );
@@ -247,7 +247,7 @@ public final class PopupsMediator extends Mediator implements IMediator
 	//==================================================================================================
 		const popup:Popup = Popup( e.currentTarget );
 		popup.removeEventListener( PopupEvents.POPUP_SHOWN, 	Handle_PopupShown );
-		trace("> Nest -> PopupsMediator > Handle_PopupShown");
+//		trace("> Nest -> PopupsMediator > Handle_PopupShown");
 		popup.touchable = true;
 	}
 	
