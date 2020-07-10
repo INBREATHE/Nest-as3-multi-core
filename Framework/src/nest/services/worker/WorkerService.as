@@ -6,7 +6,7 @@
 package nest.services.worker
 {
 	/**
-	 * 
+	 *
 	 * version 0.8.1
 	*/
 
@@ -175,13 +175,13 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 
 		try {
 //				send(new WorkerTask(
-//					WorkerTask.CALL, 
+//					WorkerTask.CALL,
 //					new CallWorkerMessage(
-//						workerHandlerID, method, args, 
-//						!(onComplete == null), 
+//						workerHandlerID, method, args,
+//						!(onComplete == null),
 //						!(onProgress == null),
 //						!(onError == null)
-//					)));		
+//					)));
 		} catch (e:*) {
 			error(e);
 			if(isOnCompletePossible) delete __workerHandler[__workerHandlerID];
@@ -384,7 +384,7 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 //				case WorkerTask.READY : __isReady = true; if (hasEventListener(WorkerEvent.READY)) { dispatchEvent(new Event(WorkerEvent.READY)); } break;
 //				case WorkerTask.DEBUG : debug.apply(null, data); break;
 //				case WorkerTask.ERROR : error.apply(null, data); break;
-//				
+//
 //				case WorkerTask.CALL :
 //					WorkerProcessMessage_Call(data as CallWorkerMessage);
 //					break;
@@ -396,24 +396,24 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 //				case WorkerTask.EVENT_PROGRESS :
 //					ProcessMessageFromWorker_Event_Progress(data as EventWorkerMessage);
 //					break;
-//				
+//
 //				case WorkerTask.EVENT_ERROR :
 //					ProcessWorkerMessage_Event_Error(data as EventWorkerMessage);
-//					break;			
-//				
+//					break;
+//
 //				case WorkerTask.DATA_SET :
 //					ProcessWorkerMessage_Data_Set(data as DataWorkerMessage);
 //					break;
-//				
+//
 //				case WorkerTask.DATA_DELETE :
 //					ProcessWorkerMessage_Data_Delete(data as DataWorkerMessage);
 //					break;
-//				
+//
 //				case WorkerTask.DATA_SYNC :
 //					ProcessWorkerMessage_Data_Sync(data as DataWorkerMessage);
 //					break;
-//					
-//				default : 
+//
+//				default :
 //					error("invalid name:", messageID);
 		}
 	}
@@ -443,14 +443,14 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 		const hdlr	: WorkerHandler = __workerHandler[id] as WorkerHandler;
 		const on	: Function = hdlr ? hdlr.onError : null;
 		delete __workerHandler[id];
-		if(on) on.apply(null, value.data);
+		if (on != null) on.apply(null, value.data);
 	}
 
 	private final function ProcessMessageFromWorker_Event_Progress(value:EventWorkerMessage):void {
 		const id	: int = value.id;
 		const hdlr	: WorkerHandler = __workerHandler[id] as WorkerHandler;
 		const on	: Function = hdlr ? hdlr.onProgress : null;
-		if (on && on.apply(null, value.data)) {
+		if (on != null && on.apply(null, value.data)) {
 			dataSet("jobcanceled#" + id.toString(), true);
 		}
 	}
@@ -460,7 +460,7 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 		const hdlr	: WorkerHandler = __workerHandler[id] as WorkerHandler;
 		const on	: Function = hdlr ? hdlr.onComplete : null;
 		delete __workerHandler[id];
-		if(on) on.apply(null, value.data);
+		if (on != null) on.apply(null, value.data);
 		RunNextTaskIfAvailable();
 	}
 
@@ -475,7 +475,7 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 			// inject new complete event
 			args.push(
 				function(...result):void {
-					if(__process[id]) {
+					if (__process[id]) {
 						delete __process[id];
 						RunNextTaskIfAvailable();
 					}
@@ -498,7 +498,7 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 			e["method"] = method;
 			error(e);
 			if (value.onError) {
-				if(__process[id]) {
+				if (__process[id]) {
 					delete __process[id];
 				}
 			}
@@ -508,9 +508,9 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 	private final function RunNextTaskIfAvailable():void
 	{
 //			trace("__tasklist", __tasklist.length)
-		if(__tasklist.length) {
+		if (__tasklist.length) {
 			const listCopy:Vector.<WorkerTask> = __tasklist.splice(0, __tasklist.length);
-			while(listCopy.length) {
+			while (listCopy.length) {
 				send(listCopy.shift());
 			}
 		}
@@ -524,7 +524,7 @@ dynamic public class WorkerService extends Sprite implements IWorkerFactory
 		if (!Capabilities.isDebugger) return;
 		if (__isPrimordial)
 			trace.apply(null, ["Debug:"].concat(args));
-//			else send(new WorkerTask(WorkerTask.DEBUG, ["[WORKER]"].concat(args))); 
+//			else send(new WorkerTask(WorkerTask.DEBUG, ["[WORKER]"].concat(args)));
 	}
 
 	/**

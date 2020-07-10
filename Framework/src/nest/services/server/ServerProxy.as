@@ -3,7 +3,7 @@
  Copyright (c) 2016 Vladimir Minkin <vladimir.minkin@gmail.com>
  Your reuse is governed by the Creative Commons Attribution 3.0 License
 */
-package nest.services.server 
+package nest.services.server
 {
 import nest.entities.application.ApplicationCommand;
 import nest.services.localization.LanguageDependentProxy;
@@ -19,7 +19,7 @@ public class ServerProxy extends LanguageDependentProxy
 		super(ServerService.getInstance());
 		_server.addEventListener(ServerResponse.COMPLETE, HandleServerRespond);
 	}
-	
+
 	//==================================================================================================
 	override public function onRegister():void { trace(">\t ServerProxy: Registered"); }
 	//==================================================================================================
@@ -33,7 +33,7 @@ public class ServerProxy extends LanguageDependentProxy
 			case ServerRequestType.GET: 	method = _server.sendGet; 	break;
 			case ServerRequestType.POST: 	method = _server.sendPost;  break;
 		}
-		if(method) method( process.path, process.data, process.callback );
+		if (method != null) method( process.path, process.data, process.callback );
 	}
 
 	//==================================================================================================
@@ -43,10 +43,10 @@ public class ServerProxy extends LanguageDependentProxy
 	}
 
 	//==================================================================================================
-	override public function languageChanged():void { 
+	override public function languageChanged():void {
 	//==================================================================================================
-		_server.language = this.facade.currentLanguage; 
-		trace(">\t ServerProxy: languageChanged");  
+		_server.language = this.facade.currentLanguage;
+		trace(">\t ServerProxy: languageChanged");
 	}
 
 	private function get _server():ServerService { return ServerService(data); }

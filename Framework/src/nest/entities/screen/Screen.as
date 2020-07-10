@@ -39,9 +39,9 @@ public class Screen extends Element implements IScreen
 	//==================================================================================================
 		isShown = false;
 		this.touchable = false;
-		if(callback) callback.call();
+		if (callback != null) callback.call();
 	}
-	
+
 	/**
 	 * This function called from ScreenMediator after screen removed when:
 	 * if(_rebuild) screen.clear();
@@ -60,15 +60,15 @@ public class Screen extends Element implements IScreen
 	public function localize( localeData:XMLList ):void {
 		_locale = localeData;
 	}
-	
+
 	//==================================================================================================
 	public function disableInteractivity():void { this.touchable = false; }
 	public function enableInteractivity():void { this.touchable = true; }
 	//==================================================================================================
-	
+
 	public function getEntityType():uint { return EntityType.SCREEN; }
 	public function getLocaleID( ):String { return this.name; }
-	
+
 	//==================================================================================================
 }
 }

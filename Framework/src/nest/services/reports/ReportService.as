@@ -123,19 +123,19 @@ public final class ReportService extends EventDispatcher implements IServiceLoca
 	//==================================================================================================
 		var ldr:URLLoader = new URLLoader();
 		const __clearLoader:Function = function():void {
-			if(ldr.hasEventListener(Event.COMPLETE)) ldr.removeEventListener(Event.COMPLETE, __completeHandler);
-			if(ldr.hasEventListener(IOErrorEvent.IO_ERROR)) ldr.removeEventListener(IOErrorEvent.IO_ERROR, __errorHandler);
+			if (ldr.hasEventListener(Event.COMPLETE)) ldr.removeEventListener(Event.COMPLETE, __completeHandler);
+			if (ldr.hasEventListener(IOErrorEvent.IO_ERROR)) ldr.removeEventListener(IOErrorEvent.IO_ERROR, __errorHandler);
 			ldr.close();
 			ldr = null;
 		};
 		const __completeHandler:Function = function (resp:Event):void {
 			trace("> Nest -> ReportService, Complete", path, successCallback);
-			if(successCallback) successCallback(JSON.parse(ldr.data));
+			if (successCallback != null) successCallback(JSON.parse(ldr.data));
 			__clearLoader();
 		};
 		const __errorHandler:Function = function (resp:IOErrorEvent):void {
 			const data:* = ldr.data;
-			if(errorCallback) errorCallback(data != null && String(data).length > 0 ? JSON.parse(data): data);
+			if (errorCallback != null) errorCallback(data != null && String(data).length > 0 ? JSON.parse(data): data);
 			__clearLoader();
 		};
 

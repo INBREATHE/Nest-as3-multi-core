@@ -19,7 +19,7 @@ import starling.events.Event;
 
 public class Popup extends Element implements IPopup
 {
-	protected var 
+	protected var
 		_actions	  : Dictionary = new Dictionary()
 	,	_locale		  : XMLList
 
@@ -44,7 +44,7 @@ public class Popup extends Element implements IPopup
 		super( Application.ENVIRONMENT );
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE );
 	}
-	
+
 	// This method called from RemovePopupFromStage only in case when forcing it to close
 	// Notification_HideAllPopups or Notification_HidePopup(name, force==true)
 	public function clear():void {
@@ -52,32 +52,32 @@ public class Popup extends Element implements IPopup
 		_onAdded = null;
 		_onShown = null;
 	}
-	
+
 	//==================================================================================================
 	private function Handler_REMOVED_FROM_STAGE( e:Event ):void {
 	//==================================================================================================
 		this.addEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.removeEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
 		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ,"> REMOVED_FROM_STAGE : _onRemoved", _onRemoved);
-		
-		if ( _onRemoved ) {
+
+		if ( _onRemoved != null ) {
 			const onRemove:Function = _onRemoved;
 			clear();
 			const timeoutID:uint = setTimeout(function():void {
 				clearTimeout( timeoutID );
-				onRemove(); 
+				onRemove();
 			}, 5);
 		}
 	}
-	
+
 	//==================================================================================================
 	private function Handler_ADDED_TO_STAGE( e:Event ):void {
 	//==================================================================================================
 		trace("> Nest -> Popup", this, DisplayObject(e.currentTarget).parent ,"> ADDED_TO_STAGE : _onAdded", _onAdded);
 		this.removeEventListener( Event.ADDED_TO_STAGE, Handler_ADDED_TO_STAGE);
 		this.addEventListener( Event.REMOVED_FROM_STAGE, Handler_REMOVED_FROM_STAGE);
-		
-		if ( _onAdded ) {
+
+		if ( _onAdded != null ) {
 			const onAdded:Function = _onAdded;
 			_onAdded = null;
 			onAdded();
@@ -90,12 +90,12 @@ public class Popup extends Element implements IPopup
 		_onAdded 	= popupData.onAdded;
 		_onShown 	= popupData.onShown;
 		_onRemoved 	= popupData.onRemoved;
-		
+
 		trace("> Nest -> Popup > setup: name =", this.name);
 		trace("> Nest -> Popup > setup: _onRemoved", _onRemoved != null);
 		trace("> Nest -> Popup > setup: _onShown", _onShown != null);
 		trace("> Nest -> Popup > setup: _onAdded", _onAdded != null);
-		
+
 		prepare( popupData.data );
 	}
 

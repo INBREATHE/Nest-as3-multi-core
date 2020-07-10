@@ -104,25 +104,25 @@ public class Scroller
 	,	_counter			  :int 		= int.MAX_VALUE
 
 	,	_container			:ScrollContainer
-	
+
 	,	areaWidth			  :uint	 	= 0
 	,	areaHeight			:uint	 	= 0
 	,	areaWidthHalf		:Number = 0
 	,	areaHeightHalf	:Number = 0
-	
+
 	,	TOUCH_ACCURACY		:int 		= 20
 	;
 
 	private var _env:Environment;
-		
-	public function Scroller() 
+
+	public function Scroller()
 	{
 		_env = Application.ENVIRONMENT;
 		this.areaWidth = _env.viewportSize.x;
 		this.areaHeight = _env.viewportSize.y;
-		
+
 		TOUCH_ACCURACY *= _env.scaleFactor.x;
-		
+
 		areaWidthHalf = areaWidth * 0.5;
 		areaHeightHalf = areaHeight * 0.5;
 	}
@@ -243,7 +243,7 @@ public class Scroller
 						Starling.juggler.add(_tweenScale);
 					}
 
-					if (_touchStartCallback) _touchStartCallback(_target);
+					if ( _touchStartCallback != null ) _touchStartCallback(_target);
 
 					break;
 				case TouchPhase.MOVED:
@@ -397,7 +397,8 @@ public class Scroller
 	//==================================================================================================
 //			trace("> Nest -> Scroller - HoldComplete");
 		_isHoldComplete = true;
-		if (_holdStartCallback) _holdStartCallback(_currentTarget, new Point(_startTouchX, _startTouchY));
+		if (_holdStartCallback != null)
+			_holdStartCallback(_currentTarget, new Point(_startTouchX, _startTouchY));
 	}
 
 	//==================================================================================================
@@ -405,7 +406,7 @@ public class Scroller
 	//==================================================================================================
 //			trace("> Nest -> Scroller - HoldEnd");
 		_isHoldComplete = false;
-		if (_holdEndCallback) _holdEndCallback();
+		if (_holdEndCallback != null) _holdEndCallback();
 	}
 
 	//==================================================================================================
@@ -416,7 +417,7 @@ public class Scroller
 
 		if(_hideInvisible) HideInvisible();
 
-		if (_touchMoveCallback) _touchMoveCallback(_currentTargetIndex);
+		if (_touchMoveCallback != null) _touchMoveCallback(_currentTargetIndex);
 		_container.itemid = _currentTargetIndex;
 	}
 
@@ -437,7 +438,7 @@ public class Scroller
 	//==================================================================================================
 		MoveUpdate();
 		trace("MoveComplete", _isTapPossible,  _touchEndCallback != null);
-		if (_isTapPossible && _touchEndCallback) {
+		if (_isTapPossible && _touchEndCallback != null) {
 			if (_needTouchPoint) _touchEndCallback(_currentTargetIndex, new Point(_touch.globalX, _touch.globalY));
 			else _touchEndCallback(_currentTargetIndex);
 		}
